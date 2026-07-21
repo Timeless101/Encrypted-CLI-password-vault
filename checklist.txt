@@ -1,0 +1,123 @@
+# TO-DO
+---------------------------
+
+$ in-progress:
+
+* option handeler
+* Make option: A work
+
+--------------------------------------------
+
+$error handeling:
+
+
+
+--------------------------------------------
+
+$new functions:
+
+* print log path when insert does not work.
+* insert faild wait for an input then go back to menu.
+* if email doesn't exits then question and functionality if you want to sign up.
+* minimal password requirement 8 long needs a capslock leter and a number and a puctioation.
+* return function to main menu
+* masterpassword inputed 3 times wrong, accounts locks for x time.
+* password delete from vault
+* password add from vault
+    - detect missing entrys.
+    - invalid user input
+* password search from vault
+* password copy to klemboard.
+* print all items in vault.
+* password encryption
+* password decryption
+* Toevoegen van een manier om te zien wat de recentelijke wachtwoorden zijn die toegevoegd zijn.
+
+* Make option: D work
+* Make option: E work
+* Make option: Q work
+* Make option: V work
+* Make option: S work
+
+
+----------------------------------------------
+
+$improvements
+
+* Voeg UNIQUE toe aan de email-kolom in de database.
+* Hernoem exceptions naar duidelijkere namen zoals InvalidEmailError en EmailAlreadyExistsError.
+
+=================================================================
+
+#Finished
+* login function netter maken. 23/06
+* sign-up function netter maken. 23/06
+* validate password error handeling. 18/6
+* EOFError handeling 18/6
+* main menu error handeling by initialize_database on startup 18/6
+* email search error handeling. 18/06
+* data row search error handeling. 18/06
+* login function error handeling. 23/06
+* signup function error handeling. 23/06
+* main_menu_validator 05/07
+* verify_password() True bij goed wachtwoord 05/07
+* verify_password() False bij fout wachtwoord 05/07
+* hash_password() geeft iets terug 05/07
+* search vindt data 05/07
+* search geeft None bij geen data 05/07
+* search geeft error bij verkeerde tabel/kolom 05/07
+* table maken 05/07
+* insert werkt 05/07
+* sign_in_function 05/07
+* get_valid_input_data() met monkeypatch 05/07
+* Voeg tests toe voor opgeloste bugs: 05/07
+    - verkeerde except error.X("message") syntax,
+    - login password-error flow,
+    - account-not-found flow, 
+    - invalid-email flow,
+    - signup duplicate-email flow,
+* Fix option_selection(): geen except TypeError: pass. 05/07
+* Fix insert-failure flow: als insert_data() faalt, niet auto_login() doen. 05/07
+* Maak duidelijk verschil tussen None, False en exceptions. 05/07
+* Houd user-facing error prints in CLI/flow, niet diep in logic/storage. 05/07
+* Maak login/signup-tests die niet afhankelijk zijn van je echte database. 05/07
+* database maken 06/07
+* pytest initialize databse bystartup 06/07
+* data_row_search() 06/07
+* email_search() 06/07
+* password_match_checker() 06/07
+* email_checker() 06/07
+* Updates email_is_available() function to be cleaner with only if True return False/True. 06/07
+* email_is_available() 06/07
+* the vault main menu screen 06/07
+* vault store function aangemaakt 06/07
+* search helper function 06/07
+* create_table error test gemaakt 08/07
+* insert data error test gemaakt 08/07
+* create table opgeschoont 08/07
+* vault_store error test gemaakt 08/07
+* password vault screen beter gemaakt: 13/07
+    - header aangemaakt.
+    - volledige screen aangemaakt.
+    - logic iets aangepast zodat de email erin komt.
+* Password vault screen aangepast en afgemaakt. klaar voor logic: 14/07
+    - Wanneer er geen laatste items zijn: No items in vault.
+    - small table aangemaakt.
+    - optie selectie aangemaakt.
+* get_userid functie gemaakt. 15/07
+* get_all_items_in_database functie gemaakt 15/07
+* test_logic_get_all_items_in_database test aangemaakt 15/07
+* get_five_rows_out_database functie aanmaken: 15/07
+    - Moet 5 rows van de database pakken.
+    - Deze terug geven aan de functie: vault_screen(rows)
+    - De totaal aantal showed items terug geven aand e functie: vualt_screen(total_items)
+* auto login for signup: 15/07
+    - Zorgen dat er een row komt met items.
+* Table creation when signup with random string for database name. 15/07
+* CLI menu screen. 15/07
+* vault Menu 15/07
+* test_logic_search_limited_amount_of_items_in_database test beter maken. 16/07
+* auto_login() 16/07
+* test_login_logic_search_data 19/07
+* Refactor, login opdelen in vault_logic, login_logic en main_logic 18/07 - 19/07
+* Refactor login opelen in login_logic en storage_logic 20/07 - 21/07
