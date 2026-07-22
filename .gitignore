@@ -1,4 +1,16 @@
-#ignore files:
+# Python cache
 __pycache__/
+*.py[cod]
+
+# Pytest cache
 .pytest_cache/
-test/.pytest_cache/
+
+# Databases
+*.db
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
