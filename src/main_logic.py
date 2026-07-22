@@ -8,11 +8,16 @@ def program_flow():
         data = login_logic.option_selection(login_logic.main_menu())
         if data is False:
             continue
-        else:
-            email, userid = data
-            break
+        
+        email, userid = data
+        while True:
+            result = vault_logic.start_flow(email=email, userid=userid)
+            print(result)
+            sleep(5)
+            if result == "q":
+                break
+        
     
-    vault_logic.start_flow(email=email, userid=userid)
 
 
 if __name__ == "__main__":

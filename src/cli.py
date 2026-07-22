@@ -15,6 +15,11 @@ def clear_screen():
     cli = command + args
     subprocess.run(cli)
 
+#Exit helper Function
+def exit_program():
+    print("\n\nYou have exited the program!")
+    return exit()
+
 global MAIN_SCREEN_LOGO
 MAIN_SCREEN_LOGO = r"""
     _____________________________________________________________________________________

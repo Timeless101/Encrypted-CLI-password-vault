@@ -8,19 +8,12 @@ import src.crypto as crypto
 DATABASE_NAME = "CLI_Data.db"
 LOGIN_TABLE = "login_information"
 
-
-
-#Exit helper Function
-def exit_program():
-    print("\n\nYou have exited the program!")
-    return exit()
-
 #Main menu selection plus validation.
 def main_menu():
     if not initialize_database_bystartup():   
         cli.print_startup_failed()
         input("Press any key to quit: ")
-        exit_program()
+        cli.cli.exit_program()
     
     cli.clear_screen()
     
@@ -37,7 +30,7 @@ def main_menu():
                 continue
         return selection
     except (KeyboardInterrupt, EOFError):
-        exit_program()
+        cli.exit_program()
 
 #menu selection.
 def option_selection(option: str):
@@ -45,7 +38,7 @@ def option_selection(option: str):
         "1": login_flow,
         "2": sign_up_flow,
         "3": about,
-        "4": exit_program,
+        "4": cli.exit_program,
     }
     func = dispatch_table.get(option)
     return func()
@@ -150,7 +143,7 @@ def login_flow():
                 continue
 
     except (KeyboardInterrupt, EOFError):
-        exit_program()
+        cli.exit_program()
 
 #Database search email return str email.
 def email_search(email):
@@ -232,16 +225,16 @@ def sign_up_flow():
                 cli.print_wrong_data_type_dict()
                 sleep(3)
                 #Make log file
-                exit_program()
+                cli.exit_program()
 
             except error.TableError:
                 cli.print_incorrect_table_name()
                 sleep(3)
                 #Make log file
-                exit_program()
+                cli.exit_program()
 
     except (KeyboardInterrupt, EOFError):
-        exit_program()
+        cli.exit_program()
 
 #Shows Information about the Maker and program.
 def about():

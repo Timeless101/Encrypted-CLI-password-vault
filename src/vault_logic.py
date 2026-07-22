@@ -6,30 +6,35 @@ DATABASE_NAME = "CLI_Data.db"
 
 
 def start_flow(email: str, userid: int):
+    try:
+        cli.clear_screen()
+
+        data = get_five_rows_out_database(userid=userid)
+        total_cred = storage_logic.get_all_items_in_database(userid=userid)
+
+        showed_items = "_"
+        if total_cred is None:
+            total_cred = 0
+
+        if data is None:
+            showed_items = 0
+        else:
+            showed_items = len(data)
+
+        success = option_handler(cli.vault_screen(
+            email=email,
+            total_cred=total_cred,
+            rows=data,
+            showed_items=showed_items).lower())
+            
+        if success is None:
+            cli.print_internal_error()
+            #Make a log entry that logs that there was something wrong while passing the choice
+            #no selection from:"A", "V", "S", "E", "D", "Q
+        return success
+    except KeyboardInterrupt, EOFError:
+        cli.exit_program()
     
-    cli.clear_screen()
-
-    data = get_five_rows_out_database(userid=userid)
-    total_cred = storage_logic.get_all_items_in_database(userid=userid)
-
-    showed_items = "_"
-    if total_cred is None:
-        total_cred = 0
-
-    if data is None:
-        showed_items = 0
-    else:
-        showed_items = len(data)
-
-    if option_handler(cli.vault_screen(
-        email=email,
-        total_cred=total_cred,
-        rows=data,
-        showed_items=showed_items).lower()) is None:
-        
-        cli.print_internal_error()
-        #Make a log entry that logs that there was something wrong while passing the choice
-        #no selection from:"A", "V", "S", "E", "D", "Q
 
 def option_handler(choice: str):
     if not choice in ["a", "v", "s", "d", "e", "q"]:
@@ -45,7 +50,7 @@ def option_handler(choice: str):
     }
     func = dispatch_table.get(choice)
     func()
-    return True
+    return func()
 
 #search limted amount of items.
 #get_all_items_in_database
@@ -89,7 +94,7 @@ def edit_item():
     print("e")
 
 def quit_program():
-    print("q")
+    return "q"
 
 if __name__ == "__main__":
     pass
