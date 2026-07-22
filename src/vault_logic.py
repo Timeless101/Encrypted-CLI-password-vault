@@ -26,14 +26,14 @@ def start_flow(email: str, userid: int):
             email=email,
             total_cred=total_cred,
             rows=data,
-            showed_items=showed_items).lower())
+            showed_items=showed_items))
             
         if success is None:
             cli.print_internal_error()
             #Make a log entry that logs that there was something wrong while passing the choice
             #no selection from:"A", "V", "S", "E", "D", "Q
         return success
-    except KeyboardInterrupt, EOFError:
+    except (KeyboardInterrupt, EOFError):
         cli.exit_program()
     
 
@@ -81,7 +81,7 @@ def add_items():
     cli.clear_screen()
     while True:
         result = cli.add_items_screen()
-        confirmation = cli.add_items_confirmation().lower()
+        confirmation = cli.add_items_confirmation()
         match confirmation:
             case "y":
                 break

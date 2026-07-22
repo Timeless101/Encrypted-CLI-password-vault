@@ -163,7 +163,7 @@ def vault_screen(email: str, total_cred: int, rows: list, showed_items: str):
     CONSOLE.print(f"\n[grey53]Showing {showed_items} of {total_cred} credentials\n")
     vault_options()
 
-    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "E", "D", "Q"], case_sensitive=False, show_choices=False)
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "E", "D", "Q"], case_sensitive=False, show_choices=False).lower()
 
 #Vaul
 def vault_options():
@@ -226,7 +226,7 @@ def add_items_screen():
     return service, username, password, comment
 
 def add_items_confirmation():
-    return Prompt.ask("\n[bright_cyan]Is al inforamtion correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True)
+    return Prompt.ask("\n[bright_cyan]Is al inforamtion correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
 
 #Database errors:
 def print_error_database():
