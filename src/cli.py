@@ -217,6 +217,16 @@ def vault_option_a():
             print("\n")
             continue
 
+def add_items_screen():
+    service = input("Service\n > ")
+    username = input("Username\n > ")
+    password = getpass(prompt="Password\n > ", echo_char="*")
+    comment = input("comments\n > ")
+
+    return service, username, password, comment
+
+def add_items_confirmation():
+    return Prompt.ask("\n[bright_cyan]Is al inforamtion correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True)
 
 #Database errors:
 def print_error_database():

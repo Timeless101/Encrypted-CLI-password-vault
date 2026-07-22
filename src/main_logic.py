@@ -1,6 +1,5 @@
 import src.login_logic as login_logic
 import src.vault_logic as vault_logic
-from time import sleep
 
 def program_flow():
 
@@ -12,12 +11,12 @@ def program_flow():
         email, userid = data
         while True:
             result = vault_logic.start_flow(email=email, userid=userid)
-            print(result)
-            sleep(5)
-            if result == "q":
-                break
-        
-    
+            match result:
+                case "q":
+                    break
+
+                case "a":
+                    continue
 
 
 if __name__ == "__main__":

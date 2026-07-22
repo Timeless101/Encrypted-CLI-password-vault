@@ -1,6 +1,7 @@
 import src.storage_logic as storage_logic
 import src.cli as cli
 import src.error as error
+import src.vault_services.add_items as add_items_file
 
 DATABASE_NAME = "CLI_Data.db"
 
@@ -41,7 +42,7 @@ def option_handler(choice: str):
         return None
     
     dispatch_table = {
-        "a": add_item,
+        "a": add_items,
         "v": view_screen,
         "s": search_item,
         "d": delete_item,
@@ -49,7 +50,6 @@ def option_handler(choice: str):
         "q": quit_program
     }
     func = dispatch_table.get(choice)
-    func()
     return func()
 
 #search limted amount of items.
@@ -77,8 +77,19 @@ def get_five_rows_out_database(userid: int):
         return False
 
 
-def add_item():
-    print("a")
+def add_items():
+    cli.clear_screen()
+    while True:
+        result = cli.add_items_screen()
+        confirmation = cli.add_items_confirmation().lower()
+        match confirmation:
+            case "y":
+                break
+
+            case "n":
+               continue
+    return "a"
+    
     
 
 def view_screen():
