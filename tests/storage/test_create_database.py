@@ -1,7 +1,7 @@
 import src.storage as storage
 import sqlite3
 import pytest
-import src.error as error
+import src.errors as errors
 
 def test_create_database_locked(monkeypatch, tmp_path):
     db_path = tmp_path / "test.db"
@@ -11,7 +11,7 @@ def test_create_database_locked(monkeypatch, tmp_path):
 
     monkeypatch.setattr(storage.sqlite3, "connect", fake_connect)
 
-    with pytest.raises(error.DatabaseError) as caught_error:
+    with pytest.raises(errors.DatabaseError) as caught_error:
         storage.create_database(db_path)
 
     assert isinstance(

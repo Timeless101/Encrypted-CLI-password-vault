@@ -1,6 +1,6 @@
 import src.storage_logic as storage_logic
 import src.login_logic as login_logic
-import src.error as error
+import src.errors as errors
 import pytest
 
 def test_get_userid_happy_test(monkeypatch):
@@ -17,5 +17,5 @@ def test_get_userid_happy_test(monkeypatch):
     
     monkeypatch.setattr(storage_logic, "data_row_search", fake_data_row_search)
 
-    with pytest.raises(error.AccountError):
+    with pytest.raises(errors.AccountError):
         assert login_logic.get_userid("test@test.nl")

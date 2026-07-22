@@ -1,11 +1,11 @@
 import pytest
-import src.error as error
+import src.errors as errors
 import src.login_logic as login_logic
 import src.storage_logic as storage_logic
 
 #test if it raises the error when e-mail is put in worng.
 def test_sign_in_function_email_wrong_email_format():
-    with pytest.raises(error.EmailMismatchError):
+    with pytest.raises(errors.EmailMismatchError):
         login_logic.sign_in_function("diego@.com", "password")
 
 #test if it works correctly when e-mail is valid.
@@ -28,7 +28,7 @@ def test_sign_in_function_account_none_account_found(monkeypatch):
     
     monkeypatch.setattr(storage_logic, "data_row_search", fake_database)
 
-    with pytest.raises(error.AccountError):
+    with pytest.raises(errors.AccountError):
         login_logic.sign_in_function("lol@outlook.com", b"fake_hash")
 
 
@@ -43,5 +43,5 @@ def test_sign_in_function_password_invalid(monkeypatch):
     monkeypatch.setattr(storage_logic, "data_row_search", fake_database)
     monkeypatch.setattr(login_logic, "validate_password", fake_validate_password)
 
-    with pytest.raises(error.InvalidPasswordError):
+    with pytest.raises(errors.InvalidPasswordError):
         login_logic.sign_in_function("diego@outlook.com", "password")

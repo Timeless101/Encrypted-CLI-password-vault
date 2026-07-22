@@ -1,5 +1,5 @@
 from time import sleep
-import src.error as error
+import src.errors as errors
 import src.storage_logic as storage_logic
 import src.cli as cli
 import src.validator as validator
@@ -74,10 +74,10 @@ def initialize_database_bystartup():
         
         return False
         
-    except error.WrongDataTypeDict:
+    except errors.WrongDataTypeDict:
         return False
     
-    except error.TableError:
+    except errors.TableError:
         return False
 
 #Check if password match
@@ -90,17 +90,17 @@ def validate_password(input_password: str, database_password):
 def sign_in_function(email: str, password: str):
 
     if not validator.email_checker(email):
-        raise error.EmailMismatchError("Email doesn't match the criteria.")
+        raise errors.EmailMismatchError("Email doesn't match the criteria.")
     
     row = storage_logic.data_row_search(email=email, table_column="Email", table_name="login_information")
     
     if row is None:
-        raise error.AccountError("Account doesn't exists.")
+        raise errors.AccountError("Account doesn't exists.")
     
     _, _, database_password = row
 
     if not validate_password(input_password=password, database_password=database_password):
-        raise error.InvalidPasswordError("Wrong password has been enterd.")
+        raise errors.InvalidPasswordError("Wrong password has been enterd.")
     
     return True
 
@@ -108,7 +108,7 @@ def sign_in_function(email: str, password: str):
 def get_userid(email):
     row = storage_logic.data_row_search(email=email, table_column="Email", table_name="login_information")
     if row is None:
-        raise error.AccountError("Account doesn't exists.")
+        raise errors.AccountError("Account doesn't exists.")
     
     userid, _, _, = row
     return int(userid)
@@ -124,19 +124,19 @@ def login_flow():
                     
                     return input_email, get_userid(input_email)
 
-            except error.EmailMismatchError:
+            except errors.EmailMismatchError:
                 cli.print_invalid_email()
                 sleep(1.5)
                 cli.clear_screen()
                 continue
 
-            except error.AccountError:
+            except errors.AccountError:
                 cli.print_account_not_in_database()
                 sleep(1.5)
                 cli.clear_screen()
                 continue
 
-            except error.InvalidPasswordError:
+            except errors.InvalidPasswordError:
                 cli.print_wrong_password()
                 sleep(1.5)
                 cli.clear_screen()
@@ -162,7 +162,7 @@ def email_search(email):
         second_data = first_data[1]
         return second_data
     
-    except error.TableError:
+    except errors.TableError:
         cli.print_search_error()
         return False
 
@@ -172,13 +172,13 @@ def get_input_and_validate_it():
     email, password1, password2 = cli.register_screen()
 
     if not validator.email_checker(email):
-        raise error.EmailMismatchError("Email doesn't match the criteria.")
+        raise errors.EmailMismatchError("Email doesn't match the criteria.")
     
     if not validator.password_match_checker(password1, password2):
-        raise error.PasswordMismatchError("Passwords don't match")
+        raise errors.PasswordMismatchError("Passwords don't match")
     
     if not validator.email_is_available(new_email=email, database_email=email_search(email)):
-        raise error.DuplicationError("Email already exists in database.")
+        raise errors.DuplicationError("Email already exists in database.")
     
     return email, crypto.hash_password(password1)
 
@@ -203,31 +203,31 @@ def sign_up_flow():
 
                 return email , get_userid(email)
                 
-            except error.EmailMismatchError:
+            except errors.EmailMismatchError:
                     cli.print_invalid_email()
                     sleep(3)
                     cli.clear_screen()
                     continue
             
-            except error.PasswordMismatchError:
+            except errors.PasswordMismatchError:
                     cli.print_password_dont_match()
                     sleep(3)
                     cli.clear_screen()
                     continue
             
-            except error.DuplicationError:
+            except errors.DuplicationError:
                     cli.print_email_exists()
                     sleep(3)
                     cli.clear_screen()
                     continue
             
-            except error.WrongDataTypeDict:
+            except errors.WrongDataTypeDict:
                 cli.print_wrong_data_type_dict()
                 sleep(3)
                 #Make log file
                 cli.exit_program()
 
-            except error.TableError:
+            except errors.TableError:
                 cli.print_incorrect_table_name()
                 sleep(3)
                 #Make log file

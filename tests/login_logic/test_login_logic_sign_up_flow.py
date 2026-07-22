@@ -2,7 +2,7 @@ import src.login_logic as login_logic
 import src.storage_logic as storage_logic
 import src.cli as cli
 import pytest
-import src.error as error
+import src.errors as errors
 
 
 def test_sign_up_flow_happy_test(monkeypatch):
@@ -61,7 +61,7 @@ def test_sign_up_flow_email_mismatch_error(monkeypatch):
 
         if count == 0:
             count += 1
-            raise error.EmailMismatchError()
+            raise errors.EmailMismatchError()
 
         return "email@email.com", b"password"
     
@@ -89,7 +89,7 @@ def test_sign_up_flow_password_mismatch_error(monkeypatch):
 
         if count == 0:
             count += 1
-            raise error.PasswordMismatchError()
+            raise errors.PasswordMismatchError()
 
         return "email@email.com", b"password"
     
@@ -118,7 +118,7 @@ def test_sign_up_flow_duplication_error(monkeypatch):
 
         if count == 0:
             count += 1
-            raise error.DuplicationError()
+            raise errors.DuplicationError()
 
         return "email@email.com", b"password"
     

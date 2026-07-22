@@ -1,5 +1,5 @@
 import src.storage as storage
-import src.error as error
+import src.errors as errors
 
 DATABASE_NAME = "CLI_Data.db"
 LOGIN_TABLE = "login_information"
@@ -20,8 +20,8 @@ def get_all_items_in_database(userid):
         else:
             return len(data)
         
-    except error.TableError as table_error:
-        raise error.TableError(f"No such table: vault_storage") from table_error
+    except errors.TableError as table_error:
+        raise errors.TableError(f"No such table: vault_storage") from table_error
     
 #Search the specified amount of rows from the database that is associated with the UserID.
 def search_limited_amount_of_items_in_database(table: str, column: str, userid: int, amount_of_items: int):
@@ -38,8 +38,8 @@ def search_limited_amount_of_items_in_database(table: str, column: str, userid: 
             return None
         
         return data
-    except error.TableError as table_error:
-        raise error.TableError(f"No such table: {table}") from table_error
+    except errors.TableError as table_error:
+        raise errors.TableError(f"No such table: {table}") from table_error
     
 #Storge database search function.
 #searches specific data in the specified column of the specified table.
@@ -56,8 +56,8 @@ def search_data(table_name: str, table_column: str, data_to_be_searched: str):
             return None
 
         return data
-    except error.TableError as table_error:
-        raise error.TableError(f"No such table: {table_name}") from table_error
+    except errors.TableError as table_error:
+        raise errors.TableError(f"No such table: {table_name}") from table_error
     
 
 def data_row_search(email: str, table_column: str, table_name: str):
@@ -72,8 +72,8 @@ def data_row_search(email: str, table_column: str, table_name: str):
         else:
             return data[0]
         
-    except error.TableError as table_error:
-        raise error.TableError(f"No such table: {LOGIN_TABLE}") from table_error
+    except errors.TableError as table_error:
+        raise errors.TableError(f"No such table: {LOGIN_TABLE}") from table_error
 
 
 def insert_data(table_name: str, column_name: list, data: list):
@@ -82,14 +82,14 @@ def insert_data(table_name: str, column_name: list, data: list):
         if db.insert_data(table_name=table_name, column_name=column_name, data_insert=data):
             return True
         
-    except error.WrongDataTypeList as wrong_type_error:
-        raise error.WrongDataTypeList("Datatype isn't an list") from wrong_type_error
+    except errors.WrongDataTypeList as wrong_type_error:
+        raise errors.WrongDataTypeList("Datatype isn't an list") from wrong_type_error
 
-    except error.DataLengthError as wrong_data_lenght_error:
-        raise error.DataLengthError("column_name and data do not contain the same number of items.") from wrong_data_lenght_error
+    except errors.DataLengthError as wrong_data_lenght_error:
+        raise errors.DataLengthError("column_name and data do not contain the same number of items.") from wrong_data_lenght_error
 
-    except error.InsertError as insert_error:
-        raise error.InsertError("Could not insert data into database.") from insert_error
+    except errors.InsertError as insert_error:
+        raise errors.InsertError("Could not insert data into database.") from insert_error
     
 
 def table_creator(table_name: str, columns: dict):
@@ -100,11 +100,11 @@ def table_creator(table_name: str, columns: dict):
             columns=columns):
             return True
 
-    except error.WrongDataTypeDict as wrong_type_error:
-        raise error.WrongDataTypeDict("Datatype isn't an dictonary") from wrong_type_error
+    except errors.WrongDataTypeDict as wrong_type_error:
+        raise errors.WrongDataTypeDict("Datatype isn't an dictonary") from wrong_type_error
     
-    except error.TableError as table_error:
-        raise error.TableError(f"No such table: {table_name}") from table_error
+    except errors.TableError as table_error:
+        raise errors.TableError(f"No such table: {table_name}") from table_error
 
 
 def create_database(database_name: str):
@@ -112,5 +112,5 @@ def create_database(database_name: str):
         if storage.create_database(database_name=database_name):
             return True
         return False
-    except error.DatabaseError:
+    except errors.DatabaseError:
         return False

@@ -1,51 +1,5 @@
-# TO-DO
----------------------------
+Veranderd naar github project logging.
 
-$ in-progress:
-
-* option handeler
-* Make option: A work
-
---------------------------------------------
-
-$error handeling:
-
-
-
---------------------------------------------
-
-$new functions:
-
-* print log path when insert does not work.
-* insert faild wait for an input then go back to menu.
-* if email doesn't exits then question and functionality if you want to sign up.
-* minimal password requirement 8 long needs a capslock leter and a number and a puctioation.
-* return function to main menu
-* masterpassword inputed 3 times wrong, accounts locks for x time.
-* password delete from vault
-* password add from vault
-    - detect missing entrys.
-    - invalid user input
-* password search from vault
-* password copy to klemboard.
-* print all items in vault.
-* password encryption
-* password decryption
-* Toevoegen van een manier om te zien wat de recentelijke wachtwoorden zijn die toegevoegd zijn.
-
-* Make option: D work
-* Make option: E work
-* Make option: Q work
-* Make option: V work
-* Make option: S work
-
-
-----------------------------------------------
-
-$improvements
-
-* Voeg UNIQUE toe aan de email-kolom in de database.
-* Hernoem exceptions naar duidelijkere namen zoals InvalidEmailError en EmailAlreadyExistsError.
 
 =================================================================
 
@@ -121,3 +75,4 @@ $improvements
 * test_login_logic_search_data 19/07
 * Refactor, login opdelen in vault_logic, login_logic en main_logic 18/07 - 19/07
 * Refactor login opelen in login_logic en storage_logic 20/07 - 21/07
+* insert faild wait for an input then go back to menu.22/07

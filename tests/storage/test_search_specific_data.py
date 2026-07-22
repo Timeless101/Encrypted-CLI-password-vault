@@ -1,5 +1,5 @@
 import pytest
-import src.error as error
+import src.errors as errors
 import sqlite3
 from src.storage import Search_data
 
@@ -8,7 +8,7 @@ def test_search_function_wrong_table(tmp_path):
     db_path = tmp_path / "test.db"
     searcher = Search_data(str(db_path))
 
-    with pytest.raises(error.TableError):
+    with pytest.raises(errors.TableError):
         searcher.search_specific_data(
             table="test.db",
             column="test",
@@ -27,7 +27,7 @@ def test_search_function_wrong_column(tmp_path):
         c.execute(sql)
         connection.commit()
 
-    with pytest.raises(error.TableError):
+    with pytest.raises(errors.TableError):
         searcher.search_specific_data(
             table="test_table",
             column="wrong_column",

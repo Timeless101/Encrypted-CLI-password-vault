@@ -1,5 +1,5 @@
 import src.storage_logic as storage_logic
-import src.error as error
+import src.errors as errors
 import pytest
 
 
@@ -14,11 +14,11 @@ def test_data_row_search_no_results(monkeypatch):
 
 def test_data_row_search_table_error(monkeypatch):
     def fake_search_data(table_name: str, table_column: str, data_to_be_searched: str):
-        raise error.TableError()
+        raise errors.TableError()
     
     monkeypatch.setattr(storage_logic, "search_data", fake_search_data)
 
-    with pytest.raises(error.TableError):
+    with pytest.raises(errors.TableError):
         assert storage_logic.data_row_search(email="fake@fake.com", table_column="Email", table_name="login_information")
 
 

@@ -1,6 +1,6 @@
 import src.login_logic as login_logic
 import src.storage_logic as storage_logic
-import src.error as error
+import src.errors as errors
 
 
 def test_email_search(monkeypatch):
@@ -14,7 +14,7 @@ def test_email_search(monkeypatch):
 
 def test_email_search_wrong_table(monkeypatch):
     def fake_search_data(table_name: str, table_column: str, data_to_be_searched: str):
-        raise error.TableError()
+        raise errors.TableError()
     
     monkeypatch.setattr(storage_logic, "search_data", fake_search_data)
 

@@ -1,7 +1,7 @@
 import src.login_logic as login_logic
 import src.storage_logic as storage_logic
 import src.cli as cli
-import src.error as error
+import src.errors as errors
 import pytest
 
 def test_login_flow_happy_test(monkeypatch):
@@ -34,7 +34,7 @@ def test_login_flow_email_error(monkeypatch):
 
         if count == 0:
             count += 1
-            raise error.EmailMismatchError()
+            raise errors.EmailMismatchError()
         return True
 
     def fake_get_userid(input_email):
@@ -61,7 +61,7 @@ def test_login_flow_account_error(monkeypatch):
 
         if count == 0:
             count += 1
-            raise error.AccountError()
+            raise errors.AccountError()
         return True
 
     def fake_get_userid(input_email):
@@ -88,7 +88,7 @@ def test_login_flow_invalid_password_error(monkeypatch):
 
         if count == 0:
             count += 1
-            raise error.InvalidPasswordError()
+            raise errors.InvalidPasswordError()
         return True
 
     def fake_get_userid(input_email):

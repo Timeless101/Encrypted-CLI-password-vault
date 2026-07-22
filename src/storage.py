@@ -1,5 +1,5 @@
 import sqlite3
-import src.error as error
+import src.errors as errors
 
 #Create database
 def create_database(database_name):
@@ -7,7 +7,7 @@ def create_database(database_name):
         with sqlite3.connect(database_name):
             return True
     except sqlite3.Error as sql_error:
-        raise error.DatabaseError(f"Could not open database") from sql_error
+        raise errors.DatabaseError(f"Could not open database") from sql_error
 
 #create an table with given input.
 class Table_creator():
@@ -16,7 +16,7 @@ class Table_creator():
 
     def create_table(self, table_name: str, columns: dict):
         if not isinstance(columns, dict):
-            raise error.WrongDataTypeDict("Columns must be a Dictionary.")
+            raise errors.WrongDataTypeDict("Columns must be a Dictionary.")
 
         try:
             columns_sql = []
@@ -39,7 +39,7 @@ class Table_creator():
             return True
 
         except sqlite3.DatabaseError as sql_error:
-            raise error.TableCreationError(f"Couldn't create table") from sql_error
+            raise errors.TableCreationError(f"Couldn't create table") from sql_error
 
 
 #Insert  data in requested database.
@@ -49,13 +49,13 @@ class Insert_data():
     
     def insert_data(self, table_name: str, column_name: list, data_insert: list):
         if not isinstance(data_insert, list):
-            raise error.WrongDataTypeList("Data insert isn't a list.")
+            raise errors.WrongDataTypeList("Data insert isn't a list.")
         
         if not isinstance(column_name, list):
-            raise error.WrongDataTypeList("column isn't a list.")
+            raise errors.WrongDataTypeList("column isn't a list.")
         
         if len(column_name) != len(data_insert):
-            raise error.DataLengthError("Column name and data insert list length isn't the same.")
+            raise errors.DataLengthError("Column name and data insert list length isn't the same.")
 
         try:
             columns = ", ".join(column_name)
@@ -69,10 +69,10 @@ class Insert_data():
             return True
 
         except sqlite3.OperationalError as sql_error:
-            raise error.InsertError(f"No such table: {table_name}") from sql_error
+            raise errors.InsertError(f"No such table: {table_name}") from sql_error
 
         except sqlite3.DatabaseError as sql_error:
-            raise error.InsertError(f"Couldn't insert data") from sql_error
+            raise errors.InsertError(f"Couldn't insert data") from sql_error
         
         
 
@@ -98,7 +98,7 @@ class Search_data():
             return rows
         
         except sqlite3.OperationalError as table_error:
-            raise error.TableError(f"No such table: {table}") from table_error
+            raise errors.TableError(f"No such table: {table}") from table_error
     
     def search_limited_amount_of_items(self, table: str, column: str, userid: int, amount_of_items: int):
         try:
@@ -116,7 +116,7 @@ class Search_data():
             return rows
         
         except sqlite3.OperationalError as table_error:
-            raise error.TableError(f"No such table: {table}") from table_error
+            raise errors.TableError(f"No such table: {table}") from table_error
         
 
 

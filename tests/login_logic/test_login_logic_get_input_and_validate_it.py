@@ -3,7 +3,7 @@ import src.validator as validator
 import src.cli as cli
 import src.crypto as crypto
 import pytest
-import src.error as error
+import src.errors as errors
 
 def test_email_checker(monkeypatch):
     def fake_cli_menu():
@@ -15,7 +15,7 @@ def test_email_checker(monkeypatch):
     monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_checker", fake_email_checker)
 
-    with pytest.raises(error.EmailMismatchError):
+    with pytest.raises(errors.EmailMismatchError):
         login_logic.get_input_and_validate_it()
 
 def test_password_match(monkeypatch):
@@ -32,7 +32,7 @@ def test_password_match(monkeypatch):
     monkeypatch.setattr(validator, "email_checker", fake_email_checker)
     monkeypatch.setattr(validator, "password_match_checker", fake_password_match_checker)
 
-    with pytest.raises(error.PasswordMismatchError):
+    with pytest.raises(errors.PasswordMismatchError):
         login_logic.get_input_and_validate_it()
 
 
@@ -58,7 +58,7 @@ def test_email_is_available(monkeypatch):
     monkeypatch.setattr(validator, "password_match_checker", fake_password_match_checker)
     monkeypatch.setattr(login_logic, "email_search", fake_email_search)
 
-    with pytest.raises(error.DuplicationError):
+    with pytest.raises(errors.DuplicationError):
         login_logic.get_input_and_validate_it()
 
 def test_happy_get_valid_input(monkeypatch):

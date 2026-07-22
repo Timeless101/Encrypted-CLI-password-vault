@@ -1,6 +1,6 @@
 import src.storage_logic as storage_logic
 import src.cli as cli
-import src.error as error
+import src.errors as errors
 import src.vault_services.add_items as add_items_file
 
 DATABASE_NAME = "CLI_Data.db"
@@ -72,7 +72,7 @@ def get_five_rows_out_database(userid: int):
             raise ValueError("Length of the data is not 5")
         
         return data
-    except error.TableError:
+    except errors.TableError:
         cli.print_incorrect_table_name()
         return False
 

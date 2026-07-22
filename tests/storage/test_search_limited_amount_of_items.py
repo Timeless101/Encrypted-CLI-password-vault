@@ -1,5 +1,5 @@
 import src.storage as storage
-import src.error as error
+import src.errors as errors
 import sqlite3
 import pytest
 
@@ -64,5 +64,5 @@ def test_search_limited_amount_of_items_error_test(tmp_path):
     db_path = tmp_path / "test.db"
     searcher = storage.Search_data(str(db_path))
     
-    with pytest.raises(error.TableError):
+    with pytest.raises(errors.TableError):
         assert searcher.search_limited_amount_of_items("name", "table", 1, 1)
