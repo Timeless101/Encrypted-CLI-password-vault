@@ -1,12 +1,14 @@
 import bcrypt
 
 
+
 #password encryption.
 def hash_password(password: str):
     password = password
+    salt = bcrypt.gensalt(rounds=12)
     bytes = password.encode("utf-8")
-    hash_password = bcrypt.hashpw(bytes, bcrypt.gensalt(rounds=12))
-    return hash_password
+    hash_password = bcrypt.hashpw(bytes, salt)
+    return hash_password, salt
 
 
 #Check password

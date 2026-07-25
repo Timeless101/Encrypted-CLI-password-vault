@@ -55,7 +55,8 @@ def initialize_database_bystartup():
             columns={
             "Id": "INTEGER UNIQUE PRIMARY KEY",
             "Email": "TEXT UNIQUE NOT NULL",
-            "Password": "TEXT NOT NULL",})
+            "Password": "TEXT NOT NULL",
+            "Salt": "TEXT NOT NULL"})
         
         table2 = storage_logic.table_creator(
             table_name="vault_storage",
@@ -97,7 +98,7 @@ def sign_in_function(email: str, password: str):
     if row is None:
         raise errors.AccountError("Account doesn't exists.")
     
-    _, _, database_password = row
+    _, _, database_password, _ = row
 
     if not validate_password(input_password=password, database_password=database_password):
         raise errors.InvalidPasswordError("Wrong password has been enterd.")
@@ -110,7 +111,7 @@ def get_userid(email):
     if row is None:
         raise errors.AccountError("Account doesn't exists.")
     
-    userid, _, _, = row
+    userid, _, _, salt = row
     return int(userid)
 
 #Login function flow.
@@ -179,8 +180,10 @@ def get_input_and_validate_it():
     
     if not validator.email_is_available(new_email=email, database_email=email_search(email)):
         raise errors.DuplicationError("Email already exists in database.")
+
+    hased_password, salt = crypto.hash_password(password1)
     
-    return email, crypto.hash_password(password1)
+    return email, hased_password, salt
 
 
 def sign_up_flow():
@@ -188,12 +191,12 @@ def sign_up_flow():
     try:
         while True:
             try:
-                email, password_hash = get_input_and_validate_it()
+                email, hased_password, salt = get_input_and_validate_it()
 
                 success = storage_logic.insert_data(
                     table_name= "login_information",
-                    column_name= ["Email", "password"],
-                    data= [email, password_hash])
+                    column_name= ["Email", "Password", "Salt"],
+                    data= [email, hased_password, salt])
                 
                 if not success:
                     cli.print_error_data_insert()
