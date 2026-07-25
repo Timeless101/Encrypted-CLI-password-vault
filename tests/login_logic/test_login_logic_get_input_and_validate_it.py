@@ -77,8 +77,8 @@ def test_happy_get_valid_input(monkeypatch):
     def fake_email_is_available(new_email, database_email):
         return True
     
-    def fake_hash_password(password):
-        return b"password"
+    def fake_hash_password(password, salt):
+        return "password" b"salt"
 
     monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_is_available", fake_email_is_available)
@@ -87,4 +87,4 @@ def test_happy_get_valid_input(monkeypatch):
     monkeypatch.setattr(crypto, "hash_password", fake_hash_password)
     monkeypatch.setattr(login_logic, "email_search", fake_email_search)
 
-    assert login_logic.get_input_and_validate_it() == ("fake@fake.com" , b"password")
+    assert login_logic.get_input_and_validate_it() == ("fake@fake.com" , b"password", b"salt")

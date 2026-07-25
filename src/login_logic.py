@@ -5,11 +5,11 @@ import src.cli as cli
 import src.validator as validator
 import src.crypto as crypto
 
-DATABASE_NAME = "CLI_Data.db"
-LOGIN_TABLE = "login_information"
+DATABASE_NAME: str = "CLI_Data.db"
+LOGIN_TABLE: str = "login_information"
 
 #Main menu selection plus validation.
-def main_menu():
+def main_menu() -> str:
     if not initialize_database_bystartup():   
         cli.print_startup_failed()
         input("Press any key to quit: ")
@@ -19,7 +19,7 @@ def main_menu():
     
     try:
         while True:
-            selection = cli.main_menu()
+            selection: str = cli.main_menu()
             if selection in ["1", "2", "3","4"]:
                 break
             else:
@@ -33,8 +33,8 @@ def main_menu():
         cli.exit_program()
 
 #menu selection.
-def option_selection(option: str):
-    dispatch_table = {
+def option_selection(option: str) -> tuple:
+    dispatch_table: dict = {
         "1": login_flow,
         "2": sign_up_flow,
         "3": about,
@@ -50,7 +50,7 @@ def initialize_database_bystartup():
         if not storage_logic.create_database(database_name=DATABASE_NAME):
             return False
         
-        table1 = storage_logic.table_creator(
+        table1: bool = storage_logic.table_creator(
             table_name=LOGIN_TABLE,
             columns={
             "Id": "INTEGER UNIQUE PRIMARY KEY",
@@ -58,7 +58,7 @@ def initialize_database_bystartup():
             "Password": "TEXT NOT NULL",
             "Salt": "TEXT NOT NULL"})
         
-        table2 = storage_logic.table_creator(
+        table2: bool = storage_logic.table_creator(
             table_name="vault_storage",
             columns={
                 "cred_id": "INTEGER PRIMARY KEY",

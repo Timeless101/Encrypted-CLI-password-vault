@@ -11,9 +11,9 @@ def test_sign_in_function_email_wrong_email_format():
 #test if it works correctly when e-mail is valid.
 def test_sign_in_function_happy_test(monkeypatch):
     def fake_database(email: str, table_column: str, table_name: str):
-        return (1, "diego@outlook.com", b"fake_hash")
+        return (1, "diego@outlook.com", b"fake_hash", b"fake_salt")
     
-    def fake_validate_password(input_password, database_password):
+    def fake_validate_password(input_password, database_password, salt):
         return True
     
     monkeypatch.setattr(storage_logic, "data_row_search", fake_database)
@@ -35,9 +35,9 @@ def test_sign_in_function_account_none_account_found(monkeypatch):
 #Check what happens when worng password is enterd.
 def test_sign_in_function_password_invalid(monkeypatch):
     def fake_database(email: str, table_column: str, table_name: str):
-        return (1, "diego@outlook.com", b"fake_hash")
+        return (1, "diego@outlook.com", b"fake_hash", b"fake_salt")
     
-    def fake_validate_password(input_password, database_password):
+    def fake_validate_password(input_password, database_password, salt):
         return False
     
     monkeypatch.setattr(storage_logic, "data_row_search", fake_database)

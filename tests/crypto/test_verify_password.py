@@ -1,7 +1,9 @@
 from src.crypto import verify_password
 
-def test_verify_password_password_match_database():
-    assert verify_password(input_password="password", database_password=b"$2b$12$umKAEmrj.MEyz1asstb22uVbeq6QpoCxbT0BgeIkv0Ai3xtZ5KISe") is True
+def test_verify_password_dont_match():
+    assert verify_password(input_password="password", database_password=b"\xd6\x13%#\xb8\x1e@b@\x9a\x84s\xd6\x18\x03\x85\xb7\x1f%4^urG\x92*\x0f\xcf\xe1\xca'\xf6@\t\xadN\xb2\xb6\xb2o\xfa\x08\xdc\x19\x9f\xf01\x17\xce\xde\xaa\xebp.\xef\xb6M+\xec\xbc)\xaa\xb4\xfb", salt=b'\xfeh\x84\x9f\xdc\xe7\x00\xfe\x88aJK\x9f\xd8\xad\xd6') is False
 
-def test_verify_password_password_mismatch():
-    assert verify_password(input_password="diego", database_password=b"$2b$12$umKAEmrj.MEyz1asstb22uVbeq6QpoCxbT0BgeIkv0Ai3xtZ5KISe") is False
+def test_verify_password_happy_test():
+    assert verify_password(input_password="test", database_password=b"\xd6\x13%#\xb8\x1e@b@\x9a\x84s\xd6\x18\x03\x85\xb7\x1f%4^urG\x92*\x0f\xcf\xe1\xca'\xf6@\t\xadN\xb2\xb6\xb2o\xfa\x08\xdc\x19\x9f\xf01\x17\xce\xde\xaa\xebp.\xef\xb6M+\xec\xbc)\xaa\xb4\xfb", salt=b'\xfeh\x84\x9f\xdc\xe7\x00\xfe\x88aJK\x9f\xd8\xad\xd6') is True
+
+

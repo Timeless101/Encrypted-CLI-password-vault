@@ -8,7 +8,7 @@ import src.errors as errors
 def test_sign_up_flow_happy_test(monkeypatch):
 
     def fake_get_input_and_validate_it():
-        return "email@email.com", b"password"
+        return "email@email.com", b"password", b"fake_salt"
     
     def fake_insert_sign_up_data(table_name: str, column_name: list, data: list):
         return True
@@ -28,7 +28,7 @@ def test_sign_up_flow_database_insert_False(monkeypatch):
     count = 0
 
     def fake_get_input_and_validate_it():
-        return "email@email.com", b"password"
+        return "email@email.com", b"password", b"fake_salt"
     
     def fake_insert_sign_up_data(table_name: str, column_name: list, data: list):
         nonlocal count
@@ -63,7 +63,7 @@ def test_sign_up_flow_email_mismatch_error(monkeypatch):
             count += 1
             raise errors.EmailMismatchError()
 
-        return "email@email.com", b"password"
+        return "email@email.com", b"password", b"fake_salt"
     
     def fake_insert_sign_up_data(table_name: str, column_name: list, data: list):
         return True
@@ -91,7 +91,7 @@ def test_sign_up_flow_password_mismatch_error(monkeypatch):
             count += 1
             raise errors.PasswordMismatchError()
 
-        return "email@email.com", b"password"
+        return "email@email.com", b"password", b"fake_salt"
     
     def fake_insert_sign_up_data(table_name: str, column_name: list, data: list):
         return True
@@ -120,7 +120,7 @@ def test_sign_up_flow_duplication_error(monkeypatch):
             count += 1
             raise errors.DuplicationError()
 
-        return "email@email.com", b"password"
+        return "email@email.com", b"password", b"fake_salt"
     
     def fake_insert_sign_up_data(table_name: str, column_name: list, data: list):
         return True

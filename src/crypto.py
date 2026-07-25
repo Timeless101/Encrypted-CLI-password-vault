@@ -2,16 +2,19 @@ from cryptography.hazmat.primitives.kdf.argon2 import Argon2id
 from cryptography.fernet import Fernet
 import cryptography
 import os
+from time import sleep
 
 
-def password_decryption(password):
+def password_encryption(password: str) -> bool:
+
     pass
-    
-#Password encryption.
-def hash_password(password: str):
 
-    salt = os.urandom(16)
-    password = password.encode("utf-8")
+
+#Hash password.
+def hash_password(password: str) -> tuple:
+
+    salt: bytes = os.urandom(16)
+    password: bytes = password.encode("utf-8")
 
     kdf = Argon2id(
             salt=salt,
@@ -25,9 +28,10 @@ def hash_password(password: str):
 
     return kdf.derive(password), salt
 
-#Check password
-def verify_password(input_password: str, database_password: bytes, salt: bytes):
-    kdf = Argon2id(
+#Check password to hash.
+def verify_password(input_password: str, database_password: bytes, salt: bytes) -> bool:
+    
+    kdf: bytes = Argon2id(
                 salt=salt,
                 length=64,
                 iterations=2,

@@ -1,4 +1,3 @@
-bcrypt
 pystyle
 pytest
 rich
