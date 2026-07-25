@@ -168,7 +168,7 @@ def email_search(email):
         return False
 
 #Gets input from CLI and return it to sign-up flow.
-def get_input_and_validate_it():
+def get_input_and_validate_it() -> tuple:
 
     email, password1, password2 = cli.register_screen()
 
@@ -186,14 +186,14 @@ def get_input_and_validate_it():
     return email, hased_password, salt
 
 
-def sign_up_flow():
+def sign_up_flow() -> tuple:
     cli.clear_screen()
     try:
         while True:
             try:
                 email, hased_password, salt = get_input_and_validate_it()
 
-                success = storage_logic.insert_data(
+                success: bool = storage_logic.insert_data(
                     table_name= "login_information",
                     column_name= ["Email", "Password", "Salt"],
                     data= [email, hased_password, salt])
