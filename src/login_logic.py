@@ -82,8 +82,8 @@ def initialize_database_bystartup():
         return False
 
 #Check if password match
-def validate_password(input_password: str, database_password):
-    if not crypto.verify_password(input_password=input_password, database_password=database_password):
+def validate_password(input_password: str, database_password: bytes, salt):
+    if not crypto.verify_password(input_password=input_password, database_password=database_password, salt=salt):
         return False
     return True
 
@@ -98,9 +98,9 @@ def sign_in_function(email: str, password: str):
     if row is None:
         raise errors.AccountError("Account doesn't exists.")
     
-    _, _, database_password, _ = row
+    _, _, database_password, salt = row
 
-    if not validate_password(input_password=password, database_password=database_password):
+    if not validate_password(input_password=password, database_password=database_password, salt=salt):
         raise errors.InvalidPasswordError("Wrong password has been enterd.")
     
     return True
