@@ -8,9 +8,9 @@ def program_flow():
         if data is False:
             continue
         
-        email, userid = data
+        email, userid, encryption_key = data
         while True:
-            result = vault_logic.start_flow(email=email, userid=userid)
+            result = vault_logic.start_flow(email=email, userid=userid, encyption_key=encryption_key)
             match result:
                 case "q":
                     break

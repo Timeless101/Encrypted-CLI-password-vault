@@ -22,7 +22,7 @@ def test_start_flow_happy_test(monkeypatch):
     monkeypatch.setattr(vault_logic, "option_handler", fake_option_handler)
     monkeypatch.setattr(cli, "vault_screen", fake_vault_screen)
 
-    assert vault_logic.start_flow("test@test.com", 1) == "a"
+    assert vault_logic.start_flow("test@test.com", 1, b"encryption_key") == "a"
 
 def test_start_flow_five_rows_return_none(monkeypatch):
 
@@ -51,7 +51,7 @@ def test_start_flow_five_rows_return_none(monkeypatch):
     monkeypatch.setattr(vault_logic, "option_handler", fake_option_handler)
     monkeypatch.setattr(vault_logic.cli, "vault_screen", fake_vault_screen)
 
-    vault_logic.start_flow("test@test.com", 1)
+    vault_logic.start_flow("test@test.com", 1, b"encryption_key")
 
     assert received["email"] == "test@test.com"
     assert received["total_cred"] == 0
@@ -87,7 +87,7 @@ def test_start_flow_get_all_return_none(monkeypatch):
     monkeypatch.setattr(vault_logic, "option_handler", fake_option_handler)
     monkeypatch.setattr(vault_logic.cli, "vault_screen", fake_vault_screen)
 
-    vault_logic.start_flow("test@test.com", 1)
+    vault_logic.start_flow("test@test.com", 1, b"encryption_key")
 
     assert received["email"] == "test@test.com"
     assert received["total_cred"] == 0
@@ -122,7 +122,7 @@ def test_start_flow_success_none(monkeypatch):
     monkeypatch.setattr(vault_logic.cli, "vault_screen", fake_vault_screen)
     monkeypatch.setattr(vault_logic.cli, "print_internal_error", fake_print_internal_error)
 
-    result = vault_logic.start_flow("test@test.com", 1)
+    result = vault_logic.start_flow("test@test.com", 1, b"encryption_key")
 
     assert received["internal_error_called"] is True
     assert result is None

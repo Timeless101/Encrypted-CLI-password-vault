@@ -1,36 +1,33 @@
 from cryptography.hazmat.primitives.kdf.argon2 import Argon2id
 from cryptography.fernet import Fernet
+import base64
 import cryptography
 import os
-from time import sleep
 
+ 
 
-def password_encryption(password: str) -> bool:
-
-    pass
-
-
-#Hash password.
+#Hash password, create key for encryption.
 def hash_password(password: str) -> tuple:
 
-    salt: bytes = os.urandom(16)
+    salt_masterpassword: bytes = os.urandom(16)
+    salt_encryption: bytes = os.urandom(16)
     password: bytes = password.encode("utf-8")
 
-    kdf = Argon2id(
-            salt=salt,
+    kdf_masterpassword: bytes = Argon2id(
+            salt=salt_masterpassword,
             length=64,
             iterations=2,
             lanes=4,
             memory_cost=512*1024, #512 MiB RAM
             ad=None,
             secret=None
-        )
+    )
 
-    return kdf.derive(password), salt
+    return kdf_masterpassword.derive(password), salt_masterpassword, salt_encryption
 
 #Check password to hash.
 def verify_password(input_password: str, database_password: bytes, salt: bytes) -> bool:
-    
+
     kdf: bytes = Argon2id(
                 salt=salt,
                 length=64,
@@ -47,6 +44,20 @@ def verify_password(input_password: str, database_password: bytes, salt: bytes) 
 
     except cryptography.exceptions.InvalidKey:
         return False
+
+
+def login_key_calculation(input_password: bytes , encryption_salt: bytes, ):
+    kdf_encryption: bytes = Argon2id(
+            salt=encryption_salt,
+            length=64,
+            iterations=2,
+            lanes=4,
+            memory_cost=512*1024,
+            ad=None,
+            secret=None
+        )
+
+    return base64.urlsafe_b64encode(kdf_encryption.derive(input_password))
 
 if __name__ == "__main__":
     ...

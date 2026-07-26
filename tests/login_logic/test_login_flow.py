@@ -102,3 +102,28 @@ def test_login_flow_invalid_password_error(monkeypatch):
 
     assert login_logic.login_flow() == ("test@test.com", "1", b"true")
     assert count == 1
+
+
+def test_login_flow_key_isnot_bytes(monkeypatch):
+
+    def fake_login_screen():
+        return "test@test.com", "password"
+
+    def fake_sign_in_function(email, password):
+        return "true"
+
+    def fake_get_userid(input_email):
+        return "1"
+
+    def fake_system_exit():
+        raise SystemExit
+
+    monkeypatch.setattr(cli, "clear_screen", lambda: None)
+    monkeypatch.setattr(cli, "login_screen", fake_login_screen)
+    monkeypatch.setattr(login_logic, "sleep", lambda _: None)
+    monkeypatch.setattr(login_logic, "sign_in_function", fake_sign_in_function)
+    monkeypatch.setattr(login_logic, "get_userid", fake_get_userid)
+    monkeypatch.setattr(login_logic.cli, "exit_program", fake_system_exit)
+
+    with pytest.raises(SystemExit):
+        assert login_logic.login_flow()

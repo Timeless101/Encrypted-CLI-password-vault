@@ -56,7 +56,8 @@ def initialize_database_bystartup():
             "Id": "INTEGER UNIQUE PRIMARY KEY",
             "Email": "TEXT UNIQUE NOT NULL",
             "Password": "TEXT NOT NULL",
-            "Salt": "TEXT NOT NULL"})
+            "Salt": "TEXT NOT NULL",
+            "EncryptionSalt": "TEXT NOT NULL"})
         
         table2: bool = storage_logic.table_creator(
             table_name="vault_storage",
@@ -66,7 +67,9 @@ def initialize_database_bystartup():
                 "Service": "TEXT",
                 "Username": "TEXT",
                 "Password": "TEXT",
-                "Comment": "TEXT"
+                "Comment": "TEXT",
+                "CreationDate": "DATE",
+                "EditedDate": "DATE", 
             }
         )
 
@@ -98,12 +101,18 @@ def sign_in_function(email: str, password: str):
     if row is None:
         raise errors.AccountError("Account doesn't exists.")
     
-    _, _, database_password, salt = row
+    _, _, database_password, salt, encryption_salt = row
 
     if not validate_password(input_password=password, database_password=database_password, salt=salt):
         raise errors.InvalidPasswordError("Wrong password has been enterd.")
-    
-    return True
+
+    return get_encryption_key(input_password=password.encode("utf-8"), encryption_salt=encryption_salt)
+
+
+#Get the key for encryption with the login password.
+def get_encryption_key(input_password: bytes, encryption_salt: bytes):
+    return crypto.login_key_calculation(input_password=input_password, encryption_salt=encryption_salt)
+
 
 #Gets the UserID out of the database.
 def get_userid(email):
@@ -111,7 +120,7 @@ def get_userid(email):
     if row is None:
         raise errors.AccountError("Account doesn't exists.")
     
-    userid, _, _, salt = row
+    userid, _, _, salt, _ = row
     return int(userid)
 
 #Login function flow.
@@ -121,9 +130,14 @@ def login_flow():
         while True:
             try:
                 input_email, input_password = cli.login_screen()
-                if sign_in_function(email=input_email, password=input_password):
+                encryption_key = sign_in_function(email=input_email, password=input_password)
+
+                if not isinstance(encryption_key, bytes):
+                    cli.print_internal_error()
+                    sleep(5)
+                    cli.exit_program()
                     
-                    return input_email, get_userid(input_email)
+                return input_email, get_userid(input_email), encryption_key
 
             except errors.EmailMismatchError:
                 cli.print_invalid_email()
@@ -181,9 +195,10 @@ def get_input_and_validate_it() -> tuple:
     if not validator.email_is_available(new_email=email, database_email=email_search(email)):
         raise errors.DuplicationError("Email already exists in database.")
 
-    hased_password, salt = crypto.hash_password(password1)
+    hashed_password, password_salt, encryption_salt = crypto.hash_password(password1)
+
     
-    return email, hased_password, salt
+    return email, hashed_password, password_salt, encryption_salt
 
 
 def sign_up_flow() -> tuple:
@@ -191,20 +206,27 @@ def sign_up_flow() -> tuple:
     try:
         while True:
             try:
-                email, hased_password, salt = get_input_and_validate_it()
+                email, hashed_password, salt, encryption_salt = get_input_and_validate_it()
 
                 success: bool = storage_logic.insert_data(
                     table_name= "login_information",
-                    column_name= ["Email", "Password", "Salt"],
-                    data= [email, hased_password, salt])
+                    column_name= ["Email", "Password", "Salt", "EncryptionSalt"],
+                    data= [email, hashed_password, salt, encryption_salt])
                 
                 if not success:
                     cli.print_error_data_insert()
                     cli.clear_screen()
                     continue
                     #Print path to log file. and wait for input, after go to menu.
+                
+                encryption_key: bytes = get_encryption_key(input_password=hashed_password, encryption_salt=encryption_salt)
 
-                return email , get_userid(email)
+                if not isinstance(encryption_key, bytes):
+                    cli.print_internal_error()
+                    sleep(5)
+                    cli.exit_program()
+
+                return email , get_userid(email), encryption_key
                 
             except errors.EmailMismatchError:
                     cli.print_invalid_email()

@@ -77,10 +77,6 @@ def data_row_search(email: str, table_column: str, table_name: str):
 
 
 def insert_data(table_name: str, column_name: list, data: list):
-
-    print(len(column_name), "\n", len(data))
-    print("\n", column_name, "\n", data)
-
     try:
         db = storage.Insert_data(database_name=DATABASE_NAME)
         if db.insert_data(table_name=table_name, column_name=column_name, data_insert=data):

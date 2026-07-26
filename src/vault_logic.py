@@ -6,7 +6,7 @@ import src.vault_services.add_items as add_items_file
 DATABASE_NAME = "CLI_Data.db"
 
 
-def start_flow(email: str, userid: int):
+def start_flow(email: str, userid: int, encyption_key: bytes):
     try:
         cli.clear_screen()
 

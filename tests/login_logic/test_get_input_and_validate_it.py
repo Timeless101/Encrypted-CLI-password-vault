@@ -5,7 +5,7 @@ import src.crypto as crypto
 import pytest
 import src.errors as errors
 
-def test_email_checker(monkeypatch):
+def test_get_input_and_validate_it_email_checker(monkeypatch):
     def fake_cli_menu():
         return ("diego@outlook.com", "password", "password")
     
@@ -18,7 +18,7 @@ def test_email_checker(monkeypatch):
     with pytest.raises(errors.EmailMismatchError):
         login_logic.get_input_and_validate_it()
 
-def test_password_match(monkeypatch):
+def test_get_input_and_validate_it_password_match(monkeypatch):
     def fake_cli_menu():
         return ("diego@outlook.com", "password", "password")
 
@@ -36,7 +36,7 @@ def test_password_match(monkeypatch):
         login_logic.get_input_and_validate_it()
 
 
-def test_email_is_available(monkeypatch):
+def test_get_input_and_validate_it_email_is_available(monkeypatch):
     def fake_cli_menu():
         return ("diego@outlook.com", "password", "password")
 
@@ -61,7 +61,7 @@ def test_email_is_available(monkeypatch):
     with pytest.raises(errors.DuplicationError):
         login_logic.get_input_and_validate_it()
 
-def test_happy_get_valid_input(monkeypatch):
+def test_get_input_and_validate_it_happy_test(monkeypatch):
     def fake_cli_menu():
         return ("test@test.com", "test", "test")
 
@@ -78,7 +78,8 @@ def test_happy_get_valid_input(monkeypatch):
         return True
     
     def fake_hash_password(password):
-        return b"hash", b"salt"
+        return b"password_hash", b"password_salt", b"encryption_salt"
+
 
     monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_is_available", fake_email_is_available)
@@ -87,4 +88,4 @@ def test_happy_get_valid_input(monkeypatch):
     monkeypatch.setattr(crypto, "hash_password", fake_hash_password)
     monkeypatch.setattr(login_logic, "email_search", fake_email_search)
 
-    assert login_logic.get_input_and_validate_it() == ("test@test.com" , b"hash", b"salt")
+    assert login_logic.get_input_and_validate_it() == ("test@test.com" , b"password_hash", b"password_salt", b"encryption_salt")
