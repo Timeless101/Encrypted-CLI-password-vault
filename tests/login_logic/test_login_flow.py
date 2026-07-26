@@ -10,7 +10,7 @@ def test_login_flow_happy_test(monkeypatch):
         return "test@test.com", "password"
 
     def fake_sign_in_function(email, password):
-        return True
+        return b"true"
 
     def fake_get_userid(input_email):
         return "1"
@@ -20,7 +20,7 @@ def test_login_flow_happy_test(monkeypatch):
     monkeypatch.setattr(login_logic, "sign_in_function", fake_sign_in_function)
     monkeypatch.setattr(login_logic, "get_userid", fake_get_userid)
 
-    assert login_logic.login_flow() == ("test@test.com", "1")
+    assert login_logic.login_flow() == ("test@test.com", "1", b"true")
 
 def test_login_flow_email_error(monkeypatch):
 
@@ -35,7 +35,7 @@ def test_login_flow_email_error(monkeypatch):
         if count == 0:
             count += 1
             raise errors.EmailMismatchError()
-        return True
+        return b"true"
 
     def fake_get_userid(input_email):
         return "1"
@@ -46,7 +46,7 @@ def test_login_flow_email_error(monkeypatch):
     monkeypatch.setattr(login_logic, "sign_in_function", fake_sign_in_function)
     monkeypatch.setattr(login_logic, "get_userid", fake_get_userid)
 
-    assert login_logic.login_flow() == ("test@test.com", "1")
+    assert login_logic.login_flow() == ("test@test.com", "1", b"true")
     assert count == 1
 
 def test_login_flow_account_error(monkeypatch):
@@ -62,7 +62,7 @@ def test_login_flow_account_error(monkeypatch):
         if count == 0:
             count += 1
             raise errors.AccountError()
-        return True
+        return b"true"
 
     def fake_get_userid(input_email):
         return "1"
@@ -73,7 +73,7 @@ def test_login_flow_account_error(monkeypatch):
     monkeypatch.setattr(login_logic, "sign_in_function", fake_sign_in_function)
     monkeypatch.setattr(login_logic, "get_userid", fake_get_userid)
 
-    assert login_logic.login_flow() == ("test@test.com", "1")
+    assert login_logic.login_flow() == ("test@test.com", "1", b"true")
     assert count == 1
 
 def test_login_flow_invalid_password_error(monkeypatch):
@@ -89,7 +89,7 @@ def test_login_flow_invalid_password_error(monkeypatch):
         if count == 0:
             count += 1
             raise errors.InvalidPasswordError()
-        return True
+        return b"true"
 
     def fake_get_userid(input_email):
         return "1"
@@ -100,5 +100,5 @@ def test_login_flow_invalid_password_error(monkeypatch):
     monkeypatch.setattr(login_logic, "sign_in_function", fake_sign_in_function)
     monkeypatch.setattr(login_logic, "get_userid", fake_get_userid)
 
-    assert login_logic.login_flow() == ("test@test.com", "1")
+    assert login_logic.login_flow() == ("test@test.com", "1", b"true")
     assert count == 1
