@@ -3,12 +3,16 @@ from cryptography.fernet import Fernet
 import base64
 import cryptography
 import os
+from time import sleep
 
 def password_decryption(encryption_key: bytes, password: bytes) -> str:
     f = Fernet(encryption_key)
     return f.decrypt(password.decode("utf-8"))
 
 def password_encryption(encryption_key: bytes, password: str) -> bytes:
+    print(type(encryption_key))
+    print(encryption_key)
+
     f = Fernet(encryption_key)
     return f.encrypt(password.encode("utf-8"))
 
@@ -52,10 +56,10 @@ def verify_password(input_password: str, database_password: bytes, salt: bytes) 
         return False
 
 
-def login_key_calculation(input_password: bytes , encryption_salt: bytes, ):
+def login_key_calculation(input_password: bytes , encryption_salt: bytes,):
     kdf_encryption: bytes = Argon2id(
             salt=encryption_salt,
-            length=64,
+            length=32,
             iterations=2,
             lanes=4,
             memory_cost=512*1024,
