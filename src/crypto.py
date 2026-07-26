@@ -4,7 +4,13 @@ import base64
 import cryptography
 import os
 
- 
+def password_decryption(encryption_key: bytes, password: bytes) -> str:
+    f = Fernet(encryption_key)
+    return f.decrypt(password.decode("utf-8"))
+
+def password_encryption(encryption_key: bytes, password: str) -> bytes:
+    f = Fernet(encryption_key)
+    return f.encrypt(password.encode("utf-8"))
 
 #Hash password, create key for encryption.
 def hash_password(password: str) -> tuple:
