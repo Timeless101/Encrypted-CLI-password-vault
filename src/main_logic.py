@@ -13,6 +13,7 @@ def program_flow():
             result = vault_logic.start_flow(email=email, userid=userid, encyption_key=encryption_key)
             match result:
                 case "q":
+                    encryption_key = None
                     break
 
                 case "a":

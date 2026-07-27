@@ -245,6 +245,11 @@ def sign_up_flow() -> tuple:
                     sleep(3)
                     cli.clear_screen()
                     continue
+
+            except errors.DataLengthError:
+                cli.print_data_length_error()
+                sleep(5)
+                cli.exit_program()
             
             except errors.WrongDataTypeDict:
                 cli.print_wrong_data_type_dict()

@@ -1,12 +1,16 @@
 import src.storage_logic as storage_logic
 import src.cli as cli
 import src.errors as errors
-import src.vault_services.add_items as add_items_file
-
-DATABASE_NAME = "CLI_Data.db"
+from src.vault_services.add_items import add_item_to_database as add_items
 
 
 def start_flow(email: str, userid: int, encyption_key: bytes):
+    global key
+    key = encyption_key
+
+    global usrid
+    usrid = userid
+
     try:
         cli.clear_screen()
 
@@ -42,12 +46,12 @@ def option_handler(choice: str):
         return None
     
     dispatch_table = {
-        "a": add_items,
-        "v": view_screen,
-        "s": search_item,
-        "d": delete_item,
-        "e": edit_item,
-        "q": quit_program
+        "a": option_a,
+        "v": option_v,
+        "s": option_s,
+        "d": option_d,
+        "e": option_e,
+        "q": option_q
     }
     func = dispatch_table.get(choice)
     return func()
@@ -77,14 +81,18 @@ def get_five_rows_out_database(userid: int):
         return False
 
 
-def add_items():
+def option_a():
     cli.clear_screen()
     while True:
         result = cli.add_items_screen()
         confirmation = cli.add_items_confirmation()
         match confirmation:
             case "y":
-                break
+                if add_items(data=result, key=key, userid=usrid):
+                    break
+                else:
+                    cli.print_internal_error()
+                    break
 
             case "n":
                continue
@@ -92,19 +100,19 @@ def add_items():
     
     
 
-def view_screen():
+def option_v():
     print('v')
 
-def search_item():
+def option_s():
     print("s")
 
-def delete_item():
+def option_d():
     print("d")
 
-def edit_item():
+def option_e():
     print("e")
 
-def quit_program():
+def option_q():
     return "q"
 
 if __name__ == "__main__":

@@ -143,10 +143,11 @@ def vault_screen_small_table(rows: list):
     small_password_table.add_column("[cyan]Service[/]", justify="left")
     small_password_table.add_column("[cyan]Username[/]", justify="left")
     small_password_table.add_column("[cyan]Password[/]", justify="left")
+    small_password_table.add_column("[cyan]EditedDate[/]", justify="left", no_wrap=True)
 
     for item in rows:
-        cred_id, item_id, service_name, username, password, comment = item
-        small_password_table.add_row(str(cred_id), service_name, username, "********")
+        cred_id, item_id, service_name, username, password, comment, creation_date, edit_date = item
+        small_password_table.add_row(str(cred_id), service_name, username, "********", edit_date)
 
     CONSOLE.print("\n:lock:[bold bright_cyan] RECENT CREDENTIALS[/]\n")
     
@@ -223,7 +224,9 @@ def add_items_screen():
     password = getpass(prompt="Password\n > ", echo_char="*")
     comment = input("comments\n > ")
 
-    return service, username, password, comment
+    data = {"Service": service, "Username": username, "Password": password, "Comment": comment}
+
+    return data
 
 def add_items_confirmation():
     return Prompt.ask("\n[bright_cyan]Is al inforamtion correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
@@ -243,6 +246,9 @@ def print_search_error():
 
 def print_database_data_row_search():
     print("\nCouln't search for the data in the database.", print_contact_support())
+
+def print_data_length_error():
+    CONSOLE.print("\n\n:warning: [bold red]ERROR![/bold red]:warning:\n [red]Length of the list isn't the same as the length of the columns.[/]")
 
 def print_email_exists():
     CONSOLE.print("\n\n:warning: [bold red]ERROR![/bold red]:warning:\n [red]EMAIL_EXISTS_IN_DATABASE[/]")
