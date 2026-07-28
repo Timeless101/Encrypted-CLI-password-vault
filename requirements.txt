@@ -2,3 +2,4 @@ pystyle
 pytest
 rich
 cryptography
+inquirerpy

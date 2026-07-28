@@ -1,10 +1,12 @@
+import subprocess
 from pystyle import Colors, Colorate
 from getpass import getpass
 from rich.table import Table
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
-import subprocess
+from InquirerPy import inquirer
+from InquirerPy.validator import PasswordValidator
 
 CONSOLE = Console()
 
@@ -83,8 +85,33 @@ def register_screen():
 """
     print(Colorate.Horizontal(Colors.rainbow, register_screen), "\n")
     email = input("Email: ").strip().lower()
-    password1 = getpass()
-    password2 = getpass("Retype password: ")
+
+    password1 = inquirer.secret(
+        message="Password:",
+        qmark="",
+        amark="",
+        validate=PasswordValidator(
+            length=8,
+            cap=True,
+            special=True,
+            number=True,
+            message="Password doesn't meet complexity",
+        ),
+    ).execute()
+
+    password2 = inquirer.secret(
+            message="Retype password:",
+            qmark="",
+            amark="",
+            validate=PasswordValidator(
+                length=8,
+                cap=True,
+                special=True,
+                number=True,
+                message="Password doesn't meet complexity",
+            ),
+        ).execute()
+    
     return (email, password1, password2)
 
 
@@ -193,28 +220,49 @@ def password_table(databaseid: str, name: str, password: str):
 
 
 def vault_option_a_questions():
-        service = CONSOLE.input("[bright_cyan]Service name: [/]")
-        username = CONSOLE.input("[bright_cyan]Username: [/]")
-        password = CONSOLE.input("[bright_cyan]Password: [/]")
-        comment = CONSOLE.input("[bright_cyan]comment: [/]")
 
-        return service, username, password, comment
+    service = CONSOLE.input("[bright_cyan]Service name: [/]")
+    username = CONSOLE.input("[bright_cyan]Username: [/]")
+    password = CONSOLE.input("[bright_cyan]Password: [/]")
+    comment = CONSOLE.input("[bright_cyan]comment: [/]")
+
+    
+    
+    table = Table.grid(padding=(0, 0), expand=False)
+
+    table.add_column(justify="left",)
+    table.add_column()
+
+    table.add_row("[bright_cyan]Service: [/]")
+    table.add_row("[bright_cyan]Username: [/]")
+    table.add_row("[bright_cyan]Password: [/]")
+    table.add_row("[bright_cyan]Comment: [/]")
+
+    panel = Panel(
+            table,
+            width=70,
+            padding=(0, 1))
+
+
+    return service, username, password, comment
 
 def vault_option_a():
     while True:
-        service, username, password, comment = vault_option_a_questions()
 
-        closed_question = Prompt.ask(
+        service, username, password, comment = vault_option_a_questions()
+        
+
+        close_question = Prompt.ask(
             "\n[bright_cyan]information correct? y/n[/]",
             choices=["y", "n", "yes", "no"],
             case_sensitive=False,
             show_choices=False
             ).lower()
         
-        if closed_question in ["y", "yes"]:
+        if close_question in ["y", "yes"]:
             return service, username, password, comment
             
-        elif closed_question in ["n", "no"]:
+        elif close_question in ["n", "no"]:
             print("\n")
             continue
 
