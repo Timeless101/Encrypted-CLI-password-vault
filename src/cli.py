@@ -65,7 +65,7 @@ ________________________________________________________________
                     """    
     print(Colorate.Horizontal(Colors.rainbow, login_screen))
     username = input("Email: ").strip().lower()
-    password = getpass()
+    password = getpass(echo_char="*")
     return username, password
     
 def register_screen():
@@ -218,24 +218,20 @@ def password_table(databaseid: str, name: str, password: str):
     return CONSOLE.print(table)
 
 
-def vault_option_a_questions():
+def vault_option_a_screen(service, username, password, comment):
 
-    service = CONSOLE.input("[bright_cyan]Service name: [/]")
-    username = CONSOLE.input("[bright_cyan]Username: [/]")
-    password = CONSOLE.input("[bright_cyan]Password: [/]")
-    comment = CONSOLE.input("[bright_cyan]comment: [/]")
+    clear_screen()
 
-    
-    
-    table = Table.grid(padding=(0, 0), expand=False)
+    asterisk = "*" * len(password)
+    table = Table.grid(padding=(0, 1), expand=False)
 
     table.add_column(justify="left",)
     table.add_column()
 
-    table.add_row("[bright_cyan]Service: [/]")
-    table.add_row("[bright_cyan]Username: [/]")
-    table.add_row("[bright_cyan]Password: [/]")
-    table.add_row("[bright_cyan]Comment: [/]")
+    table.add_row("[bright_cyan]Service: [/]", service)
+    table.add_row("[bright_cyan]Username: [/]", username)
+    table.add_row("[bright_cyan]Password: [/]", asterisk)
+    table.add_row("[bright_cyan]Comment: [/]", comment)
 
     panel = Panel(
             table,
@@ -243,37 +239,33 @@ def vault_option_a_questions():
             padding=(0, 1))
 
 
+    return CONSOLE.print(panel)
+
+def vault_option_a_question(name):
+    return input(f"\n{name}: ")
+
+def get_password():
+    return getpass(echo_char="*")
+
+def add_items_screen_flow():
+
+    vault_option_a_screen("", "", "", "")
+    service = vault_option_a_question("Service")
+    vault_option_a_screen(service, "", "", "")
+    username = vault_option_a_question("Username")
+    vault_option_a_screen(service, username, "","")
+    password = get_password()
+    vault_option_a_screen(service, username, password, "")
+    comment = vault_option_a_question("Comment")
+    vault_option_a_screen(service, username, password, comment)
+
     return service, username, password, comment
 
-def vault_option_a():
+def add_items_screen():
     while True:
 
-        service, username, password, comment = vault_option_a_questions()
-        
-
-        close_question = Prompt.ask(
-            "\n[bright_cyan]information correct? y/n[/]",
-            choices=["y", "n", "yes", "no"],
-            case_sensitive=False,
-            show_choices=False
-            ).lower()
-        
-        if close_question in ["y", "yes"]:
-            return service, username, password, comment
-            
-        elif close_question in ["n", "no"]:
-            print("\n")
-            continue
-
-def add_items_screen():
-    service = input("Service\n > ")
-    username = input("Username\n > ")
-    password = getpass(prompt="Password\n > ", echo_char="*")
-    comment = input("comments\n > ")
-
-    data = {"Service": service, "Username": username, "Password": password, "Comment": comment}
-
-    return data
+        service, username, password, comment = add_items_screen_flow()
+        return {"Service": service, "Username": username, "Password": password, "Comment": comment}
 
 def add_items_confirmation():
     return Prompt.ask("\n[bright_cyan]Is al inforamtion correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
