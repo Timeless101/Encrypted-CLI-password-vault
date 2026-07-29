@@ -9,7 +9,7 @@ def test_option_handler_test_add_items(monkeypatch):
         received["add_items_calls"] += 1
         return "add_result"
 
-    monkeypatch.setattr(vault_logic, "add_items", fake_add_items)
+    monkeypatch.setattr(vault_logic, "option_a", fake_add_items)
 
     result = vault_logic.option_handler("a")
 
@@ -24,7 +24,7 @@ def test_option_handler_test_view_screen(monkeypatch):
         received["view_screen_calls"] += 1
         return "view_screen"
 
-    monkeypatch.setattr(vault_logic, "view_screen", fake_view_screen)
+    monkeypatch.setattr(vault_logic, "option_v", fake_view_screen)
 
     result = vault_logic.option_handler("v")
 
@@ -40,7 +40,7 @@ def test_option_handler_test_search_items(monkeypatch):
         received["search_item_calls"] += 1
         return "search_item"
 
-    monkeypatch.setattr(vault_logic, "search_item", fake_search_item)
+    monkeypatch.setattr(vault_logic, "option_s", fake_search_item)
 
     result = vault_logic.option_handler("s")
 
@@ -56,7 +56,7 @@ def test_option_handler_test_delete_item(monkeypatch):
         received["delete_item_calls"] += 1
         return "delete_item"
 
-    monkeypatch.setattr(vault_logic, "delete_item", fake_delete_item)
+    monkeypatch.setattr(vault_logic, "option_d", fake_delete_item)
 
     result = vault_logic.option_handler("d")
 
@@ -71,7 +71,7 @@ def test_option_handler_test_edit_item(monkeypatch):
         received["edit_item_calls"] += 1
         return "edit_item"
 
-    monkeypatch.setattr(vault_logic, "edit_item", fake_edit_item)
+    monkeypatch.setattr(vault_logic, "option_e", fake_edit_item)
 
     result = vault_logic.option_handler("e")
 
@@ -86,7 +86,7 @@ def test_option_handler_test_quit_program(monkeypatch):
         received["quit_program_calls"] += 1
         return "quit_program"
 
-    monkeypatch.setattr(vault_logic, "quit_program", fake_quit_program)
+    monkeypatch.setattr(vault_logic, "option_q", fake_quit_program)
 
     result = vault_logic.option_handler("q")
 

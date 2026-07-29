@@ -1,51 +1,58 @@
-from time import sleep
 import src.errors as errors
 import src.storage_logic as storage_logic
-import src.cli as cli
+import src.interface.login_interface as login_interface
 import src.validator as validator
 import src.crypto as crypto
+import src.interface.error_messages as error_messages
+from time import sleep
+from src.interface.helper_functions import clear_screen, exit_program
 
+#Constances
 DATABASE_NAME: str = "CLI_Data.db"
 LOGIN_TABLE: str = "login_information"
 
-#Main menu selection plus validation.
-def main_menu() -> str:
-    if not initialize_database_bystartup():   
-        cli.print_startup_failed()
-        input("Press any key to quit: ")
-        cli.cli.exit_program()
+
+#Helper functions
+def validate_password(input_password: str, database_password: bytes, salt) -> bool:
+    if not crypto.verify_password(input_password=input_password, database_password=database_password, salt=salt):
+        return False
+    return True
+
+def get_encryption_key(input_password: bytes, encryption_salt: bytes) -> bytes:
+    return crypto.login_key_calculation(input_password=input_password, encryption_salt=encryption_salt)
+
+#Gets the UserID out of the database.
+def get_userid(email) -> int:
+    row: list | None  = storage_logic.data_row_search(email=email, table_column="Email", table_name="login_information")
+    if row is None:
+        raise errors.AccountError("Account doesn't exists.")
     
-    cli.clear_screen()
-    
+    userid, _, _, salt, _ = row
+    return int(userid)
+
+#Database search email return str email.
+def email_search(email) -> None | False | str :
     try:
-        while True:
-            selection: str = cli.main_menu()
-            if selection in ["1", "2", "3","4"]:
-                break
-            else:
-                cli.clear_screen()
-                print("Please select an option from the list.")
-                sleep(1.5)
-                cli.clear_screen()
-                continue
-        return selection
-    except (KeyboardInterrupt, EOFError):
-        cli.exit_program()
 
-#menu selection.
-def option_selection(option: str) -> tuple:
-    dispatch_table: dict = {
-        "1": login_flow,
-        "2": sign_up_flow,
-        "3": about,
-        "4": cli.exit_program,
-    }
-    func = dispatch_table.get(option)
-    return func()
+        data: list | None = storage_logic.search_data(
+            table_name="login_information",
+            table_column="Email",
+            data_to_be_searched=email
+        )
 
+        if data is None:
+            return None
 
-#Initialize database creates and starts database.
-def initialize_database_bystartup():
+        first_data = data[0]
+        second_data = first_data[1]
+        return str(second_data)
+    
+    except errors.TableError:
+        error_messages.print_search_error()
+        return False
+
+#Main menu flow.
+def initialize_database_bystartup() -> bool:
     try:
         if not storage_logic.create_database(database_name=DATABASE_NAME):
             return False
@@ -84,14 +91,80 @@ def initialize_database_bystartup():
     except errors.TableError:
         return False
 
-#Check if password match
-def validate_password(input_password: str, database_password: bytes, salt):
-    if not crypto.verify_password(input_password=input_password, database_password=database_password, salt=salt):
-        return False
-    return True
 
-#Function that the login uses to check the email and password in database.
-def sign_in_function(email: str, password: str):
+def main_menu() -> str:
+    if not initialize_database_bystartup():   
+        error_messages.print_startup_failed()
+        input("Press any key to quit: ")
+        exit_program()
+    
+    clear_screen()
+    
+    try:
+        while True:
+            selection: str = login_interface.main_menu()
+            if selection in ["1", "2", "3","4"]:
+                break
+            else:
+                clear_screen()
+                print("Please select an option from the list.")
+                sleep(1.5)
+                clear_screen()
+                continue
+        return selection
+    except (KeyboardInterrupt, EOFError):
+        exit_program()
+
+#menu selection.
+def option_selection(option: str) -> tuple:
+    dispatch_table: dict = {
+        "1": login_flow,
+        "2": sign_up_flow,
+        "3": about,
+        "4": exit_program,
+    }
+    func = dispatch_table.get(option)
+    return func()
+
+#Login flow.
+def login_flow() -> tuple[str, int, bytes]:
+    clear_screen()
+    try:
+        while True:
+            try:
+                input_email, input_password = login_interface.login_screen()
+                encryption_key: bytes = sign_in_function(email=input_email, password=input_password)
+
+                if not isinstance(encryption_key, bytes):
+                    error_messages.print_internal_error()
+                    sleep(5)
+                    exit_program()
+                    
+                return input_email, get_userid(input_email), encryption_key
+
+            except errors.EmailMismatchError:
+                error_messages.print_invalid_email()
+                sleep(1.5)
+                clear_screen()
+                continue
+
+            except errors.AccountError:
+                error_messages.print_account_not_in_database()
+                sleep(1.5)
+                clear_screen()
+                continue
+
+            except errors.InvalidPasswordError:
+                error_messages.print_wrong_password()
+                sleep(1.5)
+                clear_screen()
+                continue
+
+    except (KeyboardInterrupt, EOFError):
+        exit_program()
+
+
+def sign_in_function(email: str, password: str) -> bytes:
 
     if not validator.email_checker(email):
         raise errors.EmailMismatchError("Email doesn't match the criteria.")
@@ -109,82 +182,75 @@ def sign_in_function(email: str, password: str):
     return get_encryption_key(input_password=password.encode("utf-8"), encryption_salt=encryption_salt)
 
 
-#Get the key for encryption with the login password.
-def get_encryption_key(input_password: bytes, encryption_salt: bytes):
-    return crypto.login_key_calculation(input_password=input_password, encryption_salt=encryption_salt)
-
-
-#Gets the UserID out of the database.
-def get_userid(email):
-    row = storage_logic.data_row_search(email=email, table_column="Email", table_name="login_information")
-    if row is None:
-        raise errors.AccountError("Account doesn't exists.")
-    
-    userid, _, _, salt, _ = row
-    return int(userid)
-
-#Login function flow.
-def login_flow():
-    cli.clear_screen()
+#Sign in
+def sign_up_flow() -> tuple[str, int, bytes]:
+    clear_screen()
     try:
         while True:
             try:
-                input_email, input_password = cli.login_screen()
-                encryption_key = sign_in_function(email=input_email, password=input_password)
+                email, hashed_password, salt, encryption_salt = get_input_and_validate_it()
+
+                successs: bool = storage_logic.insert_data(
+                    table_name= "login_information",
+                    column_name= ["Email", "Password", "Salt", "EncryptionSalt"],
+                    data= [email, hashed_password, salt, encryption_salt])
+                
+                if not successs:
+                    error_messages.print_error_data_insert()
+                    clear_screen()
+                    continue
+                    #Print path to log file. and wait for input, after go to menu.
+                
+                encryption_key: bytes = get_encryption_key(input_password=hashed_password, encryption_salt=encryption_salt)
 
                 if not isinstance(encryption_key, bytes):
-                    cli.print_internal_error()
+                    error_messages.print_internal_error()
                     sleep(5)
-                    cli.exit_program()
-                    
-                return input_email, get_userid(input_email), encryption_key
+                    exit_program()
 
+                return email , get_userid(email), encryption_key
+                
             except errors.EmailMismatchError:
-                cli.print_invalid_email()
-                sleep(1.5)
-                cli.clear_screen()
-                continue
+                    error_messages.print_invalid_email()
+                    sleep(3)
+                    clear_screen()
+                    continue
+            
+            except errors.PasswordMismatchError:
+                    error_messages.print_password_dont_match()
+                    sleep(3)
+                    clear_screen()
+                    continue
+            
+            except errors.DuplicationError:
+                    error_messages.print_email_exists()
+                    sleep(3)
+                    clear_screen()
+                    continue
 
-            except errors.AccountError:
-                cli.print_account_not_in_database()
-                sleep(1.5)
-                cli.clear_screen()
-                continue
+            except errors.DataLengthError:
+                error_messages.print_data_length_error()
+                sleep(5)
+                exit_program()
+            
+            except errors.WrongDataTypeDict:
+                error_messages.print_wrong_data_type_dict()
+                sleep(3)
+                #Make log file
+                exit_program()
 
-            except errors.InvalidPasswordError:
-                cli.print_wrong_password()
-                sleep(1.5)
-                cli.clear_screen()
-                continue
+            except errors.TableError:
+                error_messages.print_incorrect_table_name()
+                sleep(3)
+                #Make log file
+                exit_program()
 
     except (KeyboardInterrupt, EOFError):
-        cli.exit_program()
+        exit_program()
 
-#Database search email return str email.
-def email_search(email):
-    try:
+def get_input_and_validate_it() -> tuple[str, bytes, bytes, bytes]:
 
-        data = storage_logic.search_data(
-            table_name="login_information",
-            table_column="Email",
-            data_to_be_searched=email
-        )
-
-        if data is None:
-            return None
-
-        first_data = data[0]
-        second_data = first_data[1]
-        return second_data
-    
-    except errors.TableError:
-        cli.print_search_error()
-        return False
-
-#Gets input from CLI and return it to sign-up flow.
-def get_input_and_validate_it() -> tuple:
-
-    email, password1, password2 = cli.register_screen()
+    email, password1, password2 = login_interface.register_screen()
 
     if not validator.email_checker(email):
         raise errors.EmailMismatchError("Email doesn't match the criteria.")
@@ -201,75 +267,10 @@ def get_input_and_validate_it() -> tuple:
     return email, hashed_password, password_salt, encryption_salt
 
 
-def sign_up_flow() -> tuple:
-    cli.clear_screen()
-    try:
-        while True:
-            try:
-                email, hashed_password, salt, encryption_salt = get_input_and_validate_it()
-
-                success: bool = storage_logic.insert_data(
-                    table_name= "login_information",
-                    column_name= ["Email", "Password", "Salt", "EncryptionSalt"],
-                    data= [email, hashed_password, salt, encryption_salt])
-                
-                if not success:
-                    cli.print_error_data_insert()
-                    cli.clear_screen()
-                    continue
-                    #Print path to log file. and wait for input, after go to menu.
-                
-                encryption_key: bytes = get_encryption_key(input_password=hashed_password, encryption_salt=encryption_salt)
-
-                if not isinstance(encryption_key, bytes):
-                    cli.print_internal_error()
-                    sleep(5)
-                    cli.exit_program()
-
-                return email , get_userid(email), encryption_key
-                
-            except errors.EmailMismatchError:
-                    cli.print_invalid_email()
-                    sleep(3)
-                    cli.clear_screen()
-                    continue
-            
-            except errors.PasswordMismatchError:
-                    cli.print_password_dont_match()
-                    sleep(3)
-                    cli.clear_screen()
-                    continue
-            
-            except errors.DuplicationError:
-                    cli.print_email_exists()
-                    sleep(3)
-                    cli.clear_screen()
-                    continue
-
-            except errors.DataLengthError:
-                cli.print_data_length_error()
-                sleep(5)
-                cli.exit_program()
-            
-            except errors.WrongDataTypeDict:
-                cli.print_wrong_data_type_dict()
-                sleep(3)
-                #Make log file
-                cli.exit_program()
-
-            except errors.TableError:
-                cli.print_incorrect_table_name()
-                sleep(3)
-                #Make log file
-                cli.exit_program()
-
-    except (KeyboardInterrupt, EOFError):
-        cli.exit_program()
-
-#Shows Information about the Maker and program.
-def about():
-    cli.clear_screen()
-    if cli.about_screen():
+#BAout flow
+def about() -> bool:
+    clear_screen()
+    if login_interface.about_screen():
         return False
     
 

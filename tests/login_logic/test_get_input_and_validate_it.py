@@ -1,6 +1,6 @@
 import src.login_logic as login_logic
 import src.validator as validator
-import src.cli as cli
+import src.interface.login_interface as login_interface
 import src.crypto as crypto
 import pytest
 import src.errors as errors
@@ -12,7 +12,7 @@ def test_get_input_and_validate_it_email_checker(monkeypatch):
     def fake_email_checker(email):
         return False
     
-    monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
+    monkeypatch.setattr(login_interface, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_checker", fake_email_checker)
 
     with pytest.raises(errors.EmailMismatchError):
@@ -28,7 +28,7 @@ def test_get_input_and_validate_it_password_match(monkeypatch):
     def fake_password_match_checker(password1, password2):
         return False
     
-    monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
+    monkeypatch.setattr(login_interface, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_checker", fake_email_checker)
     monkeypatch.setattr(validator, "password_match_checker", fake_password_match_checker)
 
@@ -52,7 +52,7 @@ def test_get_input_and_validate_it_email_is_available(monkeypatch):
     def fake_email_is_available(new_email, database_email):
         return False
 
-    monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
+    monkeypatch.setattr(login_interface, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_is_available", fake_email_is_available)
     monkeypatch.setattr(validator, "email_checker", fake_email_checker)
     monkeypatch.setattr(validator, "password_match_checker", fake_password_match_checker)
@@ -81,7 +81,7 @@ def test_get_input_and_validate_it_happy_test(monkeypatch):
         return b"password_hash", b"password_salt", b"encryption_salt"
 
 
-    monkeypatch.setattr(cli, "register_screen", fake_cli_menu)
+    monkeypatch.setattr(login_interface, "register_screen", fake_cli_menu)
     monkeypatch.setattr(validator, "email_is_available", fake_email_is_available)
     monkeypatch.setattr(validator, "email_checker", fake_email_checker)
     monkeypatch.setattr(validator, "password_match_checker", fake_password_match_checker)

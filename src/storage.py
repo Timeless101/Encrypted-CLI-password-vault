@@ -14,7 +14,7 @@ class Table_creator():
     def __init__(self, database_name: str):
         self.database_name = database_name
 
-    def create_table(self, table_name: str, columns: dict):
+    def create_table(self, table_name: str, columns: dict) -> True:
         if not isinstance(columns, dict):
             raise errors.WrongDataTypeDict("Columns must be a Dictionary.")
 
@@ -47,7 +47,7 @@ class Insert_data():
     def __init__(self, database_name: str):
         self.database_name = database_name
     
-    def insert_data(self, table_name: str, column_name: list, data_insert: list):
+    def insert_data(self, table_name: str, column_name: list, data_insert: list) -> True:
         if not isinstance(data_insert, list):
             raise errors.WrongDataTypeList("Data insert isn't a list.")
         
@@ -73,17 +73,13 @@ class Insert_data():
 
         except sqlite3.DatabaseError as sql_error:
             raise errors.InsertError(f"Couldn't insert data") from sql_error
-        
-        
-
-
-
+      
 #Search data in datebase.
 class Search_data():
     def __init__(self, database_name: str):
         self.database_name = database_name
     
-    def search_specific_data(self, table: str, column: str, data_to_be_searched: str,):
+    def search_specific_data(self, table: str, column: str, data_to_be_searched: str,) -> list | None:
         try:
             query = f"SELECT * FROM {table} WHERE {column} = ?"
             value = data_to_be_searched
@@ -100,7 +96,7 @@ class Search_data():
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
     
-    def search_limited_amount_of_items(self, table: str, column: str, userid: int, amount_of_items: int):
+    def search_limited_amount_of_items(self, table: str, column: str, userid: int, amount_of_items: int) -> list | None:
         try:
             query = f"SELECT * from {table} WHERE {column} = ? LIMIT ?"
             usrid, amount_items = userid, amount_of_items

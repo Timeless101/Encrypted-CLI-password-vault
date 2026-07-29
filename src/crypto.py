@@ -6,18 +6,16 @@ import os
 from time import sleep
 
 def password_decryption(encryption_key: bytes, password: bytes) -> str:
-    f = Fernet(encryption_key)
-    return f.decrypt(password.decode("utf-8"))
+    f: Fernet = Fernet(encryption_key)
+    decrypted_password: bytes = f.decrypt(password)
+    return decrypted_password.decode("utf-8")
 
 def password_encryption(encryption_key: bytes, password: str) -> bytes:
-    print(type(encryption_key))
-    print(encryption_key)
-
-    f = Fernet(encryption_key)
+    f: Fernet = Fernet(encryption_key)
     return f.encrypt(password.encode("utf-8"))
 
 #Hash password, create key for encryption.
-def hash_password(password: str) -> tuple:
+def hash_password(password: str) -> tuple[bytes, bytes, bytes]:
 
     salt_masterpassword: bytes = os.urandom(16)
     salt_encryption: bytes = os.urandom(16)
@@ -56,7 +54,7 @@ def verify_password(input_password: str, database_password: bytes, salt: bytes) 
         return False
 
 
-def login_key_calculation(input_password: bytes , encryption_salt: bytes,):
+def login_key_calculation(input_password: bytes , encryption_salt: bytes,) -> bytes:
     kdf_encryption: bytes = Argon2id(
             salt=encryption_salt,
             length=32,
