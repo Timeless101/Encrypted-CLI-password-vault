@@ -112,7 +112,7 @@ class Search_data():
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
 
-    def search_interface_screen(userid: int) -> list[tuple] | None:
+    def search_interface_password_id(userid: int, database: str) -> list[tuple] | None:
 
         try:
             query = """
@@ -132,7 +132,7 @@ class Search_data():
             FROM vault_storage
             WHERE UserID = ?;"""
 
-            with sqlite3.connect("CLI_Data.db") as connection:
+            with sqlite3.connect(database) as connection:
                 c = connection.cursor()
                 c.execute(query, (userid,))
                 rows = c.fetchall()
