@@ -56,3 +56,9 @@ class InvalidPasswordError(InputValidationError):
 
 class DuplicationError(Exception):
     pass
+
+class WrongSQLStatement(Exception):
+    pass
+
+class UnexpectedError(Exception):
+    pass

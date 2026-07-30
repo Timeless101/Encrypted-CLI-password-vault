@@ -3,7 +3,6 @@ from cryptography.fernet import Fernet
 import base64
 import cryptography
 import os
-from time import sleep
 
 def password_decryption(encryption_key: bytes, password: bytes) -> str:
     f: Fernet = Fernet(encryption_key)

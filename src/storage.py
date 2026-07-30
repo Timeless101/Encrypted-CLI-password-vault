@@ -99,11 +99,9 @@ class Search_data():
     def search_limited_amount_of_items(self, table: str, column: str, userid: int, amount_of_items: int) -> list | None:
         try:
             query = f"SELECT * from {table} WHERE {column} = ? LIMIT ?"
-            usrid, amount_items = userid, amount_of_items
-
             with sqlite3.connect(self.database_name) as connection:
                 c = connection.cursor()
-                c.execute(query, (usrid, amount_items))
+                c.execute(query, (userid, amount_of_items))
                 rows = c.fetchall()
             
             if len(rows) <= 0:
@@ -113,6 +111,46 @@ class Search_data():
         
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
+
+    def search_interface_screen(userid: int) -> list[tuple] | None:
+
+        try:
+            query = """
+            SELECT
+                ROW_NUMBER() OVER(
+                PARTITION BY UserID
+                ORDER by cred_id
+            ) AS screen_number_ID ,
+            cred_id,
+            service,
+            Username,
+            Password,
+            Comment,
+            CreationDate,
+            EditedDate
+
+            FROM vault_storage
+            WHERE UserID = ?;"""
+
+            with sqlite3.connect("CLI_Data.db") as connection:
+                c = connection.cursor()
+                c.execute(query, (userid,))
+                rows = c.fetchall()
+
+            if len(rows) == 0:
+                return None
+            return rows
+
+            
+        except sqlite3.ProgrammingError as Programmers_fault:
+            raise errors.WrongSQLStatement("The SQL statements are wrong, please check the query you wrote.") from Programmers_fault
+
+        except sqlite3.OperationalError as Operation_error:
+            raise errors.DatabaseError(f"Database Operation failed: {Operation_error}")
+
+        except sqlite3.Error as Error:
+                raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
+
         
 
 
