@@ -151,9 +151,5 @@ class Search_data():
         except sqlite3.Error as Error:
                 raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
 
-        
-
-
-
 if __name__ == "__main__":
     ...
