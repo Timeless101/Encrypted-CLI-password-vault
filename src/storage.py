@@ -95,6 +95,7 @@ class Search_data():
         
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
+
     
     def search_limited_amount_of_items(self, table: str, column: str, userid: int, amount_of_items: int) -> list | None:
         try:
@@ -122,7 +123,7 @@ class Search_data():
                 ORDER by cred_id
             ) AS screen_number_ID ,
             cred_id,
-            service,
+            Service,
             Username,
             Password,
             Comment,
@@ -139,7 +140,8 @@ class Search_data():
 
             if len(rows) == 0:
                 return None
-            return rows
+            
+            return rows # returns: (screen_number_ID, cred_id, Service, Username, Password, Comment, DreationDate, EditedDate)
 
             
         except sqlite3.ProgrammingError as Programmers_fault:
