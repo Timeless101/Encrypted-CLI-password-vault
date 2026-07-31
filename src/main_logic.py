@@ -20,6 +20,9 @@ def program_flow():
                 case "a":
                     continue
 
+                case "v":
+                    continue
+
 
 if __name__ == "__main__":
     pass

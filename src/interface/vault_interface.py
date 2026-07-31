@@ -123,3 +123,72 @@ def add_items_screen_flow() -> tuple[str, str, str, str]:
     vault_option_a_screen(service, username, password, comment)
 
     return service, username, password, comment
+
+#Option View_items
+
+def option_v_header(total_credentials: int) -> None:
+    table = Table.grid(expand= True)
+
+    table.add_column(justify="left", no_wrap=True)
+    table.add_column(justify="right", no_wrap=True)
+
+    table.add_row(":locked_with_key: [bold bright_cyan] All Credentials[/]", ":white_heavy_check_mark: [bright_green]Vault Unlocked[/]")
+    table.add_row("", "")
+    table.add_row("Browse saved credentials", f"{total_credentials} [bold grey53]Credentials[/]")
+
+    panel = Panel(
+        table,
+        width=70,
+        padding= (0, 1)
+    )
+
+    CONSOLE.print(panel)
+    print("\n")
+
+    
+
+def option_v_main_view(data: list):
+    table = Table()
+
+    table.add_column("#")
+    table.add_column("[bold bright_cyan]Service[/]")
+    table.add_column("[bold bright_cyan]Username[/]")
+    table.add_column("[bold bright_cyan]Password[/]")
+    table.add_column("[bold bright_cyan]Comment[/]")
+    table.add_column("[bold bright_cyan]Edited[/]")
+
+    items_id, service, username, comment, editdate = data
+
+    for row in data:
+        table.add_row(items_id, service, username, comment, editdate)
+
+    CONSOLE.print(table)
+
+def option_v_options() -> str:
+    table = Table.grid(expand= True)
+    
+    table.add_column(justify="left", no_wrap=True)
+    table.add_column(justify="center", no_wrap=True)
+    table.add_column(justify="right", no_wrap=True)
+
+    table.add_row("[bright_blue][P] Previous[/]", "[yellow][B] Back[/]", "[bright_blue][N] Next")
+    table.add_row("", "")
+    table.add_row("[grey53]Showing 6-10 of 18[/]", "[cyan] Page 2/4[/]", "[cyan][#] Open item")
+    panel = Panel(
+        table,
+        width=70,
+        padding= (0, 1)
+    )
+
+    CONSOLE.print(panel)
+
+    return Prompt.ask("[bright_cyan]Option[/]", choices=["P", "B", "N", "#"], case_sensitive=False, show_choices=False)
+
+def option_v_screen_handler(data: list, total_credentials: int) -> str:
+    option_v_header(total_credentials=total_credentials)
+    CONSOLE.print("\n:lock: [bold bright_cyan]CREDENTIALS [/]\n")
+    option: str =  option_v_main_view(data=data)
+    print("\n")
+    option_v_options()
+
+    return option

@@ -1,9 +1,10 @@
 import src.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.interface.vault_interface as vault_interface
-from src.interface.helper_functions import clear_screen, exit_program
 import src.errors as errors
+from src.interface.helper_functions import clear_screen, exit_program
 from src.vault_services.add_items import add_item_to_database as add_items
+from src.vault_services.view_items import screen_logic
 
 
 #Helper functions.
@@ -26,13 +27,13 @@ def get_five_rows_out_database(userid: int) -> list | None:
         error_messages.print_incorrect_table_name()
         return False
 
-def option_handler(choice: str) -> str | None:
+def option_handler(choice: str, userid: int) -> str | None:
     if not choice in ["a", "v", "s", "d", "e", "q"]:
         return None
     
     dispatch_table = {
-        "a": option_a,
-        "v": option_v,
+        "a": lambda: option_a(userid),
+        "v": lambda: option_v(userid),
         "s": option_s,
         "d": option_d,
         "e": option_e,
@@ -46,8 +47,6 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
     global key
     key = encryption_key
 
-    global usrid
-    usrid = userid
 
     try:
         clear_screen()
@@ -68,7 +67,7 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
             email=email,
             total_cred=total_cred,
             rows=data,
-            showed_items=showed_items))
+            showed_items=showed_items), userid)
             
         if successs is None:
             error_messages.print_internal_error()
@@ -78,14 +77,14 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
     except (KeyboardInterrupt, EOFError):
         exit_program()
 
-def option_a():
+def option_a(userid):
     clear_screen()
     while True:
         result = vault_interface.add_items_screen()
         confirmation = vault_interface.add_items_confirmation()
         match confirmation:
             case "y":
-                if add_items(data=result, key=key, userid=usrid):
+                if add_items(data=result, key=key, userid=userid):
                     break
                 else:
                     error_messages.print_internal_error()
@@ -97,8 +96,12 @@ def option_a():
     
     
 
-def option_v():
-    print('v')
+def option_v(userid):
+    rows = screen_logic(userid=userid)
+    vault_interface.option_v_header(10)
+    print(rows)
+    input()
+    return "v"
 
 def option_s():
     print("s")
