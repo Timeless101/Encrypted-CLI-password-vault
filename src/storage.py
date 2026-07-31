@@ -134,7 +134,43 @@ class Search_data():
             raise errors.DatabaseError(f"Database Operation failed: {Operation_error}")
 
         except sqlite3.Error as Error:
-                raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
+            raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
+
+    def search_for_view_items(userid: int, limit: int, offset: int, database) -> list[tuple] | None:
+        try:
+            query = """
+                SELECT cred_id,
+                    Service, 
+                    Username,
+                    Comment,
+                    CreationDate,
+                    EditedDate
+                FROM vault_storage
+                WHERE UserID = ? 
+                ORDER BY service ASC, Username ASC, cred_id ASC 
+                LIMIT ? 
+                OFFSET ?
+                """
+
+            with sqlite3.Connection(database) as connection:
+                c = connection.cursor()
+                c.execute(query, (userid, limit, offset))
+
+                rows = c.fetchall()
+
+                if len(rows) == 0:
+                    return None
+
+                return rows
+        
+        except sqlite3.ProgrammingError as Programmers_fault:
+            raise errors.WrongSQLStatement("The SQL statements are wrong, please check the query you wrote.") from Programmers_fault
+        
+        except sqlite3.OperationalError as Operation_error:
+            raise errors.DatabaseError(f"Database Operation failed: {Operation_error}")
+
+        except sqlite3.Error as Error:
+            raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
 
 
 if __name__ == "__main__":

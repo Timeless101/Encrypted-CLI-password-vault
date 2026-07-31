@@ -19,7 +19,7 @@ def test_search_interface_password_id_user_2(tmp_path):
     """
 
     insert_data = """
-        INSERT INTO vault_storage
+        INSERT INTO vault_storage cred_ID, UserID, Service, Username, Password, Comment, CreationDate, EditedDate
         VALUES
             (1, 1, "test", "test", "test", "test", "test", "test"), 
             (2, 2, "test", "test", "test", "test", "test", "test"),
