@@ -10,10 +10,8 @@ from src.vault_services.add_items import add_item_to_database as add_items
 def get_five_rows_out_database(userid: int) -> list | None:
     try:
         data: list | None = storage_logic.search_limited_amount_of_items_in_database(
-            table="vault_storage",
-            column="UserID",
             userid=userid,
-            amount_of_items=5
+            limit=5
         )
 
         if data is None:
@@ -23,6 +21,7 @@ def get_five_rows_out_database(userid: int) -> list | None:
             raise ValueError("Length of the data is not 5")
         
         return data
+    
     except errors.TableError:
         error_messages.print_incorrect_table_name()
         return False

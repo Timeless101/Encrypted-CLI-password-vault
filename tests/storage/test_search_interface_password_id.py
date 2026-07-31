@@ -37,7 +37,8 @@ def test_search_interface_password_id_user_2(tmp_path):
 
     rows = Search_data.search_interface_password_id(
         userid=2,
-        database=db
+        database=db,
+        limit=3
     )
 
     assert rows is not None
@@ -56,14 +57,14 @@ def test_search_interface_password_id_user_3(tmp_path):
 
     create_table = """
         CREATE TABLE vault_storage (
-            cred_id,
-            UserID,
-            Service,
-            Username,
-            Password,
-            Comment,
-            CreationDate,
-            EditedDate
+            cred_id INTEGER,
+            UserID INTEGER,
+            Service TEXT,
+            Username TEXT,
+            Password TEXT,
+            Comment TEXT,
+            CreationDate TEXT,
+            EditedDate TEXT
         );
     """
 
@@ -86,7 +87,8 @@ def test_search_interface_password_id_user_3(tmp_path):
 
     rows = Search_data.search_interface_password_id(
         userid=3,
-        database=db
+        database=db,
+        limit=3
     )
 
     assert rows is not None
@@ -137,7 +139,8 @@ def test_search_interface_password_None(tmp_path):
 
     rows = Search_data.search_interface_password_id(
         userid=10,
-        database=db
+        database=db,
+        limit=3
     )
 
     assert rows is None

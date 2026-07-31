@@ -113,7 +113,7 @@ class Search_data():
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
 
-    def search_interface_password_id(userid: int, database: str) -> list[tuple] | None:
+    def search_interface_password_id(userid: int, database: str, limit: int) -> list[tuple] | None:
 
         try:
             query = """
@@ -131,17 +131,17 @@ class Search_data():
             EditedDate
 
             FROM vault_storage
-            WHERE UserID = ?;"""
+            WHERE UserID = ? LIMIT ?;"""
 
             with sqlite3.connect(database) as connection:
                 c = connection.cursor()
-                c.execute(query, (userid,))
+                c.execute(query, (userid, limit))
                 rows = c.fetchall()
 
             if len(rows) == 0:
                 return None
             
-            return rows # returns: (screen_number_ID, cred_id, Service, Username, Password, Comment, DreationDate, EditedDate)
+            return rows # returns: [(screen_number_ID, cred_id, Service, Username, Password, Comment, DreationDate, EditedDate)]
 
             
         except sqlite3.ProgrammingError as Programmers_fault:

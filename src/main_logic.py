@@ -2,7 +2,6 @@ import src.login_logic as login_logic
 import src.vault_logic as vault_logic
 
 def program_flow():
-
     while True:
         data: tuple | False = login_logic.option_selection(login_logic.main_menu())
         if data is False:
@@ -14,6 +13,8 @@ def program_flow():
             match result:
                 case "q":
                     encryption_key = None
+                    email = None
+                    userid = None
                     break
 
                 case "a":

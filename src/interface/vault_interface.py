@@ -54,8 +54,8 @@ def vault_screen_small_table(rows: list):
     small_password_table.add_column("[cyan]EditedDate[/]", justify="left", no_wrap=True)
 
     for item in rows:
-        cred_id, item_id, service_name, username, password, comment, creation_date, edit_date = item
-        small_password_table.add_row(str(cred_id), service_name, username, "********", edit_date)
+        item_id, cred_id, service_name, username, password, comment, creation_date, edit_date = item
+        small_password_table.add_row(str(item_id), service_name, username, "********", edit_date)
 
     CONSOLE.print("\n:lock:[bold bright_cyan] RECENT CREDENTIALS[/]\n")
     
