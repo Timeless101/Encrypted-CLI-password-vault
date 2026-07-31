@@ -96,23 +96,6 @@ class Search_data():
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
 
-    
-    def search_limited_amount_of_items(self, table: str, column: str, userid: int, amount_of_items: int) -> list | None:
-        try:
-            query = f"SELECT * from {table} WHERE {column} = ? LIMIT ?"
-            with sqlite3.connect(self.database_name) as connection:
-                c = connection.cursor()
-                c.execute(query, (userid, amount_of_items))
-                rows = c.fetchall()
-            
-            if len(rows) <= 0:
-                return None
-            
-            return rows
-        
-        except sqlite3.OperationalError as table_error:
-            raise errors.TableError(f"No such table: {table}") from table_error
-
     def search_interface_password_id(userid: int, database: str, limit: int) -> list[tuple] | None:
 
         try:

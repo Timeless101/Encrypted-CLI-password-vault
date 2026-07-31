@@ -6,24 +6,6 @@ LOGIN_TABLE = "login_information"
 VAULT_TABLE = "vault_storage"
     
 #Search functions
-"""def search_limited_amount_of_items_in_database(table: str, column: str, userid: int, amount_of_items: int) -> list | None:
-    try:
-        db = storage.Search_data(database_name=DATABASE_NAME)
-        data: list | None = db.search_limited_amount_of_items(
-            table=table,
-            column=column,
-            userid=userid,
-            amount_of_items=amount_of_items
-        )
-
-        if data is None:
-            return None
-        
-        return data
-    except errors.TableError as table_error:
-        raise errors.TableError(f"No such table: {table}") from table_error"""
-
-
 def search_limited_amount_of_items_in_database(userid: int, limit: int) -> list[tuple] | None:
 
     data: list[tuple] = storage.Search_data.search_interface_password_id(

@@ -2,8 +2,8 @@ import src.vault_logic as vault_logic
 import pytest
 
 def test_get_five_rows_out_database_happy_test(monkeypatch):
-    def fake_search(table, column, userid, amount_of_items):
-        return ["test", "test", "test", "test", "test"]
+    def fake_search(userid, limit):
+        return [("item_id"), ("cred_id"), ("service_name"), ("username"), ("password")]
     
     monkeypatch.setattr(vault_logic.storage_logic, "search_limited_amount_of_items_in_database", fake_search)
 
@@ -11,8 +11,8 @@ def test_get_five_rows_out_database_happy_test(monkeypatch):
     assert len(result) == 5
 
 def test_get_five_rows_out_database_to_much_results(monkeypatch):
-    def fake_search(table, column, userid, amount_of_items):
-        return ["test", "test", "test", "test", "test", "test"]
+    def fake_search(userid, limit):
+        return [("item_id"), ("cred_id"), ("service_name"), ("username"), ("password"), ("creationDate")]
     
     monkeypatch.setattr(vault_logic.storage_logic, "search_limited_amount_of_items_in_database", fake_search)
 
@@ -21,7 +21,7 @@ def test_get_five_rows_out_database_to_much_results(monkeypatch):
 
 
 def test_get_five_rows_out_database_none_result(monkeypatch):
-    def fake_search(table, column, userid, amount_of_items):
+    def fake_search(userid, limit):
         return None
     
     monkeypatch.setattr(vault_logic.storage_logic, "search_limited_amount_of_items_in_database", fake_search)
@@ -30,8 +30,8 @@ def test_get_five_rows_out_database_none_result(monkeypatch):
 
 
 def test_get_five_rows_out_database_return_type_list(monkeypatch):
-    def fake_search(table, column, userid, amount_of_items):
-        return ["test", "test", "test", "test", "test"]
+    def fake_search(userid, limit):
+        return [("item_id"), ("cred_id"), ("service_name"), ("username"), ("password")]
     
     monkeypatch.setattr(vault_logic.storage_logic, "search_limited_amount_of_items_in_database", fake_search)
 
