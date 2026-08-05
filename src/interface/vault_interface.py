@@ -156,14 +156,15 @@ def option_v_main_view(data: list):
     table.add_column("[bold bright_cyan]Comment[/]")
     table.add_column("[bold bright_cyan]Edited[/]")
 
-    items_id, service, username, comment, editdate = data
+    asterisk = "*" * 8
 
-    for row in data:
-        table.add_row(items_id, service, username, comment, editdate)
+    for item in data:
+        items_id, service, username, comment, editdate = item
+        table.add_row(str(items_id), service, username, asterisk, comment, editdate)
 
     CONSOLE.print(table)
 
-def option_v_options() -> str:
+def option_v_options(total_cred: int) -> str:
     table = Table.grid(expand= True)
     
     table.add_column(justify="left", no_wrap=True)
@@ -172,7 +173,7 @@ def option_v_options() -> str:
 
     table.add_row("[bright_blue][P] Previous[/]", "[yellow][B] Back[/]", "[bright_blue][N] Next")
     table.add_row("", "")
-    table.add_row("[grey53]Showing 6-10 of 18[/]", "[cyan] Page 2/4[/]", "[cyan][#] Open item")
+    table.add_row(f"[grey53]Showing 6-10 of {str(total_cred)}][/]", "[cyan] Page 2/4[/]", "[cyan][#] Open item")
     panel = Panel(
         table,
         width=70,
@@ -188,6 +189,6 @@ def option_v_screen_handler(data: list, total_credentials: int) -> str:
     CONSOLE.print("\n:lock: [bold bright_cyan]CREDENTIALS [/]\n")
     option: str =  option_v_main_view(data=data)
     print("\n")
-    option_v_options()
+    option_v_options(total_cred=total_credentials)
 
     return option

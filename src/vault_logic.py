@@ -27,13 +27,13 @@ def get_five_rows_out_database(userid: int) -> list | None:
         error_messages.print_incorrect_table_name()
         return False
 
-def option_handler(choice: str, userid: int, encryption_key) -> str | None:
+def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: int) -> str | None:
     if not choice in ["a", "v", "s", "d", "e", "q"]:
         return None
     
     dispatch_table = {
         "a": lambda: option_a(userid, encryption_key),
-        "v": lambda: option_v(userid),
+        "v": lambda: option_v(userid, total_cred),
         "s": option_s,
         "d": option_d,
         "e": option_e,
@@ -49,7 +49,7 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
         clear_screen()
 
         data = get_five_rows_out_database(userid=userid)
-        total_cred = storage_logic.get_all_items_in_database(userid=userid)
+        total_cred: int | None = storage_logic.get_all_items_in_database(userid=userid)
 
         showed_items = "_"
         if total_cred is None:
@@ -67,7 +67,8 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
                     rows=data,
                     showed_items=showed_items),
             userid=userid,
-            encryption_key=encryption_key
+            encryption_key=encryption_key,
+            total_cred=total_cred
             )
             
         if successs is None:
@@ -97,10 +98,13 @@ def option_a(userid: int, encryption_key: bytes) -> str:
     
     
 
-def option_v(userid):
-    rows = screen_logic(userid=userid)
-    vault_interface.option_v_header(10)
-    print(rows)
+def option_v(userid: int, total_cred: int) -> str:
+    clear_screen()
+
+    vault_interface.option_v_screen_handler(
+        data=screen_logic(userid=userid),
+        total_credentials=total_cred
+    )
     input()
     return "v"
 

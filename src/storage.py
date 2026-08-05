@@ -143,7 +143,6 @@ class Search_data():
                     Service, 
                     Username,
                     Comment,
-                    CreationDate,
                     EditedDate
                 FROM vault_storage
                 WHERE UserID = ? 
