@@ -27,12 +27,12 @@ def get_five_rows_out_database(userid: int) -> list | None:
         error_messages.print_incorrect_table_name()
         return False
 
-def option_handler(choice: str, userid: int) -> str | None:
+def option_handler(choice: str, userid: int, encryption_key) -> str | None:
     if not choice in ["a", "v", "s", "d", "e", "q"]:
         return None
     
     dispatch_table = {
-        "a": lambda: option_a(userid),
+        "a": lambda: option_a(userid, encryption_key),
         "v": lambda: option_v(userid),
         "s": option_s,
         "d": option_d,
@@ -44,9 +44,6 @@ def option_handler(choice: str, userid: int) -> str | None:
 
 #Main flow
 def start_flow(email: str, userid: int, encryption_key: bytes):
-    global key
-    key = encryption_key
-
 
     try:
         clear_screen()
@@ -63,11 +60,15 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
         else:
             showed_items = len(data)
 
-        successs = option_handler(vault_interface.vault_screen(
-            email=email,
-            total_cred=total_cred,
-            rows=data,
-            showed_items=showed_items), userid)
+        successs = option_handler(
+            choice=vault_interface.vault_screen(
+                    email=email,
+                    total_cred=total_cred,
+                    rows=data,
+                    showed_items=showed_items),
+            userid=userid,
+            encryption_key=encryption_key
+            )
             
         if successs is None:
             error_messages.print_internal_error()
@@ -77,14 +78,14 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
     except (KeyboardInterrupt, EOFError):
         exit_program()
 
-def option_a(userid):
+def option_a(userid: int, encryption_key: bytes) -> str:
     clear_screen()
     while True:
         result = vault_interface.add_items_screen()
         confirmation = vault_interface.add_items_confirmation()
         match confirmation:
             case "y":
-                if add_items(data=result, key=key, userid=userid):
+                if add_items(data=result, key=encryption_key, userid=userid):
                     break
                 else:
                     error_messages.print_internal_error()

@@ -8,16 +8,6 @@ from getpass import getpass
 CONSOLE = Console()
 
 #Main vault screen functions
-#layout vault screen
-def vault_screen(email: str, total_cred: int, rows: list, showed_items: str):
-
-    vault_screen_header(email, total_cred)
-    vault_screen_small_table(rows)
-
-    CONSOLE.print(f"\n[grey53]Showing {showed_items} of {total_cred} credentials\n")
-    vault_options()
-
-    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "E", "D", "Q"], case_sensitive=False, show_choices=False).lower()
 
 def vault_screen_header(email: str, total_cred: int):
     grid_title = Table.grid(expand=True)
@@ -73,6 +63,15 @@ def vault_options():
 
     CONSOLE.print(option_table)
 
+def vault_screen(email: str, total_cred: int, rows: list, showed_items: str):
+
+    vault_screen_header(email, total_cred)
+    vault_screen_small_table(rows)
+
+    CONSOLE.print(f"\n[grey53]Showing {showed_items} of {total_cred} credentials\n")
+    vault_options()
+
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "E", "D", "Q"], case_sensitive=False, show_choices=False).lower()
 
 #vault option A
 
