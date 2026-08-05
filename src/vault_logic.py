@@ -105,7 +105,6 @@ def option_v(userid: int, total_cred: int) -> str:
         data=screen_logic(userid=userid),
         total_credentials=total_cred
     )
-    input()
     return "v"
 
 def option_s():

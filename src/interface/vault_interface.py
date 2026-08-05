@@ -182,7 +182,7 @@ def option_v_options(total_cred: int) -> str:
 
     CONSOLE.print(panel)
 
-    return Prompt.ask("[bright_cyan]Option[/]", choices=["P", "B", "N", "#"], case_sensitive=False, show_choices=False)
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["P", "B", "N", "#"], case_sensitive=False, show_choices=False)
 
 def option_v_screen_handler(data: list, total_credentials: int) -> str:
     option_v_header(total_credentials=total_credentials)
