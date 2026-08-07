@@ -5,13 +5,13 @@ def test_option_handler_test_add_items(monkeypatch):
 
     received= {"add_items_calls": 0}
 
-    def fake_add_items():
+    def fake_add_items(userid, encryption_key):
         received["add_items_calls"] += 1
         return "add_result"
 
     monkeypatch.setattr(vault_logic, "option_a", fake_add_items)
 
-    result = vault_logic.option_handler("a")
+    result = vault_logic.option_handler("a", 1, b"test", 10)
 
     assert received["add_items_calls"] == 1
     assert result == "add_result"
@@ -20,13 +20,13 @@ def test_option_handler_test_view_screen(monkeypatch):
 
     received= {"view_screen_calls": 0}
 
-    def fake_view_screen():
+    def fake_view_screen(userid, total_cred):
         received["view_screen_calls"] += 1
         return "view_screen"
 
     monkeypatch.setattr(vault_logic, "option_v", fake_view_screen)
 
-    result = vault_logic.option_handler("v")
+    result = vault_logic.option_handler("v", 1, b"test", 10)
 
     assert received["view_screen_calls"] == 1
     assert result == "view_screen"
@@ -42,7 +42,7 @@ def test_option_handler_test_search_items(monkeypatch):
 
     monkeypatch.setattr(vault_logic, "option_s", fake_search_item)
 
-    result = vault_logic.option_handler("s")
+    result = vault_logic.option_handler("s", 1, b"test", 10)
 
     assert received["search_item_calls"] == 1
     assert result == "search_item"
@@ -58,7 +58,7 @@ def test_option_handler_test_delete_item(monkeypatch):
 
     monkeypatch.setattr(vault_logic, "option_d", fake_delete_item)
 
-    result = vault_logic.option_handler("d")
+    result = vault_logic.option_handler("d", 1, b"test", 10)
 
     assert received["delete_item_calls"] == 1
     assert result == "delete_item"
@@ -73,7 +73,7 @@ def test_option_handler_test_edit_item(monkeypatch):
 
     monkeypatch.setattr(vault_logic, "option_e", fake_edit_item)
 
-    result = vault_logic.option_handler("e")
+    result = vault_logic.option_handler("e", 1, b"test", 10)
 
     assert received["edit_item_calls"] == 1
     assert result == "edit_item"
@@ -88,15 +88,15 @@ def test_option_handler_test_quit_program(monkeypatch):
 
     monkeypatch.setattr(vault_logic, "option_q", fake_quit_program)
 
-    result = vault_logic.option_handler("q")
+    result = vault_logic.option_handler("q", 1, b"test", 10)
 
     assert received["quit_program_calls"] == 1
     assert result == "quit_program"
 
 def test_option_handler_test_none():
 
-    assert vault_logic.option_handler(None) is None
+    assert vault_logic.option_handler(None, 1, b"test", 10) is None
 
 def test_option_handler_test_choice_not_in_list(monkeypatch):
 
-    assert vault_logic.option_handler("w") is None
+    assert vault_logic.option_handler("w", 1, b"test", 10) is None

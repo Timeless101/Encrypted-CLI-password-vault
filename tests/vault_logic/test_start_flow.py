@@ -10,7 +10,7 @@ def test_start_flow_happy_test(monkeypatch):
     def fake_get_all_items_in_database(userid):
         return 5
 
-    def fake_option_handler(choice):
+    def fake_option_handler(choice, userid, encryption_key, total_cred):
         return "a"
 
     def fake_vault_screen(email: str, total_cred: int, rows: list, showed_items: int):
@@ -34,7 +34,7 @@ def test_start_flow_five_rows_return_none(monkeypatch):
     def fake_get_all_items_in_database(userid):
         return 0
 
-    def fake_option_handler(choice):
+    def fake_option_handler(choice, userid, encryption_key, total_cred):
         received["choice"] = choice
         return "a"
 
@@ -70,7 +70,7 @@ def test_start_flow_get_all_return_none(monkeypatch):
     def fake_get_all_items_in_database(userid):
         return None
 
-    def fake_option_handler(choice):
+    def fake_option_handler(choice, userid, encryption_key, total_cred):
         received["choice"] = choice
         return "a"
 
@@ -106,7 +106,7 @@ def test_start_flow_successs_none(monkeypatch):
     def fake_get_all_items_in_database(userid):
         return 0
 
-    def fake_option_handler(choice):
+    def fake_option_handler(choice, userid, encryption_key, total_cred):
         return None
 
     def fake_vault_screen(email: str, total_cred: int, rows: list, showed_items: int):
