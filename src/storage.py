@@ -103,14 +103,11 @@ class Search_data():
             SELECT
                 ROW_NUMBER() OVER(
                 PARTITION BY UserID
-                ORDER by cred_id
-            ) AS screen_number_ID ,
-            cred_id,
+                ORDER by Service COLLATE NOCASE ASC
+            ) AS screen_number_ID,
+
             Service,
             Username,
-            Password,
-            Comment,
-            CreationDate,
             EditedDate
 
             FROM vault_storage
@@ -124,7 +121,7 @@ class Search_data():
             if len(rows) == 0:
                 return None
             
-            return rows # returns: [(screen_number_ID, cred_id, Service, Username, Password, Comment, DreationDate, EditedDate)]
+            return rows # returns: [(screen_number_ID, Service, Username, EditedDate)]
 
             
         except sqlite3.ProgrammingError as Programmers_fault:
@@ -139,16 +136,22 @@ class Search_data():
     def search_for_view_items(userid: int, limit: int, offset: int, database) -> list[tuple] | None:
         try:
             query = """
-                SELECT cred_id,
+                SELECT
+                    ROW_NUMBER() OVER(
+                    PARTITION BY UserID
+                    ORDER BY Service COLLATE NOCASE ASC,
+                        Username COLLATE NOCASE ASC
+                    ) AS screen_number_id,
                     Service, 
                     Username,
                     Comment,
                     EditedDate
                 FROM vault_storage
                 WHERE UserID = ? 
-                ORDER BY service ASC, Username ASC, cred_id ASC 
+                ORDER BY service COLLATE NOCASE ASC, 
+                        Username COLLATE NOCASE ASC
                 LIMIT ? 
-                OFFSET ?
+                OFFSET ?;
                 """
 
             with sqlite3.Connection(database) as connection:
@@ -160,7 +163,7 @@ class Search_data():
                 if len(rows) == 0:
                     return None
 
-                return rows
+                return rows # returns [(screen_number_id, Service, Username, Comment, editeddate)]
         
         except sqlite3.ProgrammingError as Programmers_fault:
             raise errors.WrongSQLStatement("The SQL statements are wrong, please check the query you wrote.") from Programmers_fault

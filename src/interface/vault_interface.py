@@ -44,7 +44,7 @@ def vault_screen_small_table(rows: list):
     small_password_table.add_column("[cyan]EditedDate[/]", justify="left", no_wrap=True)
 
     for item in rows:
-        item_id, cred_id, service_name, username, password, comment, creation_date, edit_date = item
+        item_id,service_name, username, edit_date = item
         small_password_table.add_row(str(item_id), service_name, username, "********", edit_date)
 
     CONSOLE.print("\n:lock:[bold bright_cyan] RECENT CREDENTIALS[/]\n")
@@ -171,9 +171,9 @@ def option_v_options(total_cred: int) -> str:
     table.add_column(justify="center", no_wrap=True)
     table.add_column(justify="right", no_wrap=True)
 
-    table.add_row("[bright_blue][P] Previous[/]", "[yellow][B] Back[/]", "[bright_blue][N] Next")
+    table.add_row("[bright_blue][P] Previous[/]", "[yellow][B] Back[/]", "[bright_blue][N] Next[/]")
     table.add_row("", "")
-    table.add_row(f"[grey53]Showing 6-10 of {str(total_cred)}][/]", "[cyan] Page 2/4[/]", "[cyan][#] Open item")
+    table.add_row(f"[grey53]Showing 6-10 of {str(total_cred)}][/]", "[cyan] Page 2/4[/]", "[cyan][#] Open item[/]")
     panel = Panel(
         table,
         width=70,
