@@ -5,6 +5,7 @@ import src.errors as errors
 from src.interface.helper_functions import clear_screen, exit_program
 from src.vault_services.add_items import add_item_to_database as add_items
 from src.vault_services.view_items import screen_logic
+import math
 
 
 #Helper functions.
@@ -104,6 +105,8 @@ def option_v(userid: int, total_cred: int) -> str:
     page_size = 5
     offset = 0
 
+    total_pages = math.ceil(total_cred / 5)
+
     while True:
         clear_screen()
 
@@ -113,14 +116,14 @@ def option_v(userid: int, total_cred: int) -> str:
         data = screen_logic(
                 userid=userid,
                 page_size=page_size,
-                total_items=total_cred,
-                current_page=current_page,
                 offset=offset
                 )
 
         option = vault_interface.option_v_screen_handler(
         data=data,
-        total_credentials=total_cred
+        total_credentials=total_cred,
+        current_page=current_page,
+        max_page=total_pages
         )
 
         match option:
