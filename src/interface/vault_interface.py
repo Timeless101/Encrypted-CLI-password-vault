@@ -187,8 +187,8 @@ def option_v_options(total_cred: int) -> str:
 def option_v_screen_handler(data: list, total_credentials: int) -> str:
     option_v_header(total_credentials=total_credentials)
     CONSOLE.print("\n:lock: [bold bright_cyan]CREDENTIALS [/]\n")
-    option: str =  option_v_main_view(data=data)
+    option_v_main_view(data=data)
     print("\n")
-    option_v_options(total_cred=total_credentials)
+    option: str =  option_v_options(total_cred=total_credentials).lower()
 
     return option

@@ -99,13 +99,52 @@ def option_a(userid: int, encryption_key: bytes) -> str:
     
 
 def option_v(userid: int, total_cred: int) -> str:
-    clear_screen()
 
-    vault_interface.option_v_screen_handler(
-        data=screen_logic(userid=userid),
+    current_page = 1
+    page_size = 5
+    offset = 0
+
+    while True:
+        clear_screen()
+
+        pages = (current_page - 1) * page_size
+        showed_items = pages + page_size
+
+        data = screen_logic(
+                userid=userid,
+                page_size=page_size,
+                total_items=total_cred,
+                current_page=current_page,
+                offset=offset
+                )
+
+        option = vault_interface.option_v_screen_handler(
+        data=data,
         total_credentials=total_cred
-    )
-    return "v"
+        )
+
+        match option:
+            case "b":
+                return "v"
+
+            case "n":
+                if showed_items < total_cred:
+                    current_page += 1
+                    offset += 5
+                    continue
+                else:
+                    continue
+
+            case "p":
+                if showed_items > 5:
+                    current_page -= 1
+                    offset -= 5
+                    continue
+                else:
+                    continue
+
+            case "#":
+                continue
 
 def option_s():
     print("s")
