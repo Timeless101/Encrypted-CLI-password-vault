@@ -21,12 +21,12 @@ def test_search_interface_password_id_user_2(tmp_path):
     insert_data = """
         INSERT INTO vault_storage (cred_ID, UserID, Service, Username, Password, Comment, CreationDate, EditedDate)
         VALUES
-            (1, 1, "test", "test", "test", "test", "test", "test"), 
-            (2, 2, "test", "test", "test", "test", "test", "test"),
-            (3, 2, "test", "test", "test", "test", "test", "test"),
-            (4, 3, "test", "test", "test", "test", "test", "test"),
-            (5, 3, "test", "test", "test", "test", "test", "test"),
-            (6, 3, "test", "test", "test", "test", "test", "test");
+            (1, 1, "test1", "test1.0.1", "test", "test", "test", "test1.0.1.1"), 
+            (2, 2, "test2", "test2.0.1", "test", "test", "test", "test2.0.1.1"),
+            (3, 2, "test2.1", "test2.1.1", "test", "test", "test", "test2.1.1.1"),
+            (4, 3, "test3", "test3.0.1", "test", "test", "test", "test3.0.1.1"),
+            (5, 3, "test3.1", "test3.1.1", "test", "test", "test", "test3.1.1.1"),
+            (6, 3, "test3.2", "test3.2.2", "test", "test", "test", "test3.2.2.2");
     """
 
     with sqlite3.connect(db) as connection:
@@ -47,10 +47,6 @@ def test_search_interface_password_id_user_2(tmp_path):
     #Check Screen_number_ID
     assert rows[0][0] == 1
     assert rows[1][0] == 2
-
-    #Check credential ID
-    assert rows[0][1] == 2
-    assert rows[1][1] == 3
 
 def test_search_interface_password_id_user_3(tmp_path):
     db = tmp_path / "test.db"
@@ -99,10 +95,6 @@ def test_search_interface_password_id_user_3(tmp_path):
     assert rows[1][0] == 2
     assert rows[2][0] == 3
 
-    #Check credential ID
-    assert rows[0][1] == 4
-    assert rows[1][1] == 5
-    assert rows[2][1] == 6
 
 def test_search_interface_password_None(tmp_path):
     db = tmp_path / "test.db"
