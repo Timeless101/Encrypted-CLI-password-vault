@@ -173,7 +173,7 @@ def option_v_main_view(data: list):
 
     CONSOLE.print(table)
 
-def option_v_options(total_cred: int, current_page:int, max_page: int) -> str:
+def option_v_options(total_cred: int, current_page:int, max_page: int, showing_items_end: int, showing_items_start: int) -> str:
     table = Table.grid(expand= True)
     
     table.add_column(justify="left", no_wrap=True)
@@ -182,7 +182,7 @@ def option_v_options(total_cred: int, current_page:int, max_page: int) -> str:
 
     table.add_row("[bright_blue][P] Previous[/]", "[yellow][B] Back[/]", "[bright_blue][N] Next[/]")
     table.add_row("", "")
-    table.add_row(f"[grey53]Showing 6-10 of {str(total_cred)}][/]", f"[cyan] Page {current_page}/{max_page}[/]", "[cyan][#] Open item[/]")
+    table.add_row(f"[grey53]Showing {showing_items_start}-{showing_items_end} of {str(total_cred)}][/]", f"[cyan] Page {current_page}/{max_page}[/]", "[cyan]\[#] Open item[/]")
     panel = Panel(
         table,
         width=70,
@@ -193,11 +193,11 @@ def option_v_options(total_cred: int, current_page:int, max_page: int) -> str:
 
     return Prompt.ask("\n[bright_cyan]Option[/]", choices=["P", "B", "N", "#"], case_sensitive=False, show_choices=False)
 
-def option_v_screen_handler(data: list, total_credentials: int, current_page: int, max_page: int) -> str:
+def option_v_screen_handler(data: list, total_credentials: int, current_page: int, max_page: int, showing_items_end: int, showing_items_start: int) -> str:
     option_v_header(total_credentials=total_credentials)
     CONSOLE.print("\n:lock: [bold bright_cyan]CREDENTIALS [/]\n")
     option_v_main_view(data=data)
     print("\n")
-    option: str =  option_v_options(total_cred=total_credentials, current_page=current_page, max_page=max_page).lower()
+    option: str =  option_v_options(total_cred=total_credentials, current_page=current_page, max_page=max_page, showing_items_end=showing_items_end, showing_items_start=showing_items_start).lower()
 
     return option

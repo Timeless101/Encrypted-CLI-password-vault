@@ -106,12 +106,16 @@ def option_v(userid: int, total_cred: int) -> str:
     offset = 0
 
     total_pages = math.ceil(total_cred / 5)
+    
 
     while True:
         clear_screen()
 
         pages = (current_page - 1) * page_size
         showed_items = pages + page_size
+
+        showing_items_start = (current_page * page_size) - 4
+        showing_items_end = min(current_page * page_size, total_cred)
 
         data = screen_logic(
                 userid=userid,
@@ -123,7 +127,9 @@ def option_v(userid: int, total_cred: int) -> str:
         data=data,
         total_credentials=total_cred,
         current_page=current_page,
-        max_page=total_pages
+        max_page=total_pages,
+        showing_items_end=showing_items_end,
+        showing_items_start=showing_items_start
         )
 
         match option:
