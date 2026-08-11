@@ -105,7 +105,7 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
     page_size = 5
     offset = 0
 
-    total_pages = math.ceil(total_cred / 5)
+    total_pages = math.ceil(total_cred / page_size)
     
 
     while True:
@@ -139,15 +139,15 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
             case "n":
                 if showed_items < total_cred:
                     current_page += 1
-                    offset += 5
+                    offset += page_size
                     continue
                 else:
                     continue
 
             case "p":
-                if showed_items > 5:
+                if showed_items > page_size:
                     current_page -= 1
-                    offset -= 5
+                    offset -= page_size
                     continue
                 else:
                     continue
