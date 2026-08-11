@@ -34,7 +34,7 @@ def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: 
     
     dispatch_table = {
         "a": lambda: option_a(userid, encryption_key),
-        "v": lambda: option_v(userid, total_cred),
+        "v": lambda: option_v(userid, total_cred, encryption_key),
         "s": option_s,
         "d": option_d,
         "e": option_e,
@@ -99,7 +99,7 @@ def option_a(userid: int, encryption_key: bytes) -> str:
     
     
 
-def option_v(userid: int, total_cred: int) -> str:
+def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
     current_page = 1
     page_size = 5
@@ -154,6 +154,10 @@ def option_v(userid: int, total_cred: int) -> str:
 
             case "#":
                 continue
+
+            case "a":
+                option_a(userid=userid, encryption_key=encryption_key)
+
 
 def option_s():
     print("s")

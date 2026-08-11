@@ -148,14 +148,6 @@ def option_v_header(total_credentials: int) -> None:
 
 def option_v_main_view(data: list):
 
-    if data is None:
-        empty_vault = ":information: [bold yellow]No recent passwords added[/] :information:"
-        panel1 = Panel(
-            empty_vault,
-            width=70
-        )
-        return CONSOLE.print(panel1)
-
     table = Table()
 
     table.add_column("#")
@@ -182,7 +174,7 @@ def option_v_options(total_cred: int, current_page:int, max_page: int, showing_i
 
     table.add_row("[bright_blue][P] Previous[/]", "[yellow][B] Back[/]", "[bright_blue][N] Next[/]")
     table.add_row("", "")
-    table.add_row(f"[grey53]Showing {showing_items_start}-{showing_items_end} of {str(total_cred)}][/]", f"[cyan] Page {current_page}/{max_page}[/]", "[cyan]\[#] Open item[/]")
+    table.add_row(f"[grey53]Showing {showing_items_start}-{showing_items_end} of {str(total_cred)}][/]", f"[cyan] Page {current_page}/{max_page}[/]", r"[cyan]\[#] Open item[/]")
     panel = Panel(
         table,
         width=70,
@@ -193,11 +185,54 @@ def option_v_options(total_cred: int, current_page:int, max_page: int, showing_i
 
     return Prompt.ask("\n[bright_cyan]Option[/]", choices=["P", "B", "N", "#"], case_sensitive=False, show_choices=False)
 
+def option_v_no_itmes_options():
+
+    empty_vault = ":information: [bold yellow]No recent passwords added[/] :information:"
+    panel1 = Panel(
+        empty_vault,
+        width=70
+    )
+    CONSOLE.print(panel1,"\n")
+
+    table = Table.grid(expand= True)
+        
+    table.add_column(justify="left", no_wrap=True)
+    table.add_column(justify="center", no_wrap=True)
+    table.add_column(justify="right", no_wrap=True)
+
+    table.add_row("[bright_green][A] Add credential[/]")
+    table.add_row("", "", "")
+    table.add_row("[yellow][B] Back[/]")
+    panel = Panel(
+        table,
+        width=70,
+        padding= (0, 1)
+    )
+    
+    CONSOLE.print(panel)
+    
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "B"], case_sensitive=False, show_choices=False)
+
 def option_v_screen_handler(data: list, total_credentials: int, current_page: int, max_page: int, showing_items_end: int, showing_items_start: int) -> str:
+
+    if data is None:
+        option_v_header(total_credentials=total_credentials)
+        option_no_items = option_v_no_itmes_options().lower()
+        return option_no_items
+
     option_v_header(total_credentials=total_credentials)
     CONSOLE.print("\n:lock: [bold bright_cyan]CREDENTIALS [/]\n")
     option_v_main_view(data=data)
     print("\n")
-    option: str =  option_v_options(total_cred=total_credentials, current_page=current_page, max_page=max_page, showing_items_end=showing_items_end, showing_items_start=showing_items_start).lower()
+
+   
+    
+    option: str =  option_v_options(
+            total_cred=total_credentials,
+            current_page=current_page,
+            max_page=max_page,
+            showing_items_end=showing_items_end,
+            showing_items_start=showing_items_start
+            ).lower()
 
     return option
