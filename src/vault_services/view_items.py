@@ -1,6 +1,6 @@
 import src.storage as storage
 
-def screen_logic(userid: int, page_size: int, offset: int) -> list[tuple]:
+def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
     rows = storage.Search_data.search_for_view_items(
         userid=userid,
@@ -10,3 +10,7 @@ def screen_logic(userid: int, page_size: int, offset: int) -> list[tuple]:
     )
 
     return rows
+
+
+def view_password(userid: int, encryption_key: bytes, choice: int):
+    pass

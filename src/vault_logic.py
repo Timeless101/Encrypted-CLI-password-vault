@@ -4,7 +4,7 @@ import src.interface.vault_interface as vault_interface
 import src.errors as errors
 from src.interface.helper_functions import clear_screen, exit_program
 from src.vault_services.add_items import add_item_to_database as add_items
-from src.vault_services.view_items import screen_logic
+from src.vault_services.view_items import get_view_screen_data, view_password
 import math
 
 
@@ -117,7 +117,7 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
         showing_items_start = (current_page * page_size) - 4
         showing_items_end = min(current_page * page_size, total_cred)
 
-        data = screen_logic(
+        data = get_view_screen_data(
                 userid=userid,
                 page_size=page_size,
                 offset=offset
@@ -153,6 +153,8 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
                     continue
 
             case "#":
+                choice = vault_interface.option_v_view_password_handler(data=data)
+                view_password(userid=userid, encryption_key=encryption_key, choice=choice)
                 continue
 
             case "a":
