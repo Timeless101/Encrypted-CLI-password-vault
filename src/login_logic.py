@@ -182,13 +182,13 @@ def sign_in_function(email: str, password: str) -> bytes:
     return get_encryption_key(input_password=password.encode("utf-8"), encryption_salt=encryption_salt)
 
 
-#Sign in
+#Sign up
 def sign_up_flow() -> tuple[str, int, bytes]:
     clear_screen()
     try:
         while True:
             try:
-                email, hashed_password, salt, encryption_salt = get_input_and_validate_it()
+                email, password1, hashed_password, salt, encryption_salt = get_input_and_validate_it()
 
                 successs: bool = storage_logic.insert_data(
                     table_name= "login_information",
@@ -201,7 +201,7 @@ def sign_up_flow() -> tuple[str, int, bytes]:
                     continue
                     #Print path to log file. and wait for input, after go to menu.
                 
-                encryption_key: bytes = get_encryption_key(input_password=hashed_password, encryption_salt=encryption_salt)
+                encryption_key: bytes = get_encryption_key(input_password=password1, encryption_salt=encryption_salt)
 
                 if not isinstance(encryption_key, bytes):
                     error_messages.print_internal_error()
@@ -248,7 +248,7 @@ def sign_up_flow() -> tuple[str, int, bytes]:
     except (KeyboardInterrupt, EOFError):
         exit_program()
 
-def get_input_and_validate_it() -> tuple[str, bytes, bytes, bytes]:
+def get_input_and_validate_it() -> tuple[str, str, bytes, bytes, bytes]:
 
     email, password1, password2 = login_interface.register_screen()
 
@@ -264,7 +264,7 @@ def get_input_and_validate_it() -> tuple[str, bytes, bytes, bytes]:
     hashed_password, password_salt, encryption_salt = crypto.hash_password(password1)
 
     
-    return email, hashed_password, password_salt, encryption_salt
+    return email, password1, hashed_password, password_salt, encryption_salt
 
 
 #BAout flow

@@ -34,12 +34,12 @@ def get_all_items_in_database(userid) -> None | int:
 
 def search_data(table_name: str, table_column: str, data_to_be_searched: str) -> list | None:
     try:
-        db = storage.Search_data(DATABASE_NAME)
-        data:  list | None = db.search_specific_data(
-        table=table_name,
-        column=table_column,
-        data_to_be_searched=data_to_be_searched
-        )
+        data:  list | None = storage.Search_data.search_specific_data(
+                database_name="CLI_Data.db",
+                table=table_name,
+                column=table_column,
+                data_to_be_searched=data_to_be_searched
+                )
 
         if data is None:
             return None

@@ -1,7 +1,7 @@
 from rich.panel import Panel
 from rich.table import Table
 from rich.console import Console
-from rich.prompt import Prompt
+from rich.prompt import Prompt, IntPrompt
 from src.interface.helper_functions import clear_screen
 from getpass import getpass
 
@@ -125,6 +125,12 @@ def add_items_screen_flow() -> tuple[str, str, str, str]:
 
 #Option View_items
 
+def view_password_confirmation():
+    return Prompt.ask("\n[bright_cyan]Are you sure you want to reveal the password?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
+
+def ask_item_id():
+    return IntPrompt.ask("[cyan]Item ID[/]")
+
 def option_v_header(total_credentials: int) -> None:
     table = Table.grid(expand= True)
 
@@ -160,7 +166,7 @@ def option_v_main_view(data: list):
     asterisk = "*" * 8
 
     for item in data:
-        items_id, service, username, comment, editdate = item
+        items_id, cred_id, service, username, comment, editdate = item
         table.add_row(str(items_id), service, username, asterisk, comment, editdate)
 
     CONSOLE.print(table)
@@ -214,10 +220,7 @@ def option_v_no_itmes_options() -> str:
     return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "B"], case_sensitive=False, show_choices=False)
 
 def option_v_view_password_header():
-    table = Table(expand=True)
-
-    table.add_column(justify="left")
-    table.add_row(":locked_with_key: [bold bright_cyan] Credential Details[/]")
+    table = (":locked_with_key: [bold bright_cyan] Credential Details[/]")
 
     panel = Panel(
         table,
@@ -237,7 +240,7 @@ def option_v_view_password_item(data: list) -> str:
 
     table.add_row("[grey70]Service[/]", service)
     table.add_row("[grey70]Username[/]", username)
-    table.add_row("[grey70]Password[/]" "********")
+    table.add_row("[grey70]Password[/]", "********")
     table.add_row("[grey70]Comment[/]", comment)
     table.add_row("[grey70]Created[/]", created)
     table.add_row("[grey70]Last edited[/]", editeddate)
@@ -250,7 +253,7 @@ def option_v_view_password_item(data: list) -> str:
     CONSOLE.print(panel)
 
 def option_v_view_password_options() -> str:
-    table = Table(expand=True)
+    table = Table.grid(expand=True)
 
     table.add_column(no_wrap=True)
     table.add_column(no_wrap=True)
@@ -259,11 +262,18 @@ def option_v_view_password_options() -> str:
 
     table.add_row("[cyan][R] Reveal Password[/]", "[yellow][E] Edit[/]", "[red][D] Delete[/]", "[yellow][B] Back[/]")
 
+    panel = Panel(
+        table,
+        width=70
+    )
+
+    CONSOLE.print(panel)
+
     return Prompt.ask("\n[bright_cyan]Option[/]", choices=["r", "r", "d", "b"], case_sensitive=False, show_choices=False)
 
 def option_v_view_password_handler(data: list) -> str:
     option_v_view_password_header()
-    option_v_view_password_item()
+    option_v_view_password_item(data=data)
     return option_v_view_password_options()
 
 def option_v_screen_handler(data: list, total_credentials: int, current_page: int, max_page: int, showing_items_end: int, showing_items_start: int) -> str:

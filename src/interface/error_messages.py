@@ -61,3 +61,6 @@ def print_contact_support():
 
 def print_internal_error():
     CONSOLE.print("\n\n:warning: [bold red]ERROR[/] :warning:\n [red]INTERNAL ERROR[/] \nSomething happened with the system.\n", print_contact_support())
+
+def print_option_out_of_range():
+    CONSOLE.print("\n\n:warning: [bold red] ERROR[/] :warning:\n [red]Option out of scope.\n Please select an id that is listed in the view or move to that page.")

@@ -64,7 +64,7 @@ def login_key_calculation(input_password: bytes , encryption_salt: bytes,) -> by
             secret=None
         )
 
-    return base64.urlsafe_b64encode(kdf_encryption.derive(input_password))
+    return base64.urlsafe_b64encode(kdf_encryption.derive(input_password.encode("utf-8")))
 
 if __name__ == "__main__":
     ...

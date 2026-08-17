@@ -4,8 +4,9 @@ import src.interface.vault_interface as vault_interface
 import src.errors as errors
 from src.interface.helper_functions import clear_screen, exit_program
 from src.vault_services.add_items import add_item_to_database as add_items
-from src.vault_services.view_items import get_view_screen_data, view_password
+from src.vault_services.view_items import get_view_screen_data, data_handler, view_password
 import math
+import time
 
 
 #Helper functions.
@@ -97,7 +98,33 @@ def option_a(userid: int, encryption_key: bytes) -> str:
                continue
     return "a"
     
-    
+def select_item_flow(data: list) -> str:
+    id_choice = vault_interface.ask_item_id()
+    clear_screen()
+    view_item_data = data_handler(data=data, choice=id_choice)
+
+    if view_item_data is None:
+        error_messages.print_option_out_of_range()
+        return False
+
+    return vault_interface.option_v_view_password_handler(data=view_item_data), id_choice
+
+def password_item_flow(choice: str, userid: int, encryption_key: bytes, data: list[tuple], id_choice):
+    match choice:
+
+        case "r":
+            if vault_interface.view_password_confirmation() == "y":
+                print(view_password(encryption_key=encryption_key, data=data, id_choice=id_choice))
+                time.sleep(500)
+
+        case "e":
+            pass
+        case "d":
+            pass
+        case "b":
+            return False
+
+
 
 def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
@@ -124,13 +151,13 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
                 )
 
         option = vault_interface.option_v_screen_handler(
-        data=data,
-        total_credentials=total_cred,
-        current_page=current_page,
-        max_page=total_pages,
-        showing_items_end=showing_items_end,
-        showing_items_start=showing_items_start
-        )
+                data=data,
+                total_credentials=total_cred,
+                current_page=current_page,
+                max_page=total_pages,
+                showing_items_end=showing_items_end,
+                showing_items_start=showing_items_start
+                )
 
         match option:
             case "b":
@@ -141,21 +168,20 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
                     current_page += 1
                     offset += page_size
                     continue
-                else:
-                    continue
 
             case "p":
                 if showed_items > page_size:
                     current_page -= 1
                     offset -= page_size
                     continue
-                else:
-                    continue
 
             case "#":
-                choice = vault_interface.option_v_view_password_handler(data=data)
-                view_password(userid=userid, encryption_key=encryption_key, choice=choice)
-                continue
+                choice, id_choice = select_item_flow(data=data)
+                if choice is None:
+                    continue
+                password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key, userid=userid)
+
+
 
             case "a":
                 option_a(userid=userid, encryption_key=encryption_key)

@@ -1,10 +1,7 @@
 
 from pystyle import Colors, Colorate
 from getpass import getpass
-from rich.table import Table
 from rich.console import Console
-from rich.panel import Panel
-from rich.prompt import Prompt
 from InquirerPy import inquirer
 from InquirerPy.validator import PasswordValidator
 

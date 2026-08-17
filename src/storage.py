@@ -76,14 +76,11 @@ class Insert_data():
       
 #Search data in datebase.
 class Search_data():
-    def __init__(self, database_name: str):
-        self.database_name = database_name
-    
-    def search_specific_data(self, table: str, column: str, data_to_be_searched: str,) -> list | None:
+    def search_specific_data(table: str, column: str, data_to_be_searched: str, database_name: str) -> list | None:
         try:
             query = f"SELECT * FROM {table} WHERE {column} = ?"
             value = data_to_be_searched
-            with sqlite3.connect(self.database_name) as connection:
+            with sqlite3.connect(database_name) as connection:
                 c = connection.cursor()
                 c.execute(query, (value,))
                 rows = c.fetchall()
@@ -142,6 +139,7 @@ class Search_data():
                     ORDER BY Service COLLATE NOCASE ASC,
                         Username COLLATE NOCASE ASC
                     ) AS screen_number_id,
+                    cred_id, 
                     Service, 
                     Username,
                     Comment,
