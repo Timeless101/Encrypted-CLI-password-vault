@@ -252,6 +252,51 @@ def option_v_view_password_item(data: list) -> str:
 
     CONSOLE.print(panel)
 
+def option_v_view_password_plain(data: list, password: str) -> None:
+
+    _, service, username, comment, created, editeddate = data[0]
+
+    table = Table.grid(expand=True)
+
+    table.add_column(no_wrap=True)
+    table.add_column(no_wrap=True)
+
+    table.add_row("[grey70]Service[/]", str(service))
+    table.add_row("[grey70]Username[/]", username)
+    table.add_row("[grey70]Password[/]", password)
+    table.add_row("[grey70]Comment[/]", comment)
+    table.add_row("[grey70]Created[/]", created)
+    table.add_row("[grey70]Last edited[/]", editeddate)
+
+    panel = Panel(
+        table,
+        width=70,
+    )
+
+    CONSOLE.print(panel)
+
+def option_v_password_plain_choices() -> str:
+    table = Table.grid(expand=True)
+
+    table.add_column()
+    table.add_column()
+
+    table.add_row("[green][C] Copy[/]", "[yellow][B] Back[/]")
+
+    panel = Panel(
+        table,
+        width=70
+    )
+
+    CONSOLE.print(panel)
+
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["b", "c"], case_sensitive=False, show_choices=False)
+
+def view_password_plain_handeler(data: list[tuple], password: str):
+    option_v_view_password_header()
+    option_v_view_password_plain(data=data, password=password)
+    return option_v_password_plain_choices().lower()
+
 def option_v_view_password_options() -> str:
     table = Table.grid(expand=True)
 

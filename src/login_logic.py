@@ -179,7 +179,7 @@ def sign_in_function(email: str, password: str) -> bytes:
     if not validate_password(input_password=password, database_password=database_password, salt=salt):
         raise errors.InvalidPasswordError("Wrong password has been enterd.")
 
-    return get_encryption_key(input_password=password.encode("utf-8"), encryption_salt=encryption_salt)
+    return get_encryption_key(input_password=password, encryption_salt=encryption_salt)
 
 
 #Sign up

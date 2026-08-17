@@ -2,11 +2,11 @@ import src.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.interface.vault_interface as vault_interface
 import src.errors as errors
-from src.interface.helper_functions import clear_screen, exit_program
+from src.interface.helper_functions import clear_screen, exit_program, print_copy
 from src.vault_services.add_items import add_item_to_database as add_items
 from src.vault_services.view_items import get_view_screen_data, data_handler, view_password
 import math
-import time
+import pyperclip
 
 
 #Helper functions.
@@ -114,9 +114,16 @@ def password_item_flow(choice: str, userid: int, encryption_key: bytes, data: li
 
         case "r":
             if vault_interface.view_password_confirmation() == "y":
-                print(view_password(encryption_key=encryption_key, data=data, id_choice=id_choice))
-                time.sleep(500)
-
+                clear_screen()
+                password = view_password(encryption_key=encryption_key, data=data, id_choice=id_choice)
+                while True:
+                    clear_screen()
+                    if vault_interface.view_password_plain_handeler(data=data, password=password) == "c":
+                        pyperclip.copy(password)
+                        print_copy()
+                    else:
+                        break
+                    
         case "e":
             pass
         case "d":
