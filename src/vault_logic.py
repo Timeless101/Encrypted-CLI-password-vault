@@ -99,9 +99,9 @@ def option_a(userid: int, encryption_key: bytes) -> str:
     return "a"
     
 def select_item_flow(data: list) -> str:
-    id_choice = vault_interface.ask_item_id()
+    id_choice: int = vault_interface.ask_item_id()
     clear_screen()
-    view_item_data = data_handler(data=data, choice=id_choice)
+    view_item_data: tuple = data_handler(data=data, choice=id_choice)
 
     if view_item_data is None:
         error_messages.print_option_out_of_range()
@@ -135,29 +135,29 @@ def password_item_flow(choice: str, userid: int, encryption_key: bytes, data: li
 
 def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
-    current_page = 1
-    page_size = 5
-    offset = 0
+    current_page: int = 1
+    page_size: int = 5
+    offset: int = 0
 
-    total_pages = math.ceil(total_cred / page_size)
+    total_pages: int = math.ceil(total_cred / page_size)
     
 
     while True:
         clear_screen()
 
-        pages = (current_page - 1) * page_size
-        showed_items = pages + page_size
+        pages: int = (current_page - 1) * page_size
+        showed_items: int = pages + page_size
 
-        showing_items_start = (current_page * page_size) - 4
-        showing_items_end = min(current_page * page_size, total_cred)
+        showing_items_start: int = (current_page * page_size) - 4
+        showing_items_end: int = min(current_page * page_size, total_cred)
 
-        data = get_view_screen_data(
+        data: list[tuple] = get_view_screen_data(
                 userid=userid,
                 page_size=page_size,
                 offset=offset
                 )
 
-        option = vault_interface.option_v_screen_handler(
+        option: str = vault_interface.option_v_screen_handler(
                 data=data,
                 total_credentials=total_cred,
                 current_page=current_page,
@@ -183,12 +183,15 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
                     continue
 
             case "#":
-                choice, id_choice = select_item_flow(data=data)
+                result = select_item_flow(data=data)
+                if result is False:
+                    continue
+                
+                choice, id_choice = result
+
                 if choice is None:
                     continue
                 password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key, userid=userid)
-
-
 
             case "a":
                 option_a(userid=userid, encryption_key=encryption_key)
