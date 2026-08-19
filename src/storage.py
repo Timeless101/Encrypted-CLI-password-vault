@@ -172,6 +172,24 @@ class Search_data():
         except sqlite3.Error as Error:
             raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
 
+def delete_item(database: str, table: str, column: list) -> bool:
+    try:
+        query = f"DELETE FROM {table} WHERE ?"
+
+        with sqlite3.Connection(database) as connection:
+            c = connection.cursor()
+            c.execute(query, (column,))
+            return True
+
+    except sqlite3.ProgrammingError as Programmers_fault:
+                raise errors.WrongSQLStatement("The SQL statements are wrong, please check the query you wrote.") from Programmers_fault
+            
+    except sqlite3.OperationalError as Operation_error:
+        raise errors.DatabaseError(f"Database Operation failed: {Operation_error}")
+
+    except sqlite3.Error as Error:
+                raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
+
 
 if __name__ == "__main__":
     ...

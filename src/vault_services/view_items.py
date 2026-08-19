@@ -43,3 +43,11 @@ def view_password(encryption_key: bytes, data: list[tuple], id_choice: int):
             )
 
     return password_decryption(encryption_key=encryption_key, password=password[0][4])
+
+def delete_item(cred_id: int, userid: int):
+    if storage.delete_item(
+        database="CLI_Data.db",
+        table="vault_storage",
+        column=[f"userid={userid}", f"cred_id={cred_id}"]
+    ):
+        
