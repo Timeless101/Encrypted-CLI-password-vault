@@ -1,4 +1,6 @@
 import src.storage as storage
+import src.interface.error_messages as error_messages
+import src.errors as errors
 from src.crypto import password_decryption
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
@@ -44,10 +46,21 @@ def view_password(encryption_key: bytes, data: list[tuple], id_choice: int):
 
     return password_decryption(encryption_key=encryption_key, password=password[0][4])
 
-def delete_item(cred_id: int, userid: int):
-    if storage.delete_item(
+def delete_item(cred_id: int):
+    try:
+        if storage.delete_item(
         database="CLI_Data.db",
         table="vault_storage",
-        column=[f"userid={userid}", f"cred_id={cred_id}"]
-    ):
-        
+        cred_id=cred_id
+        ):
+            return True
+    except errors.WrongSQLStatement:
+        error_messages.print_internal_error()
+        return False
+    except errors.DatabaseError:
+        error_messages.print_internal_error()
+        return False
+    except errors.UnexpectedError:
+        error_messages.print_contact_support()
+        return False
+    

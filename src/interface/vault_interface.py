@@ -128,6 +128,9 @@ def add_items_screen_flow() -> tuple[str, str, str, str]:
 def view_password_confirmation():
     return Prompt.ask("\n[bright_cyan]Are you sure you want to reveal the password?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
 
+def view_password_delete_confirmation():
+    return Prompt.ask("\n:warning:[bright_cyan] Are you sure you want to delete this item?[/]:warning:", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
+
 def ask_item_id():
     return IntPrompt.ask("[cyan]Item ID[/]")
 
