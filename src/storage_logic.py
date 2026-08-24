@@ -35,7 +35,7 @@ def get_all_items_in_database(userid) -> None | int:
 def search_data(table_name: str, table_column: str, data_to_be_searched: str) -> list | None:
     try:
         data:  list | None = storage.Search_data.search_specific_data(
-                database_name="CLI_Data.db",
+                database_name=DATABASE_NAME,
                 table=table_name,
                 column=table_column,
                 data_to_be_searched=data_to_be_searched

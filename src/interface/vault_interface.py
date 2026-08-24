@@ -387,7 +387,7 @@ class Edit_data:
         print(f"Current {title}: {value}")
         return Prompt.ask(f"New {title}")
 
-def option_v_handler(data):
+def option_v_edit_handler(data):
     option_v_edit_item_header()
     option_v_edit_main_view(data=data)
     return option_v_edit_option()

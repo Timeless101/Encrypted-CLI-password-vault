@@ -10,7 +10,7 @@ def create_database(database_name):
         raise errors.DatabaseError(f"Could not open database") from sql_error
 
 #create an table with given input.
-class Table_creator():
+class Table_creator:
     def __init__(self, database_name: str):
         self.database_name = database_name
 
@@ -43,7 +43,7 @@ class Table_creator():
 
 
 #Insert  data in requested database.
-class Insert_data():
+class Insert_data:
     def __init__(self, database_name: str):
         self.database_name = database_name
     
@@ -75,7 +75,8 @@ class Insert_data():
             raise errors.InsertError(f"Couldn't insert data") from sql_error
       
 #Search data in datebase.
-class Search_data():
+class Search_data:
+    @staticmethod
     def search_specific_data(table: str, column: str, data_to_be_searched: str, database_name: str) -> list | None:
         try:
             query = f"SELECT * FROM {table} WHERE {column} = ?"
@@ -93,6 +94,9 @@ class Search_data():
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
 
+    
+
+    @staticmethod
     def search_interface_password_id(userid: int, database: str, limit: int) -> list[tuple] | None:
 
         try:
@@ -129,7 +133,7 @@ class Search_data():
 
         except sqlite3.Error as Error:
             raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
-
+    @staticmethod
     def search_for_view_items(userid: int, limit: int, offset: int, database) -> list[tuple] | None:
         try:
             query = """
@@ -171,7 +175,7 @@ class Search_data():
 
         except sqlite3.Error as Error:
             raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
-
+    
 def delete_item(database: str, table: str, cred_id: int) -> bool:
     try:
         query = f"DELETE FROM {table} WHERE cred_id = ?"
