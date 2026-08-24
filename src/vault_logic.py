@@ -37,8 +37,6 @@ def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: 
         "a": lambda: option_a(userid, encryption_key),
         "v": lambda: option_v(userid, total_cred, encryption_key),
         "s": option_s,
-        "d": option_d,
-        "e": option_e,
         "q": option_q
     }
     func = dispatch_table.get(choice)
@@ -203,11 +201,6 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
 def option_s():
     print("s")
 
-def option_d():
-    print("d")
-
-def option_e():
-    print("e")
 
 def option_q():
     return "q"

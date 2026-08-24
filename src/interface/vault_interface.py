@@ -59,7 +59,7 @@ def vault_options():
     option_table.add_column(min_width=23)
 
     option_table.add_row("[bold bright_green][A] Add[/]", "[bold bright_blue][V] View[/]", "[bold bright_blue][S] Search[/]")
-    option_table.add_row("[bold yellow][E] Edit[/]", "[bold red][D] Delete[/]", "[bold red][Q] Lock[/]")
+    option_table.add_row("[bold red][Q] Lock[/]", "", "")
 
     CONSOLE.print(option_table)
 
@@ -71,7 +71,7 @@ def vault_screen(email: str, total_cred: int, rows: list, showed_items: str):
     CONSOLE.print(f"\n[grey53]Showing {showed_items} of {total_cred} credentials\n")
     vault_options()
 
-    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "E", "D", "Q"], case_sensitive=False, show_choices=False).lower()
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "Q"], case_sensitive=False, show_choices=False).lower()
 
 #vault option A
 
