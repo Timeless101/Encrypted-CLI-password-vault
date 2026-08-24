@@ -345,3 +345,49 @@ def option_v_screen_handler(data: list, total_credentials: int, current_page: in
             ).lower()
 
     return option
+
+def option_v_edit_item_header():
+    table = (":locked_with_key: [bold bright_cyan] Credential Details[/]")
+
+    panel = Panel(
+        table,
+        width= 70
+    )
+
+    CONSOLE.print(panel)
+
+def option_v_edit_main_view(data: list):
+
+    service, username, comment = data
+
+    table = Table()
+
+    table.add_column()
+    table.add_column()
+
+    table.add_row("[1] Service", service)
+    table.add_row("[2] Username", username)
+    table.add_row("[3] Password", "********")
+    table.add_row("[4] Comment", comment)
+    table.add_row("", "")
+    table.add_row("[B] Back", "")
+
+    panel = Panel(
+        table,
+        width=70
+    )
+
+    CONSOLE.print(panel)
+
+def option_v_edit_option():
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["b", 1, 2, 3, 4], case_sensitive=False, show_choices=False).lower()
+
+class Edit_data:
+    def object_one(title, value):
+        print(f"Current {title}: {value}")
+        return Prompt.ask(f"New {title}")
+
+def option_v_handler(data):
+    option_v_edit_item_header()
+    option_v_edit_main_view(data=data)
+    return option_v_edit_option()
