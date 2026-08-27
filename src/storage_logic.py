@@ -47,7 +47,34 @@ def search_data(table_name: str, table_column: str, data_to_be_searched: str) ->
         return data
     except errors.TableError as table_error:
         raise errors.TableError(f"No such table: {table_name}") from table_error
+
+def searcher(columns: list, column: tuple, data_to_search: str):
+
+    if not isinstance(column, tuple):
+        raise errors.WrongDataTypeTuple("Column isn't a tuple.")
+
+    if not isinstance(columns, list):
+        raise errors.WrongDataTypeList("Columns isn't a list.")
+
+    try:
+        data = storage.Search_data.searcher(
+            table=VAULT_TABLE,
+            database_name=DATABASE_NAME,
+            columns=columns,
+            column=column,
+            data_to_search=data_to_search
+        )
+
+        return data
     
+    except errors.WrongSQLStatement as sql:
+        raise errors.WrongSQLStatement(sql)
+
+    except errors.DatabaseError as x:
+        raise errors.DatabaseError(x)
+
+    except errors.DatabaseError as e:
+        raise errors.DatabaseError(e)
 
 def data_row_search(email: str, table_column: str, table_name: str) -> list | None:
     try:
