@@ -7,4 +7,5 @@ def main(cred_id: int):
         column=("cred_id",),
         data_to_search=cred_id
     )
-    vault_interface.option_v_edit_handler(data=data)
+    
+    choice = vault_interface.option_v_edit_handler(data=data)

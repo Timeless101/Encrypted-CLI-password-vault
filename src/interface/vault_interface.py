@@ -379,8 +379,7 @@ def option_v_edit_main_view(data: list):
 
     CONSOLE.print(panel)
 
-def option_v_edit_option():
-    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["b", "1", "2", "3", "4"], case_sensitive=False, show_choices=False).lower()
+
 
 class Edit_data:
     def object_one(title, value):
@@ -390,4 +389,4 @@ class Edit_data:
 def option_v_edit_handler(data):
     option_v_edit_item_header()
     option_v_edit_main_view(data=data)
-    return option_v_edit_option()
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["b", "1", "2", "3", "4"], case_sensitive=False, show_choices=False).lower()
