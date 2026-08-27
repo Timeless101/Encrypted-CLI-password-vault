@@ -36,6 +36,10 @@ class WrongDataTypeList(StorageInputError):
     """
     pass
 
+class WrongDataTypeTuple(StorageInputError):
+    pass
+
+
 class DataLengthError(StorageInputError):
     """
     This Error means that the length isn't the same as the other one given.

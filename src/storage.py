@@ -86,7 +86,7 @@ class Search_data:
                 c.execute(query, (value,))
                 rows = c.fetchall()
 
-            if len(rows) <= 0:
+            if len(rows) == 0:
                 return None
             
             return rows
@@ -94,7 +94,39 @@ class Search_data:
         except sqlite3.OperationalError as table_error:
             raise errors.TableError(f"No such table: {table}") from table_error
 
-    
+    @staticmethod
+    def searcher(table: str, columns: list, column: tuple, data_to_search: str, database_name: str):
+
+        try:
+            if not isinstance(column, tuple):
+                raise errors.WrongDataTypeTuple("Column isn't a tuple.")
+
+            if not isinstance(columns, list):
+                raise errors.WrongDataTypeList("Columns isn't a list.")
+
+            column = column[0]
+
+            column_str = ", ".join(columns)
+            query = f"SELECT {column_str} FROM {table} WHERE {column} = ?"
+            with sqlite3.connect(database_name) as connection:
+                c = connection.cursor()
+                c.execute(query, (data_to_search, ))
+                row = c.fetchall()
+
+            if len(row) == 0:
+                return None
+
+            return row
+        
+        except sqlite3.ProgrammingError("Wrong sql query") as sql:
+            raise errors.WrongSQLStatement(sql)
+
+        except sqlite3.OperationalError("Something went wrong") as x:
+            raise errors.DatabaseError(x)
+
+        except sqlite3.Error("Something went wrong") as e:
+            raise errors.DatabaseError(e)
+
 
     @staticmethod
     def search_interface_password_id(userid: int, database: str, limit: int) -> list[tuple] | None:
