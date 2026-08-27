@@ -118,13 +118,13 @@ class Search_data:
 
             return row
         
-        except sqlite3.ProgrammingError("Wrong sql query") as sql:
+        except sqlite3.ProgrammingError as sql:
             raise errors.WrongSQLStatement(sql)
 
-        except sqlite3.OperationalError("Something went wrong") as x:
+        except sqlite3.OperationalError as x:
             raise errors.DatabaseError(x)
 
-        except sqlite3.Error("Something went wrong") as e:
+        except sqlite3.Error as e:
             raise errors.DatabaseError(e)
 
 
