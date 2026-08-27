@@ -58,7 +58,7 @@ def vault_options():
     option_table.add_column(min_width=23)
     option_table.add_column(min_width=23)
 
-    option_table.add_row("[bold bright_green][A] Add[/]", "[bold bright_blue][V] View[/]", "[bold bright_blue][S] Search[/]")
+    option_table.add_row("[bold bright_green][A] Add[/]", "[bold magenta][V] View[/]", "[bold bright_blue][S] Search[/]")
     option_table.add_row("[bold red][Q] Lock[/]", "", "")
 
     CONSOLE.print(option_table)
@@ -317,7 +317,7 @@ def option_v_view_password_options() -> str:
 
     CONSOLE.print(panel)
 
-    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["r", "r", "d", "b"], case_sensitive=False, show_choices=False)
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["r", "e", "d", "b"], case_sensitive=False, show_choices=False)
 
 def option_v_view_password_handler(data: list) -> str:
     option_v_view_password_header()
@@ -358,9 +358,9 @@ def option_v_edit_item_header():
 
 def option_v_edit_main_view(data: list):
 
-    service, username, comment = data
+    service, username, comment = data[0]
 
-    table = Table()
+    table = Table.grid(expand=True)
 
     table.add_column()
     table.add_column()
@@ -380,7 +380,7 @@ def option_v_edit_main_view(data: list):
     CONSOLE.print(panel)
 
 def option_v_edit_option():
-    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["b", 1, 2, 3, 4], case_sensitive=False, show_choices=False).lower()
+    return Prompt.ask("\n[bright_cyan]Option[/]", choices=["b", "1", "2", "3", "4"], case_sensitive=False, show_choices=False).lower()
 
 class Edit_data:
     def object_one(title, value):

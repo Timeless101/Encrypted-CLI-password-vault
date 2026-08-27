@@ -5,6 +5,7 @@ import src.errors as errors
 from src.interface.helper_functions import clear_screen, exit_program, print_copy
 from src.vault_services.add_items import add_item_to_database as add_items
 import src.vault_services.view_items as view_items
+import src.vault_services.edit as edit
 import math
 import pyperclip
 
@@ -123,7 +124,8 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
                         break
                     
         case "e":
-            pass
+            edit.main(cred_id=id_choice)
+
         case "d":
             if vault_interface.view_password_delete_confirmation() == "y":
                 view_items.delete_item(cred_id=id_choice)

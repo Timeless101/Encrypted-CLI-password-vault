@@ -95,7 +95,7 @@ class Search_data:
             raise errors.TableError(f"No such table: {table}") from table_error
 
     @staticmethod
-    def searcher(table: str, columns: list, column: tuple, data_to_search: str, database_name: str):
+    def searcher(table: str, columns: list, column: tuple, data_to_search: str, database_name: str) -> list[tuple] | None:
 
         try:
             if not isinstance(column, tuple):
