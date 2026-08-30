@@ -28,6 +28,7 @@ def choice_table(choice, cred_id):
         case "4":
             pass
 
+#WIP Need the function that update the data in the database.
 class Edit_searcher:
     def __init__(self, columns, cred_id, new_data):
         self.search = storage_logic.searcher(

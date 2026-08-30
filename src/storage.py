@@ -226,6 +226,15 @@ def delete_item(database: str, table: str, cred_id: int) -> bool:
     except sqlite3.Error as Error:
                 raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
 
+def update_item(table: str, cred_id: int, database: str, userid: int, column: str, new_data: str):
+
+    query = f"UPDATE {table} SET {column} = ? WHERE cred_id = ? AND Userid = ?"
+
+    with sqlite3.Connection(database) as connection:
+        c = connection.cursor()
+        c.execute(query, (new_data, cred_id, userid))
+        c.execute()
+        return True
 
 if __name__ == "__main__":
     ...
