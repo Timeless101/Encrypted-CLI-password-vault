@@ -8,4 +8,30 @@ def main(cred_id: int):
         data_to_search=cred_id
     )
     
-    choice = vault_interface.option_v_edit_handler(data=data)
+    choice_table(
+        choice=vault_interface.option_v_edit_handler(data=data),
+        cred_id=cred_id
+        )
+
+def choice_table(choice, cred_id):
+    match choice:
+
+        case "1":
+            vault_interface.Edit_data.object_one()
+
+        case "2":
+            pass
+
+        case "3":
+            pass
+
+        case "4":
+            pass
+
+class Edit_searcher:
+    def __init__(self, columns, cred_id, new_data):
+        self.search = storage_logic.searcher(
+            columns=[columns,],
+            column=(cred_id,),
+            data_to_search=cred_id
+        )
