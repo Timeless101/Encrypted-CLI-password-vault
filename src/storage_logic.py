@@ -135,11 +135,12 @@ def create_database(database_name: str):
 
 
 def update_database_item(cred_id: int, userid: int, column: str, new_data: str):
-    storage.update_item(
+    if storage.update_item(
         table=VAULT_TABLE,
         database=DATABASE_NAME,
         userid=userid,
         column=column,
         new_data=new_data,
         cred_id=cred_id
-    )
+    ):
+        return True

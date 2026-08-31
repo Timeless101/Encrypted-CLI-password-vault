@@ -233,7 +233,6 @@ def update_item(table: str, cred_id: int, database: str, userid: int, column: st
     with sqlite3.Connection(database) as connection:
         c = connection.cursor()
         c.execute(query, (new_data, cred_id, userid))
-        c.execute()
         return True
 
 if __name__ == "__main__":
