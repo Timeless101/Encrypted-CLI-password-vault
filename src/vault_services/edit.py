@@ -2,56 +2,10 @@ import src.interface.vault_interface as vault_interface
 import src.storage_logic as storage_logic
 import src.crypto as crypto
 
-def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
-    data = storage_logic.searcher(
-        columns=["Service", "Username", "comment"],
-        column=("cred_id",),
-        data_to_search=cred_id
-    )
-    
-    choice_table(
-        choice=vault_interface.option_v_edit_handler(data=data),
-        cred_id=cred_id,
-        userid=userid,
-        encryption_key=encryption_key
-        )
-
-def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> None:
-    match choice:
-
-        case "1":
-            Edit_searcher.update_data(
-                column="Service",
-                cred_id=cred_id,
-                userid=userid,
-            )
-
-        case "2":
-            Edit_searcher.update_data(
-                column="Username",
-                cred_id=cred_id,
-                userid=userid,
-            )
-
-        case "3":
-            Edit_searcher.update_password(
-                column="Password",
-                cred_id=cred_id,
-                userid=userid,
-                encryption_key=encryption_key
-            )
-
-        case "4":
-            Edit_searcher.update_data(
-                column="Comment",
-                cred_id=cred_id,
-                userid=userid,
-            )
-
 class Edit_searcher:
     def __init__(self):
-        self.question = vault_interface.Edit_data
-        self.confirmation = vault_interface.Edit_data
+        self.question = vault_interface.Edit_data()
+        self.confirmation = vault_interface.Edit_data()
 
     def update_data(self, column: str, cred_id: int, userid: int) -> True:
         while True:
@@ -111,3 +65,51 @@ class Edit_searcher:
         )
 
         return True
+
+def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
+    data = storage_logic.searcher(
+        columns=["Service", "Username", "comment"],
+        column=("cred_id",),
+        data_to_search=cred_id
+    )
+    
+    choice_table(
+        choice=vault_interface.option_v_edit_handler(data=data),
+        cred_id=cred_id,
+        userid=userid,
+        encryption_key=encryption_key
+        )
+
+def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> None:
+    update = Edit_searcher()
+    match choice:
+
+        case "1":
+            update.update_data(
+                column="Service",
+                cred_id=cred_id,
+                userid=userid,
+            )
+
+        case "2":
+            update.update_data(
+                column="Username",
+                cred_id=cred_id,
+                userid=userid,
+            )
+
+        case "3":
+            update.update_password(
+                column="Password",
+                cred_id=cred_id,
+                userid=userid,
+                encryption_key=encryption_key
+            )
+
+        case "4":
+            update.update_data(
+                column="Comment",
+                cred_id=cred_id,
+                userid=userid,
+            )
+

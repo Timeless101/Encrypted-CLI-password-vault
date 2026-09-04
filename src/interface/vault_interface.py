@@ -76,7 +76,7 @@ def vault_screen(email: str, total_cred: int, rows: list, showed_items: str):
 #vault option A
 
 def add_items_confirmation():
-    return Prompt.ask("\n[bright_cyan]Is al information correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True).lower()
+    return Prompt.ask("\n[bright_cyan]Is al information correct?[/]", choices=["y", "N"], case_sensitive=False, show_choices=True, default="y").lower()
 
 def add_items_screen():
     service, username, password, comment = add_items_screen_flow()
