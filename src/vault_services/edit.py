@@ -45,7 +45,6 @@ def choice_table(choice, cred_id: int, userid: int):
                 userid=userid,
             )
 
-#WIP Need the function that update the data in the database.
 class Edit_searcher:
     def __init__(self):
         self.question = vault_interface.Edit_data
@@ -54,7 +53,7 @@ class Edit_searcher:
     def update_data(self, column, cred_id, userid: int):
         while True:
             current_data = storage_logic.searcher(
-                columns=["Service",],
+                columns=[column,],
                 column=("cred_id",),
                 data_to_search=cred_id
             )[0][0]
