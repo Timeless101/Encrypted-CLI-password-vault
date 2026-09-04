@@ -108,7 +108,7 @@ def select_item_flow(data: list) -> str:
 
     return vault_interface.option_v_view_password_handler(data=view_item_data), id_choice
 
-def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id_choice):
+def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id_choice, userid: int):
     match choice:
 
         case "r":
@@ -124,7 +124,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
                         break
                     
         case "e":
-            edit.main(cred_id=id_choice)
+            edit.main(cred_id=id_choice, userid=userid)
 
         case "d":
             if vault_interface.view_password_delete_confirmation() == "y":
@@ -194,7 +194,7 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
                 if choice is None:
                     continue
-                password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key)
+                password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key, userid=userid)
 
             case "a":
                 option_a(userid=userid, encryption_key=encryption_key)

@@ -386,6 +386,9 @@ class Edit_data:
         print(f"Current {title}: {value}")
         return Prompt.ask(f"New {title}")
 
+    def confirmation():
+        return Prompt.ask("is the information corred y/n default", choices=["yes", "y", "n", "no"], case_sensitive=False, show_choices=False, default="y")
+
 def option_v_edit_handler(data):
     option_v_edit_item_header()
     option_v_edit_main_view(data=data)
