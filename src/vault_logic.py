@@ -124,7 +124,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
                         break
                     
         case "e":
-            edit.main(cred_id=id_choice, userid=userid)
+            edit.main(cred_id=id_choice, userid=userid, encryption_key=encryption_key)
 
         case "d":
             if vault_interface.view_password_delete_confirmation() == "y":

@@ -29,7 +29,6 @@ MAIN_SCREEN_OPTIONS= """
             """
 
 
-
 #Main Screen functions
 def main_menu():
     print(Colorate.Horizontal(Colors.rainbow, MAIN_SCREEN_LOGO), MAIN_SCREEN_OPTIONS)
@@ -103,4 +102,3 @@ ___________________________________
 
 if __name__ == "__main__":
     pass
-

@@ -2,7 +2,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.console import Console
 from rich.prompt import Prompt, IntPrompt
-from src.interface.helper_functions import clear_screen
+from src.interface.helper_functions import clear_screen, get_password_with_complexity
 from getpass import getpass
 
 CONSOLE = Console()
@@ -385,6 +385,10 @@ class Edit_data:
     def object_one(title, value):
         print(f"Current {title}: {value}")
         return Prompt.ask(f"New {title}")
+
+    def object_password(title, value):
+            print(f"Current {title}: {value}")
+            return get_password_with_complexity()
 
     def confirmation():
         return Prompt.ask("is the information corred y/n default", choices=["yes", "y", "n", "no"], case_sensitive=False, show_choices=False, default="y")
