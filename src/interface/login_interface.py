@@ -2,8 +2,7 @@
 from pystyle import Colors, Colorate
 from getpass import getpass
 from rich.console import Console
-from InquirerPy import inquirer
-from InquirerPy.validator import PasswordValidator
+from src.interface.helper_functions import get_password_with_complexity
 
 CONSOLE = Console()
 
@@ -29,20 +28,7 @@ MAIN_SCREEN_OPTIONS= """
     4) Exit
             """
 
-def get_password_with_complexity():
-    password = inquirer.secret(
-                message="Retype password:",
-                qmark="",
-                amark="",
-                validate=PasswordValidator(
-                    length=8,
-                    cap=True,
-                    special=True,
-                    number=True,
-                    message="Password doesn't meet complexity",
-                ),
-            ).execute()
-    return password
+
 
 #Main Screen functions
 def main_menu():

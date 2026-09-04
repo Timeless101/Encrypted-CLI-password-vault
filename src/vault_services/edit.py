@@ -1,7 +1,8 @@
 import src.interface.vault_interface as vault_interface
 import src.storage_logic as storage_logic
+import src.crypto as crypto
 
-def main(cred_id: int, userid: int):
+def main(cred_id: int, userid: int) -> None:
     data = storage_logic.searcher(
         columns=["Service", "Username", "comment"],
         column=("cred_id",),
@@ -14,7 +15,7 @@ def main(cred_id: int, userid: int):
         userid=userid
         )
 
-def choice_table(choice, cred_id: int, userid: int):
+def choice_table(choice, cred_id: int, userid: int) -> None:
     match choice:
 
         case "1":
@@ -50,7 +51,7 @@ class Edit_searcher:
         self.question = vault_interface.Edit_data
         self.confirmation = vault_interface.Edit_data
 
-    def update_data(self, column, cred_id, userid: int):
+    def update_data(self, column: str, cred_id: int, userid: int) -> True:
         while True:
             current_data = storage_logic.searcher(
                 columns=[column,],
@@ -66,6 +67,39 @@ class Edit_searcher:
             break
                 
 
+        self.search = storage_logic.update_database_item(
+            cred_id=cred_id,
+            userid=userid,
+            column=column,
+            new_data=new_data
+        )
+
+        return True
+
+    def update_password(self, column: str, cred_id: int, userid: int, encryption_key: bytes) -> True:
+        while True:
+                    password_encrypted = storage_logic.searcher(
+                        columns=[column,],
+                        column=("cred_id",),
+                        data_to_search=cred_id
+                    )[0][0]
+                    current_data = crypto.password_decryption(
+                        password=password_encrypted,
+                        encryption_key=encryption_key
+                    )
+
+
+                    new_data = self.question.object_one(column, current_data)
+                    awnser = self.confirmation.confirmation()
+        
+                    if awnser.lower() not in ("y", "yes"):
+                        continue
+                    break
+
+        crypto.password_encryption(
+            password=new_data
+        )
+        
         self.search = storage_logic.update_database_item(
             cred_id=cred_id,
             userid=userid,
