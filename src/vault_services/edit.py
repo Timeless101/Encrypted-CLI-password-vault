@@ -1,11 +1,9 @@
 import src.interface.vault_interface as vault_interface
 import src.storage_logic as storage_logic
 import src.crypto as crypto
+import time
 
 class Edit_searcher:
-    def __init__(self):
-        self.question = vault_interface.Edit_data()
-        self.confirmation = vault_interface.Edit_data()
 
     def update_data(self, column: str, cred_id: int, userid: int) -> True:
         while True:
@@ -15,8 +13,8 @@ class Edit_searcher:
                 data_to_search=cred_id
             )[0][0]
 
-            new_data = self.question.object_one(column, current_data)
-            awnser = self.confirmation.confirmation()
+            new_data = vault_interface.Edit_data.object_one(column, current_data)
+            awnser = vault_interface.Edit_data.confirmation()
 
             if awnser.lower() not in ("y", "yes"):
                 continue
@@ -39,14 +37,14 @@ class Edit_searcher:
                         column=("cred_id",),
                         data_to_search=cred_id
                     )[0][0]
+
                     current_data = crypto.password_decryption(
                         password=password_encrypted,
                         encryption_key=encryption_key
                     )
 
-
-                    password_decrypted = self.question.object_password(column, current_data)
-                    awnser = self.confirmation.confirmation()
+                    password_decrypted = vault_interface.Edit_data.object_password(column, current_data)
+                    awnser = vault_interface.Edit_data.confirmation()
         
                     if awnser.lower() not in ("y", "yes"):
                         continue
@@ -67,6 +65,7 @@ class Edit_searcher:
         return True
 
 def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
+
     data = storage_logic.searcher(
         columns=["Service", "Username", "comment"],
         column=("cred_id",),
@@ -112,4 +111,3 @@ def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> No
                 cred_id=cred_id,
                 userid=userid,
             )
-

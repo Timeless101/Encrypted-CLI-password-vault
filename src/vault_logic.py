@@ -100,15 +100,15 @@ def option_a(userid: int, encryption_key: bytes) -> str:
 def select_item_flow(data: list) -> str:
     id_choice: int = vault_interface.ask_item_id()
     clear_screen()
-    view_item_data: tuple = view_items.data_handler(data=data, choice=id_choice)
+    view_item_data, cred_id = view_items.data_handler(data=data, choice=id_choice)
 
     if view_item_data is None:
         error_messages.print_option_out_of_range()
         return False
 
-    return vault_interface.option_v_view_password_handler(data=view_item_data), id_choice
+    return vault_interface.option_v_view_password_handler(data=view_item_data), id_choice, cred_id
 
-def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id_choice, userid: int):
+def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id_choice, userid: int, cred_id: int):
     match choice:
 
         case "r":
@@ -124,7 +124,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
                         break
                     
         case "e":
-            edit.main(cred_id=id_choice, userid=userid, encryption_key=encryption_key)
+            edit.main(cred_id=cred_id, userid=userid, encryption_key=encryption_key)
 
         case "d":
             if vault_interface.view_password_delete_confirmation() == "y":
@@ -190,11 +190,11 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
                 if result is False:
                     continue
                 
-                choice, id_choice = result
+                choice, id_choice, cred_id = result
 
                 if choice is None:
                     continue
-                password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key, userid=userid)
+                password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key, userid=userid, cred_id=cred_id)
 
             case "a":
                 option_a(userid=userid, encryption_key=encryption_key)

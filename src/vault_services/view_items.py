@@ -2,6 +2,7 @@ import src.storage as storage
 import src.interface.error_messages as error_messages
 import src.errors as errors
 from src.crypto import password_decryption
+import time
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
     rows = storage.Search_data.search_for_view_items(
@@ -27,7 +28,7 @@ def data_handler(data: list[tuple], choice: int ) -> tuple:
     if data is None:
         return None
 
-    return (data[0][2], data[0][3], data[0][5], data[0][6], data[0][7]) # returns service, username, comment, creationdate, editeddate.
+    return (data[0][2], data[0][3], data[0][5], data[0][6], data[0][7]), cred_id # returns service, username, comment, creationdate, editeddate.
 
 def get_cred_id(data: list[tuple], choice: int):
     for item in data:
