@@ -5,7 +5,7 @@ import src.validator as validator
 import src.crypto as crypto
 import src.interface.error_messages as error_messages
 from time import sleep
-from src.interface.helper_functions import clear_screen, exit_program
+from src.vault_services.helper_functions import clear_screen, exit_program
 
 #Constances
 DATABASE_NAME: str = "CLI_Data.db"

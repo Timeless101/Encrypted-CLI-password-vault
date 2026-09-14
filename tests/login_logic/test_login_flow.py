@@ -1,6 +1,6 @@
 import src.login_logic as login_logic
 import src.interface.login_interface as login_interface
-import src.interface.helper_functions as helper_functions
+import src.vault_services.helper_functions as helper_functions
 import src.errors as errors
 import pytest
 

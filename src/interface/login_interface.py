@@ -2,7 +2,7 @@
 from pystyle import Colors, Colorate
 from getpass import getpass
 from rich.console import Console
-from src.interface.helper_functions import get_password_with_complexity
+from src.vault_services.helper_functions import get_password_with_complexity
 
 CONSOLE = Console()
 

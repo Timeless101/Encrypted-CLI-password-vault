@@ -2,7 +2,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.console import Console
 from rich.prompt import Prompt, IntPrompt
-from src.interface.helper_functions import clear_screen, get_password_with_complexity
+from src.vault_services.helper_functions import clear_screen, get_password_with_complexity
 from getpass import getpass
 
 CONSOLE = Console()

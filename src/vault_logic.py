@@ -2,7 +2,7 @@ import src.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.interface.vault_interface as vault_interface
 import src.errors as errors
-from src.interface.helper_functions import clear_screen, exit_program, print_copy
+from src.vault_services.helper_functions import clear_screen, exit_program, print_copy
 from src.vault_services.add_items import add_item_to_database as add_items
 import src.vault_services.view_items as view_items
 import src.vault_services.edit as edit
