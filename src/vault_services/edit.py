@@ -1,4 +1,4 @@
-import src.interface.vault_interface as vault_interface
+import src.interface.edit_interface as edit_interface
 import src.storage_logic as storage_logic
 import src.crypto as crypto
 import time
@@ -13,8 +13,8 @@ class Edit_searcher:
                 data_to_search=cred_id
             )[0][0]
 
-            new_data = vault_interface.Edit_data.object_one(column, current_data)
-            awnser = vault_interface.Edit_data.confirmation()
+            new_data = edit_interface.Edit_prompt.new_data_question(column, current_data)
+            awnser = edit_interface.Edit_prompt.confirmation()
 
             if awnser.lower() not in ("y", "yes"):
                 continue
@@ -43,8 +43,8 @@ class Edit_searcher:
                         encryption_key=encryption_key
                     )
 
-                    password_decrypted = vault_interface.Edit_data.object_password(column, current_data)
-                    awnser = vault_interface.Edit_data.confirmation()
+                    password_decrypted = edit_interface.Edit_prompt.new_data_question(column, current_data)
+                    awnser = edit_interface.Edit_prompt.confirmation()
         
                     if awnser.lower() not in ("y", "yes"):
                         continue
@@ -73,7 +73,7 @@ def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
     )
     
     choice_table(
-        choice=vault_interface.option_v_edit_handler(data=data),
+        choice=edit_interface.handler(data=data),
         cred_id=cred_id,
         userid=userid,
         encryption_key=encryption_key
