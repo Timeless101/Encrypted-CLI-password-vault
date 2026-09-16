@@ -2,6 +2,7 @@ import subprocess
 from time import sleep
 from InquirerPy import inquirer
 from InquirerPy.validator import PasswordValidator
+from rich.prompt import Prompt
 
 def exit_program():
     print("\n\nYou have exited the program!")
@@ -31,3 +32,6 @@ def get_password_with_complexity():
                 ),
             ).execute()
     return password
+
+def confirmation(text: str):
+    return Prompt.ask(text, choices=["y", "N"], case_sensitive=False, show_choices=True, default="y").lower()

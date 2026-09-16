@@ -95,7 +95,7 @@ ___________________________________
     print("\nEncrypted Command Line Password Vault.")
     print("This is my first big project")
     print("\nBy: Diego")
-    print("Create: Created: 09/04/2026 dd/mm/yy")
+    print("Created: 09/04/2026 dd/mm/yy")
     
     input("\n\nwaiting for input: ")
     return True

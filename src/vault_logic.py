@@ -1,14 +1,16 @@
+import math
+import pyperclip
+
 import src.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.interface.vault_interface as vault_interface
 import src.errors as errors
-from src.vault_services.helper_functions import clear_screen, exit_program, print_copy
-from src.vault_services.add_items import add_item_to_database as add_items
 import src.vault_services.view_items as view_items
 import src.vault_services.edit as edit
-import math
-import pyperclip
-
+import src.interface.view_interface as view_interface
+from src.vault_services.helper_functions import confirmation
+from src.vault_services.helper_functions import clear_screen, exit_program, print_copy
+from src.vault_services.add_items import add_item_to_database as add_items
 
 #Helper functions.
 def get_five_rows_out_database(userid: int) -> list | None:
@@ -98,7 +100,7 @@ def option_a(userid: int, encryption_key: bytes) -> str:
     return "a"
     
 def select_item_flow(data: list) -> str:
-    id_choice: int = vault_interface.ask_item_id()
+    id_choice: int = view_interface.ask_item_id()
     clear_screen()
     view_item_data, cred_id = view_items.data_handler(data=data, choice=id_choice)
 
@@ -106,18 +108,18 @@ def select_item_flow(data: list) -> str:
         error_messages.print_option_out_of_range()
         return False
 
-    return vault_interface.option_v_view_password_handler(data=view_item_data), id_choice, cred_id
+    return view_interface.view_password_handler(data=view_item_data), id_choice, cred_id
 
 def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id_choice, userid: int, cred_id: int):
     match choice:
 
         case "r":
-            if vault_interface.view_password_confirmation() == "y":
+            if confirmation(text="\n[bright_cyan]Are you sure you want to reveal the password?[/]") == "y":
                 clear_screen()
                 password = view_items.view_password(encryption_key=encryption_key, data=data, id_choice=id_choice)
                 while True:
                     clear_screen()
-                    if vault_interface.view_password_plain_handeler(data=data, password=password) == "c":
+                    if view_interface.view_password_plain_handeler(data=data, password=password) == "c":
                         pyperclip.copy(password)
                         print_copy()
                     else:
@@ -127,7 +129,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
             edit.main(cred_id=cred_id, userid=userid, encryption_key=encryption_key)
 
         case "d":
-            if vault_interface.view_password_delete_confirmation() == "y":
+            if confirmation(text="\n:warning:[bright_cyan] Are you sure you want to delete this item?[/]:warning:") == "y":
                 view_items.delete_item(cred_id=id_choice)
             pass
                 
@@ -160,7 +162,7 @@ def option_v(userid: int, total_cred: int, encryption_key: bytes) -> str:
                 offset=offset
                 )
 
-        option: str = vault_interface.option_v_screen_handler(
+        option: str = view_interface.screen_handler(
                 data=data,
                 total_credentials=total_cred,
                 current_page=current_page,

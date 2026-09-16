@@ -2,7 +2,7 @@ import src.storage as storage
 import src.interface.error_messages as error_messages
 import src.errors as errors
 from src.crypto import password_decryption
-import time
+
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
     rows = storage.Search_data.search_for_view_items(
