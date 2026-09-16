@@ -1,15 +1,12 @@
 from rich.panel import Panel
 from rich.table import Table
 from rich.console import Console
-from rich.prompt import Prompt, IntPrompt
-from src.services.helper_functions import clear_screen, get_password_with_complexity
-
+from rich.prompt import Prompt
 
 CONSOLE = Console()
 
-#Main vault screen functions
 
-def vault_screen_header(email: str, total_cred: int):
+def vault_header(email: str, total_cred: int):
     grid_title = Table.grid(expand=True)
     grid_title.add_column(justify="left", no_wrap=True)
     grid_title.add_column(justify="right", no_wrap=True)
@@ -26,7 +23,7 @@ def vault_screen_header(email: str, total_cred: int):
 
     CONSOLE.print(panel)
 
-def vault_screen_small_table(rows: list):
+def vault_small_table(rows: list):
 
     if rows is None:
         empty_vault = ":information: [bold yellow]No recent passwords added[/] :information:"
@@ -65,13 +62,10 @@ def vault_options():
 
 def vault_screen(email: str, total_cred: int, rows: list, showed_items: str):
 
-    vault_screen_header(email, total_cred)
-    vault_screen_small_table(rows)
+    vault_header(email, total_cred)
+    vault_small_table(rows)
 
     CONSOLE.print(f"\n[grey53]Showing {showed_items} of {total_cred} credentials\n")
     vault_options()
 
     return Prompt.ask("\n[bright_cyan]Option[/]", choices=["A", "V", "S", "Q"], case_sensitive=False, show_choices=False).lower()
-
-#vault option A
-
