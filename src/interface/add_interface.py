@@ -33,20 +33,20 @@ def add_item_screen(service, username, password, comment):
 
     CONSOLE.print(panel)
 
-def vault_option_a_question(name):
+def question(name):
     return CONSOLE.input(f"[cyan]\n{name}: [/]")
 
 
 def add_items_screen_flow() -> tuple[str, str, str, str]:
 
     add_item_screen("", "", "", "")
-    service: str = vault_option_a_question("Service")
+    service: str = question("Service")
     add_item_screen(service, "", "", "")
-    username: str = vault_option_a_question("Username")
+    username: str = question("Username")
     add_item_screen(service, username, "","")
     password: str = getpass(echo_char="*")
     add_item_screen(service, username, password, "")
-    comment: str = vault_option_a_question("Comment")
+    comment: str = question("Comment")
     add_item_screen(service, username, password, comment)
 
     return service, username, password, comment
