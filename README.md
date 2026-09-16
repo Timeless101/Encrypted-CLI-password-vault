@@ -13,17 +13,17 @@ A modular command-line password manager built with Python, SQLite, Argon2id, Fer
 
 Encrypted CLI Password Vault is a local password manager with a terminal interface. It supports user registration and login, encrypts credential passwords before writing them to SQLite, and separates interface, application logic, storage, validation, and cryptographic responsibilities into dedicated modules.
 
-The project began as a way to learn Python by building a complete application rather than isolated exercises. The long-term goal is to evolve the same core domain into a REST API and web interface without discarding the CLI application.
+The project began as a way to learn Python by building a complete application rather than isolated exercises. The current goal is to finish and harden the CLI as a complete v1.0 release before moving on to a REST API and web interface.
 
 ## Current interface
 
 ![Main interface](docs/images/main_view.png)
 
-The main interface displays an overview of five credentials stored in the vault. Users can navigate through the application by entering the key associated with the desired option.
+The main interface displays an overview of credentials stored in the vault and provides keyboard-driven navigation to the main vault features.
 
 ![All credentials view](docs/images/view-credentials.png)
 
-The credential overview currently displays five records at a time, masks stored passwords, and orders records by service, username, and credential ID for predictable results.
+The credential view displays five records per page, masks passwords in list views, orders credentials predictably, and supports opening individual credentials for further actions.
 
 ## Current features
 
@@ -34,22 +34,30 @@ The credential overview currently displays five records at a time, masks stored 
 - Master-password verification using Argon2id
 - Separate salts for password verification and encryption-key derivation
 - Per-user credential records
+- Session encryption-key derivation after successful authentication
 
 ### Password vault
 
 - Add credentials through an interactive CLI flow
 - Encrypt credential passwords with Fernet before database storage
 - Confirm entered data before saving
-- Display a five-item recent-credentials overview
-- Display credentials in a Rich table
+- Display credentials in Rich tables
 - Sort credentials by service and username
-- Mask passwords in overview screens
+- Five-record pagination with previous/next navigation
+- Dynamic `Showing x-y of total` and page information
+- Open an individual credential from the View screen
+- Keep passwords masked in overview/detail screens until explicitly requested
+- Reveal and copy a selected credential password
+- Edit Service, Username, Password, and Comment
+- Delete credentials with confirmation
 - Store creation and modification timestamps
+- Dedicated empty-vault handling
 
 ### Application design
 
 - Layered, modular project structure
 - Separate interface, logic, service, storage, validation, and cryptography modules
+- Feature-specific vault services for Add, View, and Edit
 - Custom application exceptions
 - Automatic SQLite database and table initialization
 - Parameterized SQL values
@@ -57,14 +65,15 @@ The credential overview currently displays five records at a time, masks stored 
 
 ### Testing
 
-- pytest test suite
-- Unit tests for cryptography, validation, login logic, vault logic, and storage logic
+- pytest-based automated test suite
+- Tests for cryptography, validation, login logic, vault logic, storage, and storage logic
 - Temporary SQLite databases through pytest's `tmp_path`
 - Mocking and exception-path testing
+- Additional tests are being added for Edit, Delete, Search, pagination edge cases, ownership checks, and crypto failures
 
 ## Development status
 
-The CLI foundation is working, but the vault is not feature-complete.
+The majority of the CLI feature set is implemented. Search is the final major CLI feature before the project moves into a larger refactor, security-hardening, test-cleanup, documentation, and release phase.
 
 ### Implemented
 
@@ -76,46 +85,65 @@ The CLI foundation is working, but the vault is not feature-complete.
 - [x] Add Credential flow
 - [x] Vault dashboard
 - [x] Alphabetically sorted credential view
-- [x] Five-record database queries for credential pages
-- [x] Automated tests for the main application layers
+- [x] Five-record pagination
+- [x] Previous and next page navigation
+- [x] Dynamic pagination metadata
+- [x] Open an individual credential
+- [x] Reveal a password only after explicit user action
+- [x] Copy a revealed password
+- [x] Edit credentials
+- [x] Delete credentials
+- [x] Dedicated empty-state handling
 
 ### In progress
 
-- [ ] Dynamic pagination metadata
-- [ ] Previous and next page navigation
-- [ ] Open an individual credential
-- [ ] Decrypt a password only after an explicit user action
-
-### Planned CLI features
-
 - [ ] Search credentials
-- [ ] Edit credentials
-- [ ] Delete credentials
-- [ ] Improved lock and session-key cleanup
-- [ ] Export and import functionality
-- [ ] Database migrations and schema versioning
-- [ ] Packaging and release builds
+- [ ] Fix remaining Delete edge cases
+- [ ] Make the main overview consistently show the most recent credentials
+- [ ] Bring the complete automated test suite in sync with the current application
+
+### CLI v1.0 cleanup and hardening
+
+- [ ] Full code refactor and responsibility cleanup
+- [ ] Error-handling refactor
+- [ ] Credential ownership checks on reads and deletes
+- [ ] SQL identifier hardening
+- [ ] Clipboard cleanup for copied passwords
+- [ ] Session cleanup on lock/logout
+- [ ] Database schema/constraint review
+- [ ] Crypto failure handling
+- [ ] Final CLI navigation and UX polish
+- [ ] README and architecture documentation
+- [ ] Security documentation
+- [ ] Clean-install verification
+- [ ] Full manual acceptance test
+- [ ] CLI v1.0 release
 
 ### Future platform development
 
+After the CLI v1.0 milestone, the project is planned to continue with:
+
 - [ ] FastAPI REST API
-- [ ] Web interface
+- [ ] Web interface using HTML/CSS/JavaScript
 - [ ] PostgreSQL support
-- [ ] Server-side multi-user authentication
+- [ ] Server-side multi-user authentication/session design
 - [ ] Docker deployment
 - [ ] Cloud deployment
 
 ## Security model
 
-The current implementation uses the following flow:
+The current implementation uses the following high-level flow:
 
-1. The master password is processed with Argon2id during registration.
-2. A password verifier and separate random salts are stored in the login table.
+1. The master password is processed with Argon2id during registration and authentication.
+2. Password verification and encryption-key derivation use separate stored salts.
 3. After a successful login, an encryption key is derived for the active session.
-4. Credential passwords are encrypted with Fernet before they are inserted into SQLite.
-5. List views retrieve only the fields required for display and show a masked password value.
+4. Credential passwords are encrypted with Fernet before being written to SQLite.
+5. List views retrieve only the fields required for display and show passwords as masked values.
+6. A credential password is fetched/decrypted only when the user explicitly requests access to it.
 
-Security-sensitive code is still being reviewed and refactored as the project develops. A stable release will require additional testing, threat modelling, dependency review, secure key-lifecycle handling, and an independent security assessment.
+Security-sensitive code is still being reviewed and hardened. Before the first stable CLI release, the project roadmap includes ownership enforcement, session and clipboard cleanup, database constraint review, crypto failure handling, improved tests, and documentation of security limitations.
+
+This project has not undergone an independent security audit and does not make production-grade security guarantees.
 
 ## Project structure
 
@@ -131,6 +159,8 @@ Encrypted-CLI-password-vault/
 |   |
 |   |-- vault_services/
 |   |   |-- add_items.py
+|   |   |-- edit.py
+|   |   |-- helper_functions.py
 |   |   `-- view_items.py
 |   |
 |   |-- crypto.py
@@ -156,20 +186,24 @@ Encrypted-CLI-password-vault/
 `-- README.md
 ```
 
+The structure is still being actively refactored. The goal is for interface modules to focus on input/output, vault services to own feature-specific flows, application logic to coordinate behavior, and storage modules to isolate database access.
+
 ## Technology stack
 
 | Technology | Purpose |
 |---|---|
 | Python 3.14 | Application runtime |
 | SQLite | Local persistent storage |
-| cryptography | Argon2id key derivation and Fernet encryption |
+| cryptography | Fernet encryption and supporting cryptographic operations |
+| Argon2id | Master-password verification / key-derivation-related password processing |
 | Rich | Terminal layout, panels, tables, and prompts |
-| InquirerPy | Interactive input validation |
+| InquirerPy | Interactive CLI input |
+| pyperclip | Clipboard support for copied passwords |
 | pytest | Automated testing |
 
 ## Installation
 
-Python 3.14 is currently required.
+Python 3.14 is currently used for development.
 
 ```bash
 git clone https://github.com/Timeless101/Encrypted-CLI-password-vault.git
@@ -183,7 +217,7 @@ Run the application from the repository root:
 python -m src.main
 ```
 
-The SQLite database is created automatically on first start and is excluded from Git.
+The SQLite database is created automatically on first start and should remain excluded from Git.
 
 ## Running the tests
 
@@ -199,11 +233,26 @@ Run tests with detailed output:
 python -m pytest -vv
 ```
 
-Run one test file while showing printed output:
+Run a single test file while showing printed output:
 
 ```bash
-python -m pytest -s tests/storage/test_search_for_view_items.py
+python -m pytest -s path/to/test_file.py
 ```
+
+The test suite is currently being updated alongside the final CLI feature and refactor work, so some existing tests may temporarily need adjustment as older application flows are removed or changed.
+
+## Roadmap to CLI v1.0
+
+The remaining work is tracked through GitHub Issues and is grouped around six main areas:
+
+1. **Search** — complete the final major CLI feature.
+2. **Refactor** — simplify structure, responsibilities, naming, typing, and error handling.
+3. **Testing** — bring the full automated suite up to date and cover important edge cases.
+4. **Security hardening** — enforce user ownership and review sensitive-data handling.
+5. **CLI polish** — make navigation, empty states, errors, and feedback consistent.
+6. **Release** — verify a clean install, update documentation, run an acceptance test, and publish CLI v1.0.
+
+The API and web interface are intentionally treated as the next project phase rather than part of the CLI v1.0 milestone.
 
 ## Design goals
 
@@ -212,18 +261,19 @@ This project is being developed around a few practical goals:
 - Keep user-interface code separate from business and storage logic.
 - Make security-sensitive operations explicit and testable.
 - Keep database access replaceable so SQLite can later be exchanged for PostgreSQL.
-- Reuse the application and domain logic when the API and web interface are introduced.
+- Reuse application/domain logic when the API and web interface are introduced.
 - Prefer understandable code and incremental refactoring over prematurely complex abstractions.
+- Finish features before introducing abstractions that are not yet justified by the codebase.
 
 ## Contributing
 
 Feedback, bug reports, security observations, and architecture discussions are welcome. Because this is also a learning project, please open an issue before submitting a large change so the reasoning and design can be discussed first.
 
-Do not include real credentials, database files, encryption keys, or other secrets in issues, logs, screenshots, or pull requests.
+Do not include real credentials, database files, encryption keys, master passwords, or other secrets in issues, logs, screenshots, or pull requests.
 
 ## License
 
-This repository does not currently include an open-source license. A license will be selected before the first stable public release.
+This repository does not currently include an open-source license. Selecting and adding a license is part of the CLI v1.0 release roadmap.
 
 ## Author
 
