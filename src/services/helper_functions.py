@@ -33,5 +33,5 @@ def get_password_with_complexity():
             ).execute()
     return password
 
-def confirmation(text: str):
+def confirmation_prompt(text: str):
     return Prompt.ask(text, choices=["y", "N"], case_sensitive=False, show_choices=True, default="y").lower()

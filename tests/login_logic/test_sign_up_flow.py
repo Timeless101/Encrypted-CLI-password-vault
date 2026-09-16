@@ -1,7 +1,7 @@
 import src.login_logic as login_logic
 import src.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
-import src.vault_services.helper_functions as helper_functions
+import src.Services.helper_functions as helper_functions
 import pytest
 import src.errors as errors
 

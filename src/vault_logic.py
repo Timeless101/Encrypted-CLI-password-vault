@@ -1,16 +1,16 @@
 import math
 import pyperclip
-
 import src.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.interface.vault_interface as vault_interface
+import src.interface.add_interface as add_interface
 import src.errors as errors
-import src.vault_services.view_items as view_items
-import src.vault_services.edit as edit
+import src.services.view_items as view_items
+import src.services.edit as edit
 import src.interface.view_interface as view_interface
-from src.vault_services.helper_functions import confirmation
-from src.vault_services.helper_functions import clear_screen, exit_program, print_copy
-from src.vault_services.add_items import add_item_to_database as add_items
+from src.services.helper_functions import confirmation_prompt
+from src.services.helper_functions import clear_screen, exit_program, print_copy
+from src.services.add_items import add_item_to_database as add_items
 
 #Helper functions.
 def get_five_rows_out_database(userid: int) -> list | None:
@@ -85,8 +85,8 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
 def option_a(userid: int, encryption_key: bytes) -> str:
     clear_screen()
     while True:
-        result = vault_interface.add_items_screen()
-        confirmation = vault_interface.add_items_confirmation()
+        result = add_interface.add_items_screen()
+        confirmation = confirmation_prompt(text="\n[bright_cyan]Is al information correct?[/]")
         match confirmation:
             case "y":
                 if add_items(data=result, key=encryption_key, userid=userid):
@@ -114,7 +114,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
     match choice:
 
         case "r":
-            if confirmation(text="\n[bright_cyan]Are you sure you want to reveal the password?[/]") == "y":
+            if confirmation_prompt(text="\n[bright_cyan]Are you sure you want to reveal the password?[/]") == "y":
                 clear_screen()
                 password = view_items.view_password(encryption_key=encryption_key, data=data, id_choice=id_choice)
                 while True:
@@ -129,7 +129,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
             edit.main(cred_id=cred_id, userid=userid, encryption_key=encryption_key)
 
         case "d":
-            if confirmation(text="\n:warning:[bright_cyan] Are you sure you want to delete this item?[/]:warning:") == "y":
+            if confirmation_prompt(text="\n:warning:[bright_cyan] Are you sure you want to delete this item?[/]:warning:") == "y":
                 view_items.delete_item(cred_id=id_choice)
             pass
                 

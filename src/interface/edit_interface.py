@@ -2,7 +2,7 @@ from rich.prompt import Prompt
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from src.vault_services.helper_functions import clear_screen, get_password_with_complexity
+from src.services.helper_functions import get_password_with_complexity
 
 CONSOLE = Console()
 
