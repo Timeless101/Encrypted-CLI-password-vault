@@ -10,7 +10,7 @@ import src.services.edit as edit
 import src.interface.view_interface as view_interface
 from src.services.helper_functions import confirmation_prompt
 from src.services.helper_functions import clear_screen, exit_program, print_copy
-from src.services.add_items import add_item_to_database as add_items
+from src.services.add_items import add_item
 
 #Helper functions.
 def get_five_rows_out_database(userid: int) -> list | None:
@@ -45,7 +45,7 @@ def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: 
     func = dispatch_table.get(choice)
     return func()
 
-def setup(userid: int):
+def prepare_vault_screen_data(userid: int):
 
     data = get_five_rows_out_database(userid=userid)
     total_cred: int | None = storage_logic.get_all_items_in_database(userid=userid)
@@ -65,9 +65,9 @@ def setup(userid: int):
 def start_flow(email: str, userid: int, encryption_key: bytes):
     try:
         clear_screen()
-        data, total_cred, showed_items = setup(userid=userid)
+        data, total_cred, showed_items = prepare_vault_screen_data(userid=userid)
 
-        successs = option_handler(
+        success = option_handler(
             choice=vault_interface.vault_screen(
                     email=email,
                     total_cred=total_cred,
@@ -78,11 +78,11 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
             total_cred=total_cred
             )
         
-        if successs is None:
+        if success is None:
             error_messages.print_internal_error()
             #Make a log entry that logs that there was something wrong while passing the choice
             #no selection from:"A", "V", "S", "E", "D", "Q
-        return successs
+        return success
     
     except (KeyboardInterrupt, EOFError):
         exit_program()
@@ -90,11 +90,11 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
 def option_a(userid: int, encryption_key: bytes) -> str:
     clear_screen()
     while True:
-        result = add_interface.add_items_screen()
-        confirmation = confirmation_prompt(text="\n[bright_cyan]Is al information correct?[/]")
-        match confirmation:
+        result = add_interface.add_items_screen_flow()
+
+        match confirmation_prompt(text="\n[bright_cyan]Is al information correct?[/]"):
             case "y":
-                if add_items(data=result, key=encryption_key, userid=userid):
+                if add_item(data=result, key=encryption_key, userid=userid):
                     break
                 else:
                     error_messages.print_internal_error()

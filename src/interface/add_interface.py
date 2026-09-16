@@ -6,8 +6,8 @@ from src.services.helper_functions import clear_screen
 
 CONSOLE = Console()
 
-def add_items_screen():
-    service, username, password, comment = add_items_screen_flow()
+def add_items_screen_flow():
+    service, username, password, comment = add_items_screen()
     return {"Service": service, "Username": username, "Password": password, "Comment": comment}
 
 def add_item_screen(service, username, password, comment):
@@ -37,7 +37,7 @@ def question(name):
     return CONSOLE.input(f"[cyan]\n{name}: [/]")
 
 
-def add_items_screen_flow() -> tuple[str, str, str, str]:
+def add_items_screen() -> tuple[str, str, str, str]:
 
     add_item_screen("", "", "", "")
     service: str = question("Service")

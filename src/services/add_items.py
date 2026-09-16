@@ -3,7 +3,7 @@ from src.storage_logic import insert_data
 from datetime import datetime
 import src.errors as errors
 
-def add_item_to_database(data: dict, key: bytes, userid: int) -> bool:
+def add_item(data: dict, key: bytes, userid: int) -> bool:
     current_time = datetime.now()
 
     service = data["Service"]
