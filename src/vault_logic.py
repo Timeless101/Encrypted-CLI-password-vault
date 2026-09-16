@@ -45,23 +45,27 @@ def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: 
     func = dispatch_table.get(choice)
     return func()
 
+def setup(userid: int):
+
+    data = get_five_rows_out_database(userid=userid)
+    total_cred: int | None = storage_logic.get_all_items_in_database(userid=userid)
+
+    showed_items = 0
+    if total_cred is None:
+        total_cred = 0
+
+    if data is None:
+        showed_items = 0
+    else:
+        showed_items = len(data)
+
+    return data, total_cred, showed_items
+
 #Main flow
 def start_flow(email: str, userid: int, encryption_key: bytes):
-
     try:
         clear_screen()
-
-        data = get_five_rows_out_database(userid=userid)
-        total_cred: int | None = storage_logic.get_all_items_in_database(userid=userid)
-
-        showed_items = "_"
-        if total_cred is None:
-            total_cred = 0
-
-        if data is None:
-            showed_items = 0
-        else:
-            showed_items = len(data)
+        data, total_cred, showed_items = setup(userid=userid)
 
         successs = option_handler(
             choice=vault_interface.vault_screen(
@@ -73,12 +77,13 @@ def start_flow(email: str, userid: int, encryption_key: bytes):
             encryption_key=encryption_key,
             total_cred=total_cred
             )
-            
+        
         if successs is None:
             error_messages.print_internal_error()
             #Make a log entry that logs that there was something wrong while passing the choice
             #no selection from:"A", "V", "S", "E", "D", "Q
         return successs
+    
     except (KeyboardInterrupt, EOFError):
         exit_program()
 

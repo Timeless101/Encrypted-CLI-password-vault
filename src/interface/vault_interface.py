@@ -5,7 +5,6 @@ from rich.prompt import Prompt
 
 CONSOLE = Console()
 
-
 def vault_header(email: str, total_cred: int):
     grid_title = Table.grid(expand=True)
     grid_title.add_column(justify="left", no_wrap=True)

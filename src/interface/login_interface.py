@@ -1,4 +1,3 @@
-
 from pystyle import Colors, Colorate
 from getpass import getpass
 from rich.console import Console
