@@ -1,7 +1,10 @@
+import src.errors as errors
 from src.crypto import password_encryption
 from src.storage_logic import insert_data
 from datetime import datetime
-import src.errors as errors
+from src.services.helper_functions import clear_screen, confirmation_prompt
+from src.interface.error_messages import print_internal_error
+from src.interface.add_interface import add_items_screen_flow
 
 def add_item(data: dict, key: bytes, userid: int) -> bool:
     current_time = datetime.now()
@@ -48,3 +51,19 @@ def add_item(data: dict, key: bytes, userid: int) -> bool:
     except errors.InsertError as insert_error:
         raise errors.InsertError("Could not insert data into database.") from insert_error
 
+def add_main(userid: int, encryption_key: bytes) -> str:
+    clear_screen()
+    while True:
+        result = add_items_screen_flow()
+
+        match confirmation_prompt(text="\n[bright_cyan]Is al information correct?[/]"):
+            case "y":
+                if add_item(data=result, key=encryption_key, userid=userid):
+                    break
+                else:
+                    print_internal_error()
+                    break
+
+            case "n":
+               continue
+    return "a"
