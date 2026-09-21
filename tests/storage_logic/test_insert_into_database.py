@@ -1,5 +1,5 @@
-import src.storage_logic as storage_logic
-import src.storage as storage
+import src.storage.storage_logic as storage_logic
+import src.storage.storage as storage
 import src.errors as errors
 import pytest
 

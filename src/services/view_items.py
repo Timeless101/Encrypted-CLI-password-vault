@@ -1,6 +1,6 @@
 import math
 import pyperclip
-import src.storage as storage
+import src.storage.storage as storage
 import src.interface.error_messages as error_messages
 import src.interface.view_interface as view_interface
 import src.errors as errors
@@ -8,9 +8,9 @@ from src.services import edit
 from src.crypto import password_decryption
 from src.services.helper_functions import clear_screen, print_copy, confirmation_prompt
 from src.services.add_items import add_main
-from src.storage_logic import searcher
+from src.storage.storage_logic import searcher
 
-#Helpder Functions
+#Helper Functions
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
     rows = storage.Search_data.search_for_view_items(
@@ -37,13 +37,13 @@ def data_handler(data: list[tuple], choice: int ) -> tuple:
 
     return (data[0][2], data[0][3], data[0][5], data[0][6], data[0][7]), cred_id # returns service, username, comment, creationdate, editeddate.
 
-def get_cred_id(data: list[tuple], choice: int):
+def get_cred_id(data: list[tuple], choice: int) -> int:
     for item in data:
         if item[0] == choice:
             return item[1]
         continue
 
-def view_password(encryption_key: bytes, cred_id: int):
+def view_password(encryption_key: bytes, cred_id: int) -> str:
     password = storage.Search_data.search_specific_data(
                 database_name="CLI_Data.db",
                 table="vault_storage",
@@ -53,7 +53,7 @@ def view_password(encryption_key: bytes, cred_id: int):
 
     return password_decryption(encryption_key=encryption_key, password=password[0][4])
 
-def data_collection(userid: int, page_size: int, offset: int, total_cred: int, current_page: int, total_pages: int, showing_items_end: int, showing_items_start: int) -> str | list[tuple]:
+def data_collection(userid: int, page_size: int, offset: int, total_cred: int, current_page: int, total_pages: int, showing_items_end: int, showing_items_start: int) -> tuple:
     data: list[tuple] = get_view_screen_data(
         userid=userid,
         page_size=page_size,
@@ -69,7 +69,6 @@ def data_collection(userid: int, page_size: int, offset: int, total_cred: int, c
             showing_items_start=showing_items_start
             )
     return option, data
-
 
 #Flow functions
 def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
@@ -121,7 +120,7 @@ def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
             case "a":
                 add_main(userid=userid, encryption_key=encryption_key)
 
-def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred_id: int):
+def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred_id: int) -> bool:
     data = searcher(
         columns=["Service", "Username", "Comment", "CreationDate", "EditedDate"],
         column=("cred_id",),
@@ -153,7 +152,6 @@ def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred
         case "b":
             return False
 
-
 def select_item_flow(data: list) -> str:
     id_choice: int = view_interface.ask_item_id()
     clear_screen()
@@ -165,9 +163,8 @@ def select_item_flow(data: list) -> str:
 
     return view_interface.view_password_handler(data=view_item_data), id_choice, cred_id
 
-
 #Item Operations
-def open_item(data: list, encryption_key: bytes, userid: int):
+def open_item(data: list, encryption_key: bytes, userid: int) -> bool:
     result = select_item_flow(data=data)
     if result is False:
         return False
@@ -179,7 +176,7 @@ def open_item(data: list, encryption_key: bytes, userid: int):
     password_item_flow(str_choice=str_choice, encryption_key=encryption_key, userid=userid, cred_id=cred_id)
 
 
-def delete_item(cred_id: int):
+def delete_item(cred_id: int) -> bool:
     try:
         if storage.delete_item(
         database="CLI_Data.db",

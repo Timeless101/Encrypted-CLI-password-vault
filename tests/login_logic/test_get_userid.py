@@ -1,4 +1,4 @@
-import src.storage_logic as storage_logic
+import src.storage.storage_logic as storage_logic
 import src.login_logic as login_logic
 import src.errors as errors
 import pytest

@@ -1,8 +1,7 @@
-import src.storage_logic as storage_logic
+import src.storage.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.interface.vault_interface as vault_interface
 import src.errors as errors
-import src.services.view_items as view_items
 from src.services.helper_functions import clear_screen, exit_program
 from src.services.add_items import add_main
 from src.services.view_items import pagination

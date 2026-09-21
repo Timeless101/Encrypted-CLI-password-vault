@@ -1,7 +1,7 @@
 import pytest
 import src.errors as errors
 import src.login_logic as login_logic
-import src.storage_logic as storage_logic
+import src.storage.storage_logic as storage_logic
 
 
 #test if it works correctly when e-mail is valid.

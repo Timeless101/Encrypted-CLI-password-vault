@@ -1,4 +1,4 @@
-from src.storage import Search_data
+from src.storage.storage import Search_data
 import sqlite3
 import pytest
 import src.errors as errors

@@ -1,5 +1,5 @@
 import src.interface.edit_interface as edit_interface
-import src.storage_logic as storage_logic
+import src.storage.storage_logic as storage_logic
 import src.crypto as crypto
 
 class Edit_searcher:

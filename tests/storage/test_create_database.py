@@ -1,4 +1,4 @@
-import src.storage as storage
+import src.storage.storage as storage
 import sqlite3
 import pytest
 import src.errors as errors

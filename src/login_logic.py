@@ -1,5 +1,5 @@
 import src.errors as errors
-import src.storage_logic as storage_logic
+import src.storage.storage_logic as storage_logic
 import src.interface.login_interface as login_interface
 import src.validator as validator
 import src.crypto as crypto

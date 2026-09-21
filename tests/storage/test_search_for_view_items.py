@@ -1,4 +1,4 @@
-import src.storage as storage
+import src.storage.storage as storage
 import sqlite3
 
 def test_search_for_view_items_happy_test(tmp_path):
