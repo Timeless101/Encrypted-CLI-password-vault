@@ -120,7 +120,7 @@ def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
             case "a":
                 add_main(userid=userid, encryption_key=encryption_key)
 
-def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred_id: int) -> bool:
+def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred_id: int) -> bool | None:
     data = searcher(
         columns=["Service", "Username", "Comment", "CreationDate", "EditedDate"],
         column=("cred_id",),
