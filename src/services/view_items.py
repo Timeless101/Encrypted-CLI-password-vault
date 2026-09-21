@@ -77,8 +77,6 @@ def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred
         data_to_search=cred_id,
         userid=userid
     )
-
-    #service, username, comment, created, editeddate
     match str_choice:
         case "r":
             if confirmation_prompt(text="\n[bright_cyan]Are you sure you want to reveal the password?[/]") == "y":

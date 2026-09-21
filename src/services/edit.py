@@ -1,7 +1,6 @@
 import src.interface.edit_interface as edit_interface
 import src.storage_logic as storage_logic
 import src.crypto as crypto
-import time
 
 class Edit_searcher:
 
@@ -10,7 +9,8 @@ class Edit_searcher:
             current_data = storage_logic.searcher(
                 columns=[column,],
                 column=("cred_id",),
-                data_to_search=cred_id
+                data_to_search=cred_id,
+                userid=userid
             )[0][0]
 
             new_data = edit_interface.Edit_prompt.new_data_question(column, current_data)
@@ -35,7 +35,8 @@ class Edit_searcher:
                     password_encrypted = storage_logic.searcher(
                         columns=[column,],
                         column=("cred_id",),
-                        data_to_search=cred_id
+                        data_to_search=cred_id,
+                        userid=userid
                     )[0][0]
 
                     current_data = crypto.password_decryption(
@@ -69,7 +70,8 @@ def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
     data = storage_logic.searcher(
         columns=["Service", "Username", "comment"],
         column=("cred_id",),
-        data_to_search=cred_id
+        data_to_search=cred_id,
+        userid=userid
     )
     
     choice_table(
