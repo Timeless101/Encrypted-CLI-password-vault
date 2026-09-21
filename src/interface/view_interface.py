@@ -41,7 +41,7 @@ def main_view(data: list):
     asterisk = "*" * 8
 
     for item in data:
-        items_id, cred_id, service, username, comment, editdate = item
+        items_id, _, service, username, comment, editdate = item
         table.add_row(str(items_id), service, username, asterisk, comment, editdate)
 
     CONSOLE.print(table)

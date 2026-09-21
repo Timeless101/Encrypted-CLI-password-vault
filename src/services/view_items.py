@@ -10,6 +10,7 @@ from src.services.helper_functions import clear_screen, print_copy, confirmation
 from src.services.add_items import add_main
 from src.storage_logic import searcher
 
+#Helpder Functions
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
     rows = storage.Search_data.search_for_view_items(
@@ -52,23 +53,73 @@ def view_password(encryption_key: bytes, cred_id: int):
 
     return password_decryption(encryption_key=encryption_key, password=password[0][4])
 
-def delete_item(cred_id: int):
-    try:
-        if storage.delete_item(
-        database="CLI_Data.db",
-        table="vault_storage",
-        cred_id=cred_id
-        ):
-            return True
-    except errors.WrongSQLStatement:
-        error_messages.print_internal_error()
-        return False
-    except errors.DatabaseError:
-        error_messages.print_internal_error()
-        return False
-    except errors.UnexpectedError:
-        error_messages.print_contact_support()
-        return False
+def data_collection(userid: int, page_size: int, offset: int, total_cred: int, current_page: int, total_pages: int, showing_items_end: int, showing_items_start: int) -> str | list[tuple]:
+    data: list[tuple] = get_view_screen_data(
+        userid=userid,
+        page_size=page_size,
+        offset=offset
+        )
+
+    option: str = view_interface.screen_handler(
+            data=data,
+            total_credentials=total_cred,
+            current_page=current_page,
+            max_page=total_pages,
+            showing_items_end=showing_items_end,
+            showing_items_start=showing_items_start
+            )
+    return option, data
+
+
+#Flow functions
+def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
+
+    current_page: int = 1
+    page_size: int = 5
+    offset: int = 0
+    total_pages: int = math.ceil(total_cred / page_size)
+    
+    while True:
+        clear_screen()
+
+        pages: int = (current_page - 1) * page_size
+        showed_items: int = pages + page_size
+
+        showing_items_start: int = (current_page * page_size) - 4
+        showing_items_end: int = min(current_page * page_size, total_cred)
+
+        option, data = data_collection(
+                        userid=userid,
+                        page_size=page_size,
+                        offset=offset,
+                        total_cred=total_cred,
+                        current_page=current_page,
+                        total_pages=total_pages,
+                        showing_items_end=showing_items_end,
+                        showing_items_start=showing_items_start
+                    )
+
+        match option:
+            case "b":
+                return "v"
+
+            case "n":
+                if showed_items < total_cred:
+                    current_page += 1
+                    offset += page_size
+                    continue
+
+            case "p":
+                if showed_items > page_size:
+                    current_page -= 1
+                    offset -= page_size
+                    continue
+
+            case "#":
+                open_item(data=data, encryption_key=encryption_key, userid=userid)
+
+            case "a":
+                add_main(userid=userid, encryption_key=encryption_key)
 
 def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred_id: int):
     data = searcher(
@@ -102,6 +153,7 @@ def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred
         case "b":
             return False
 
+
 def select_item_flow(data: list) -> str:
     id_choice: int = view_interface.ask_item_id()
     clear_screen()
@@ -114,23 +166,7 @@ def select_item_flow(data: list) -> str:
     return view_interface.view_password_handler(data=view_item_data), id_choice, cred_id
 
 
-def new_func(userid: int, page_size: int, offset: int, total_cred: int, current_page: int, total_pages: int, showing_items_end: int, showing_items_start: int):
-    data: list[tuple] = get_view_screen_data(
-        userid=userid,
-        page_size=page_size,
-        offset=offset
-        )
-
-    option: str = view_interface.screen_handler(
-            data=data,
-            total_credentials=total_cred,
-            current_page=current_page,
-            max_page=total_pages,
-            showing_items_end=showing_items_end,
-            showing_items_start=showing_items_start
-            )
-    return option, data
-
+#Item Operations
 def open_item(data: list, encryption_key: bytes, userid: int):
     result = select_item_flow(data=data)
     if result is False:
@@ -142,51 +178,21 @@ def open_item(data: list, encryption_key: bytes, userid: int):
         return False
     password_item_flow(str_choice=str_choice, encryption_key=encryption_key, userid=userid, cred_id=cred_id)
 
-def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
-    current_page: int = 1
-    page_size: int = 5
-    offset: int = 0
-    total_pages: int = math.ceil(total_cred / page_size)
-    
-    while True:
-        clear_screen()
-
-        pages: int = (current_page - 1) * page_size
-        showed_items: int = pages + page_size
-
-        showing_items_start: int = (current_page * page_size) - 4
-        showing_items_end: int = min(current_page * page_size, total_cred)
-
-        option, data = new_func(
-                        userid=userid,
-                        page_size=page_size,
-                        offset=offset,
-                        total_cred=total_cred,
-                        current_page=current_page,
-                        total_pages=total_pages,
-                        showing_items_end=showing_items_end,
-                        showing_items_start=showing_items_start
-                    )
-
-        match option:
-            case "b":
-                return "v"
-
-            case "n":
-                if showed_items < total_cred:
-                    current_page += 1
-                    offset += page_size
-                    continue
-
-            case "p":
-                if showed_items > page_size:
-                    current_page -= 1
-                    offset -= page_size
-                    continue
-
-            case "#":
-                open_item(data=data, encryption_key=encryption_key, userid=userid)
-
-            case "a":
-                add_main(userid=userid, encryption_key=encryption_key)
+def delete_item(cred_id: int):
+    try:
+        if storage.delete_item(
+        database="CLI_Data.db",
+        table="vault_storage",
+        cred_id=cred_id
+        ):
+            return True
+    except errors.WrongSQLStatement:
+        error_messages.print_internal_error()
+        return False
+    except errors.DatabaseError:
+        error_messages.print_internal_error()
+        return False
+    except errors.UnexpectedError:
+        error_messages.print_contact_support()
+        return False
