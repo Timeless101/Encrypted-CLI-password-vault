@@ -129,7 +129,7 @@ def view_password_item(data: list) -> str:
 
 def view_password_plain(data: list, password: str) -> None:
 
-    _, service, username, comment, created, editeddate = data[0]
+    service, username, comment, created, editeddate = data[0]
 
     table = Table.grid(expand=True)
 

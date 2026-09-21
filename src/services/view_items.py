@@ -6,10 +6,9 @@ import src.interface.view_interface as view_interface
 import src.errors as errors
 from src.services import edit
 from src.crypto import password_decryption
-from src.services.helper_functions import clear_screen
 from src.services.helper_functions import clear_screen, print_copy, confirmation_prompt
 from src.services.add_items import add_main
-
+from src.storage_logic import searcher
 
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
@@ -21,7 +20,6 @@ def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple
     )
 
     return rows
-
 
 def data_handler(data: list[tuple], choice: int ) -> tuple:
     cred_id = get_cred_id(data=data, choice=choice)
@@ -42,15 +40,14 @@ def get_cred_id(data: list[tuple], choice: int):
     for item in data:
         if item[0] == choice:
             return item[1]
-        else:
-            continue
+        continue
 
-def view_password(encryption_key: bytes, data: list[tuple], id_choice: int):
+def view_password(encryption_key: bytes, cred_id: int):
     password = storage.Search_data.search_specific_data(
                 database_name="CLI_Data.db",
                 table="vault_storage",
                 column="cred_id",
-                data_to_be_searched=get_cred_id(data=data, choice=id_choice)
+                data_to_be_searched=cred_id
             )
 
     return password_decryption(encryption_key=encryption_key, password=password[0][4])
@@ -73,13 +70,20 @@ def delete_item(cred_id: int):
         error_messages.print_contact_support()
         return False
 
-def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id_choice, userid: int, cred_id: int):
-    match choice:
+def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred_id: int):
+    data = searcher(
+        columns=["Service", "Username", "Comment", "CreationDate", "EditedDate"],
+        column=("cred_id",),
+        data_to_search=cred_id,
+        userid=userid
+    )
 
+    #service, username, comment, created, editeddate
+    match str_choice:
         case "r":
             if confirmation_prompt(text="\n[bright_cyan]Are you sure you want to reveal the password?[/]") == "y":
                 clear_screen()
-                password = view_password(encryption_key=encryption_key, data=data, id_choice=id_choice)
+                password = view_password(encryption_key=encryption_key, cred_id=cred_id)
                 while True:
                     clear_screen()
                     if view_interface.view_password_plain_handeler(data=data, password=password) == "c":
@@ -93,7 +97,7 @@ def password_item_flow(choice: str, encryption_key: bytes, data: list[tuple], id
 
         case "d":
             if confirmation_prompt(text="\n:warning:[bright_cyan] Are you sure you want to delete this item?[/]:warning:") == "y":
-                delete_item(cred_id=id_choice)
+                delete_item(cred_id=cred_id)
             pass
                 
             
@@ -129,16 +133,16 @@ def new_func(userid: int, page_size: int, offset: int, total_cred: int, current_
             )
     return option, data
 
-def openitem(data: list, encryption_key: bytes, userid: int):
+def open_item(data: list, encryption_key: bytes, userid: int):
     result = select_item_flow(data=data)
     if result is False:
         return False
-    
-    choice, id_choice, cred_id = result
 
-    if choice is None:
+    str_choice, _, cred_id = result
+
+    if str_choice is None:
         return False
-    password_item_flow(choice=choice, id_choice=id_choice, data=data, encryption_key=encryption_key, userid=userid, cred_id=cred_id)
+    password_item_flow(str_choice=str_choice, encryption_key=encryption_key, userid=userid, cred_id=cred_id)
 
 def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
@@ -169,7 +173,7 @@ def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
 
         match option:
             case "b":
-                return ""
+                return "v"
 
             case "n":
                 if showed_items < total_cred:
@@ -184,7 +188,7 @@ def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
                     continue
 
             case "#":
-                openitem(data=data, encryption_key=encryption_key, userid=userid)
+                open_item(data=data, encryption_key=encryption_key, userid=userid)
 
             case "a":
                 add_main(userid=userid, encryption_key=encryption_key)

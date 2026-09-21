@@ -95,7 +95,7 @@ class Search_data:
             raise errors.TableError(f"No such table: {table}") from table_error
 
     @staticmethod
-    def searcher(table: str, columns: list, column: tuple, data_to_search: str, database_name: str) -> list[tuple] | None:
+    def searcher(table: str, columns: list, column: tuple, data_to_search: str, database_name: str, userid: int) -> list[tuple] | None:
 
         try:
             if not isinstance(column, tuple):
@@ -107,10 +107,10 @@ class Search_data:
             column = column[0]
 
             column_str = ", ".join(columns)
-            query = f"SELECT {column_str} FROM {table} WHERE {column} = ?"
+            query = f"SELECT {column_str} FROM {table} WHERE {column} = ? AND Userid = ?;"
             with sqlite3.connect(database_name) as connection:
                 c = connection.cursor()
-                c.execute(query, (data_to_search, ))
+                c.execute(query, (data_to_search, userid))
                 row = c.fetchall()
 
             if len(row) == 0:

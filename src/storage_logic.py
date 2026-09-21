@@ -48,7 +48,7 @@ def search_data(table_name: str, table_column: str, data_to_be_searched: str) ->
     except errors.TableError as table_error:
         raise errors.TableError(f"No such table: {table_name}") from table_error
 
-def searcher(columns: list, column: tuple, data_to_search: str) -> list[tuple] | None:
+def searcher(columns: list, column: tuple, data_to_search: str, userid: int) -> list[tuple] | None:
 
     if not isinstance(column, tuple):
         raise errors.WrongDataTypeTuple("Column isn't a tuple.")
@@ -62,7 +62,8 @@ def searcher(columns: list, column: tuple, data_to_search: str) -> list[tuple] |
             database_name=DATABASE_NAME,
             columns=columns,
             column=column,
-            data_to_search=data_to_search
+            data_to_search=data_to_search,
+            userid=userid
         )
 
         return data
