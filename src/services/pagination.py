@@ -9,31 +9,22 @@ class Pagination():
         self.offset: int = 0
 
         self.total_pages: int = math.ceil(total_cred / self.page_size)
-        self.pages: int = (self.current_page - 1) * self.page_size
-        self.showed_items: int = self.pages + self.page_size
-
-        
-        
 
     @property
     def showing_items_start(self) -> int:
-        return (self.current_page * self.page_size) - 4
+        return (self.current_page * self.page_size) - (self.page_size - self.current_page)
 
     @property
 
     def showing_items_end(self) -> int:
         return min(self.current_page * self.page_size, self.total_cred)
         
-    def next_page(self):
+    def next_page(self) -> None:
         if self.current_page < self.total_pages:
             self.current_page += 1
             self.offset += self.page_size
-        else:
-            pass
 
-    def previous_page(self):
+    def previous_page(self) -> None:
         if self.current_page > 1:
             self.current_page -= 1
             self.offset -= self.page_size
-        else:
-            pass
