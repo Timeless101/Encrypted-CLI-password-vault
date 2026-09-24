@@ -199,7 +199,7 @@ def view_password_handler(data: list) -> str:
 def screen_handler(data: list, total_credentials: int, current_page: int, max_page: int, showing_items_end: int, showing_items_start: int) -> str:
 
     if data is None:
-        option_v_header(total_credentials=total_credentials)
+        main_header(total_credentials=total_credentials)
         option_no_items = items_none().lower()
         return option_no_items
 

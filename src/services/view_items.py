@@ -1,4 +1,3 @@
-import math
 import pyperclip
 import src.storage.database_logic as database_logic
 import src.interface.error_messages as error_messages
@@ -9,18 +8,17 @@ from src.crypto import password_decryption
 from src.services.helper_functions import clear_screen, print_copy, confirmation_prompt
 from src.services.add_items import add_main
 from src.storage.storage_logic import searcher
+from src.services.pagination import Pagination
 
 #Helper Functions
-def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
-
-    rows = database_logic.search_for_view_items(
+def get_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
+    data_rows = database_logic.search_for_view_items(
         userid=userid,
         limit=page_size,
         offset=offset,
         database="CLI_Data.db"
     )
-
-    return rows
+    return data_rows
 
 def data_handler(data: list[tuple], choice: int ) -> tuple:
     cred_id = get_cred_id(data=data, choice=choice)
@@ -53,66 +51,44 @@ def view_password(encryption_key: bytes, cred_id: int) -> str:
 
     return password_decryption(encryption_key=encryption_key, password=password[0][4])
 
-def data_collection(userid: int, page_size: int, offset: int, total_cred: int, current_page: int, total_pages: int, showing_items_end: int, showing_items_start: int) -> tuple:
-    data: list[tuple] = get_view_screen_data(
-        userid=userid,
-        page_size=page_size,
-        offset=offset
-        )
-
+def show_screen_with_data_get_option(data: list, total_cred: int, current_page:int , total_pages: int, showing_items_end: int, showing_items_start: int):
     option: str = view_interface.screen_handler(
-            data=data,
-            total_credentials=total_cred,
-            current_page=current_page,
-            max_page=total_pages,
-            showing_items_end=showing_items_end,
-            showing_items_start=showing_items_start
-            )
-    return option, data
+                data=data,
+                total_credentials=total_cred,
+                current_page=current_page,
+                max_page=total_pages,
+                showing_items_end=showing_items_end,
+                showing_items_start=showing_items_start,
+                )
+    return option
 
 #Flow functions
-def pagination(userid: int, total_cred: int, encryption_key: bytes) -> str:
-
-    current_page: int = 1
-    page_size: int = 5
-    offset: int = 0
-    total_pages: int = math.ceil(total_cred / page_size)
-    
+def menu_flow(userid: int, total_cred: int, encryption_key: bytes) -> str:
+    pag = Pagination(total_cred=total_cred)
     while True:
         clear_screen()
+        data = get_screen_data(userid=userid, page_size=pag.page_size, offset=pag.offset)
 
-        pages: int = (current_page - 1) * page_size
-        showed_items: int = pages + page_size
-
-        showing_items_start: int = (current_page * page_size) - 4
-        showing_items_end: int = min(current_page * page_size, total_cred)
-
-        option, data = data_collection(
-                        userid=userid,
-                        page_size=page_size,
-                        offset=offset,
-                        total_cred=total_cred,
-                        current_page=current_page,
-                        total_pages=total_pages,
-                        showing_items_end=showing_items_end,
-                        showing_items_start=showing_items_start
-                    )
+        option = show_screen_with_data_get_option(
+            data=data,
+            total_cred=pag.total_cred,
+            current_page=pag.current_page,
+            total_pages=pag.total_pages,
+            showing_items_start=pag.showing_items_start,
+            showing_items_end=pag.showing_items_end
+        )
 
         match option:
             case "b":
                 return "v"
 
             case "n":
-                if showed_items < total_cred:
-                    current_page += 1
-                    offset += page_size
-                    continue
+                pag.next_page()
+                continue
 
             case "p":
-                if showed_items > page_size:
-                    current_page -= 1
-                    offset -= page_size
-                    continue
+                pag.previous_page()
+                continue
 
             case "#":
                 open_item(data=data, encryption_key=encryption_key, userid=userid)

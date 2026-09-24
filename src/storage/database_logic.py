@@ -38,7 +38,7 @@ def create_table(table_name: str, columns: dict, database_name: str) -> True:
         raise errors.TableCreationError(f"Couldn't create table") from sql_error
 
 
-def insert_data(self, table_name: str, column_name: list, data_insert: list, database_name: str) -> True:
+def insert_data(table_name: str, column_name: list, data_insert: list, database_name: str) -> True:
     if not isinstance(data_insert, list):
         raise errors.WrongDataTypeList("Data insert isn't a list.")
     

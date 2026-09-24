@@ -4,7 +4,7 @@ import src.interface.vault_interface as vault_interface
 import src.errors as errors
 from src.services.helper_functions import clear_screen, exit_program
 from src.services.add_items import add_main
-from src.services.view_items import pagination
+from src.services.view_items import menu_flow
 
 #Helper functions.
 def get_five_rows_out_database(userid: int) -> list | None:
@@ -32,7 +32,7 @@ def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: 
     
     dispatch_table = {
         "a": lambda: add_main(userid, encryption_key),
-        "v": lambda: pagination(userid, total_cred, encryption_key),
+        "v": lambda: menu_flow(userid, total_cred, encryption_key),
         "s": option_s,
         "q": option_q
     }
