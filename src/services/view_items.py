@@ -1,6 +1,6 @@
 import math
 import pyperclip
-import src.storage.storage as storage
+import src.storage.database_logic as database_logic
 import src.interface.error_messages as error_messages
 import src.interface.view_interface as view_interface
 import src.errors as errors
@@ -13,7 +13,7 @@ from src.storage.storage_logic import searcher
 #Helper Functions
 def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple]:
 
-    rows = storage.Search_data.search_for_view_items(
+    rows = database_logic.search_for_view_items(
         userid=userid,
         limit=page_size,
         offset=offset,
@@ -25,7 +25,7 @@ def get_view_screen_data(userid: int, page_size: int, offset: int) -> list[tuple
 def data_handler(data: list[tuple], choice: int ) -> tuple:
     cred_id = get_cred_id(data=data, choice=choice)
 
-    data = storage.Search_data.search_specific_data(
+    data = database_logic.search_specific_data(
             database_name="CLI_Data.db",
             table="vault_storage",
             column="cred_id",
@@ -44,7 +44,7 @@ def get_cred_id(data: list[tuple], choice: int) -> int:
         continue
 
 def view_password(encryption_key: bytes, cred_id: int) -> str:
-    password = storage.Search_data.search_specific_data(
+    password = database_logic.search_specific_data(
                 database_name="CLI_Data.db",
                 table="vault_storage",
                 column="cred_id",
@@ -178,7 +178,7 @@ def open_item(data: list, encryption_key: bytes, userid: int) -> bool:
 
 def delete_item(cred_id: int) -> bool:
     try:
-        if storage.delete_item(
+        if database_logic.delete_item(
         database="CLI_Data.db",
         table="vault_storage",
         cred_id=cred_id

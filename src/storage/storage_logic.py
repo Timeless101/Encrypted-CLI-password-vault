@@ -1,4 +1,4 @@
-import src.storage as storage
+import src.storage.database_logic as database_logic
 import src.errors as errors
 
 DATABASE_NAME = "CLI_Data.db"
@@ -8,7 +8,7 @@ VAULT_TABLE = "vault_storage"
 #Search functions
 def search_limited_amount_of_items_in_database(userid: int, limit: int) -> list[tuple] | None:
 
-    data: list[tuple] = storage.Search_data.search_interface_password_id(
+    data: list[tuple] = database_logic.search_interface_password_id(
         userid=userid,
         database=DATABASE_NAME,
         limit=limit
@@ -34,7 +34,7 @@ def get_all_items_in_database(userid) -> None | int:
 
 def search_data(table_name: str, table_column: str, data_to_be_searched: str) -> list | None:
     try:
-        data:  list | None = storage.Search_data.search_specific_data(
+        data:  list | None = database_logic.search_specific_data(
                 database_name=DATABASE_NAME,
                 table=table_name,
                 column=table_column,
@@ -57,7 +57,7 @@ def searcher(columns: list, column: tuple, data_to_search: str, userid: int) -> 
         raise errors.WrongDataTypeList("Columns isn't a list.")
 
     try:
-        data = storage.Search_data.searcher(
+        data = database_logic.searcher(
             table=VAULT_TABLE,
             database_name=DATABASE_NAME,
             columns=columns,
@@ -96,8 +96,7 @@ def data_row_search(email: str, table_column: str, table_name: str) -> list | No
 #Insert functions
 def insert_data(table_name: str, column_name: list, data: list) -> bool:
     try:
-        db = storage.Insert_data(database_name=DATABASE_NAME)
-        if db.insert_data(table_name=table_name, column_name=column_name, data_insert=data):
+        if database_logic.insert_data(table_name=table_name, database_name=DATABASE_NAME, column_name=column_name, data_insert=data):
             return True
         
     except errors.WrongDataTypeList as wrong_type_error:
@@ -112,11 +111,13 @@ def insert_data(table_name: str, column_name: list, data: list) -> bool:
 
 #Database creations functions
 def table_creator(table_name: str, columns: dict):
-    creator = storage.Table_creator(database_name=DATABASE_NAME)
+
     try:
-        if creator.create_table(
+        if database_logic.create_table(
             table_name=table_name,
-            columns=columns):
+            columns=columns,
+            database_name=DATABASE_NAME
+            ):
             return True
 
     except errors.WrongDataTypeDict as wrong_type_error:
@@ -128,7 +129,7 @@ def table_creator(table_name: str, columns: dict):
 
 def create_database(database_name: str):
     try:
-        if storage.create_database(database_name=database_name):
+        if database_logic.create_database(database_name=database_name):
             return True
         return False
     except errors.DatabaseError:
@@ -136,7 +137,7 @@ def create_database(database_name: str):
 
 
 def update_database_item(cred_id: int, userid: int, column: str, new_data: str):
-    if storage.update_item(
+    if database_logic.update_item(
         table=VAULT_TABLE,
         database=DATABASE_NAME,
         userid=userid,

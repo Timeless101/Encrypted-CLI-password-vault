@@ -1,7 +1,7 @@
 import pytest
 import src.errors as errors
 import sqlite3
-from src.storage.storage import Search_data
+from src.storage.Database_logic import Search_data
 
 
 def test_search_function_wrong_table(tmp_path):

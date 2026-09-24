@@ -1,6 +1,6 @@
 import pytest
 import src.errors as errors
-from src.storage.storage import Table_creator
+from src.storage.Database_logic import Table_creator
 
 
 def test_create_tabale__wrong_input(tmp_path):
