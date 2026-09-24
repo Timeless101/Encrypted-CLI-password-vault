@@ -5,14 +5,14 @@ class Pagination():
 
         self.total_cred = total_cred
         self.current_page: int = 1
-        self.page_size: int = 5
+        self.page_size: int = 10
         self.offset: int = 0
 
         self.total_pages: int = math.ceil(total_cred / self.page_size)
 
     @property
     def showing_items_start(self) -> int:
-        return (self.current_page * self.page_size) - (self.page_size - self.current_page)
+        return (self.current_page * self.page_size) - (self.offset + 1)
 
     @property
 
