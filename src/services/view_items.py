@@ -103,6 +103,7 @@ def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred
         data_to_search=cred_id,
         userid=userid
     )
+
     match str_choice:
         case "r":
             if confirmation_prompt(text="\n[bright_cyan]Are you sure you want to reveal the password?[/]") == "y":
@@ -123,10 +124,6 @@ def password_item_flow(str_choice: str, encryption_key: bytes, userid: int, cred
             if confirmation_prompt(text="\n:warning:[bright_cyan] Are you sure you want to delete this item?[/]:warning:") == "y":
                 delete_item(cred_id=cred_id)
             pass
-                
-            
-        case "b":
-            return False
 
 def select_item_flow(data: list) -> str:
     id_choice: int = view_interface.ask_item_id()

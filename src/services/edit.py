@@ -2,70 +2,60 @@ import src.interface.edit_interface as edit_interface
 import src.storage.storage_logic as storage_logic
 import src.crypto as crypto
 
-
-
-def update_data(column: str, cred_id: int, userid: int) -> True:
+def update_password(column: str, cred_id: int, userid: int, encryption_key: bytes, current_data) -> None:
     while True:
-        current_data = storage_logic.searcher(
-            columns=[column,],
-            column=("cred_id",),
-            data_to_search=cred_id,
-            userid=userid
-        )[0][0]
+        password_decrypted = crypto.password_decryption(
+            password=current_data,
+            encryption_key=encryption_key
+            )
+        
+        new_data = edit_interface.Edit_prompt.new_data_question(column, password_decrypted)
+        awnser = edit_interface.Edit_prompt.confirmation()
 
+        if awnser.lower() not in ("y", "yes"):
+            continue
+        storage_logic.update_database_item(
+                            cred_id=cred_id,
+                            userid=userid,
+                            column=column,
+                            new_data=new_data
+        )
+        break
+
+def update_data(column: str, cred_id: int, userid: int, encryption_key: bytes, is_password: bool) -> None:
+    current_data = storage_logic.searcher(
+                columns=[column,],
+                column=("cred_id",),
+                data_to_search=cred_id,
+                userid=userid
+            )[0][0]
+
+    if is_password:
+        update_password(
+            current_data=current_data,
+            column=column,
+            cred_id=cred_id,
+            userid=userid,
+            encryption_key=encryption_key,
+        )
+        return None
+
+    while True:
         new_data = edit_interface.Edit_prompt.new_data_question(column, current_data)
         awnser = edit_interface.Edit_prompt.confirmation()
 
         if awnser.lower() not in ("y", "yes"):
             continue
         break
-            
 
     storage_logic.update_database_item(
-        cred_id=cred_id,
-        userid=userid,
-        column=column,
-        new_data=new_data
-    )
+            cred_id=cred_id,
+            userid=userid,
+            column=column,
+            new_data=new_data
+        )
 
-    return True
-
-def update_password(column: str, cred_id: int, userid: int, encryption_key: bytes) -> True:
-    while True:
-                password_encrypted = storage_logic.searcher(
-                    columns=[column,],
-                    column=("cred_id",),
-                    data_to_search=cred_id,
-                    userid=userid
-                )[0][0]
-
-                current_data = crypto.password_decryption(
-                    password=password_encrypted,
-                    encryption_key=encryption_key
-                )
-
-                password_decrypted = edit_interface.Edit_prompt.new_data_question(column, current_data)
-                awnser = edit_interface.Edit_prompt.confirmation()
-    
-                if awnser.lower() not in ("y", "yes"):
-                    continue
-                break
-
-    password_encrypted = crypto.password_encryption(
-        password=password_decrypted,
-        encryption_key=encryption_key
-    )
-    
-    storage_logic.update_database_item(
-        cred_id=cred_id,
-        userid=userid,
-        column=column,
-        new_data=password_encrypted
-    )
-
-    return True
-
-def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
+def main(cred_id: int, userid: int, encryption_key: bytes) -> bool | None:
 
     data = storage_logic.searcher(
         columns=["Service", "Username", "comment"],
@@ -74,15 +64,17 @@ def main(cred_id: int, userid: int, encryption_key: bytes) -> None:
         userid=userid
     )
     
-    choice_table(
+    if not choice_table(
         choice=edit_interface.handler(data=data),
         cred_id=cred_id,
         userid=userid,
         encryption_key=encryption_key
-        )
+        ):
+        print("Back to the main func")
+        return False
 
 def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> None:
-
+    print(choice)
     match choice:
 
         case "1":
@@ -90,6 +82,8 @@ def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> No
                 column="Service",
                 cred_id=cred_id,
                 userid=userid,
+                encryption_key=encryption_key,
+                is_password=False
             )
 
         case "2":
@@ -97,14 +91,17 @@ def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> No
                 column="Username",
                 cred_id=cred_id,
                 userid=userid,
+                encryption_key=encryption_key,
+                is_password=False
             )
 
         case "3":
-            update_password(
+            update_data(
                 column="Password",
                 cred_id=cred_id,
                 userid=userid,
-                encryption_key=encryption_key
+                encryption_key=encryption_key,
+                is_password=True
             )
 
         case "4":
@@ -112,4 +109,9 @@ def choice_table(choice, cred_id: int, userid: int, encryption_key: bytes) -> No
                 column="Comment",
                 cred_id=cred_id,
                 userid=userid,
+                encryption_key=encryption_key,
+                is_password=False
             )
+        case "b":
+            print("We have made it to the case!")
+            return False
