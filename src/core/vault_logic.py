@@ -5,6 +5,7 @@ import src.common.errors as errors
 from src.common.helper_functions import clear_screen, exit_program
 from src.services.add_items import add_main
 from src.services.view_items import menu_flow
+from src.services.search import search_main
 
 #Helper functions.
 def get_five_rows_out_database(userid: int) -> list | None:
@@ -33,7 +34,7 @@ def option_handler(choice: str, userid: int, encryption_key: bytes, total_cred: 
     dispatch_table = {
         "a": lambda: add_main(userid, encryption_key),
         "v": lambda: menu_flow(userid, total_cred, encryption_key),
-        "s": option_s,
+        "s": lambda: search_main(),
         "q": option_q
     }
     func = dispatch_table.get(choice)
