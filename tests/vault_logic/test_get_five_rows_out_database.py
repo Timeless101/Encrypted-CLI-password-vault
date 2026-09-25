@@ -1,4 +1,4 @@
-import src.vault_logic as vault_logic
+import src.core.vault_logic as vault_logic
 import pytest
 
 def test_get_five_rows_out_database_happy_test(monkeypatch):

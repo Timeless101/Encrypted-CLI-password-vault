@@ -1,8 +1,8 @@
-import src.errors as errors
+import src.common.errors as errors
 from src.crypto import password_encryption
 from src.storage.storage_logic import insert_data
 from datetime import datetime
-from src.services.helper_functions import clear_screen, confirmation_prompt
+from src.common.helper_functions import clear_screen, confirmation_prompt
 from src.interface.error_messages import print_internal_error
 from src.interface.add_interface import add_items_screen_flow
 

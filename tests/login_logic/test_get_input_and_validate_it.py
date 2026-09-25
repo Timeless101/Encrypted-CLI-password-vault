@@ -1,9 +1,9 @@
-import src.login_logic as login_logic
+import src.core.login_logic as login_logic
 import src.validator as validator
 import src.interface.login_interface as login_interface
 import src.crypto as crypto
 import pytest
-import src.errors as errors
+import src.common.errors as errors
 
 def test_get_input_and_validate_it_email_checker(monkeypatch):
     def fake_cli_menu():

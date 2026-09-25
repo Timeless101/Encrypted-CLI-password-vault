@@ -1,4 +1,4 @@
-import src.vault_logic as vault_logic
+import src.core.vault_logic as vault_logic
 import src.storage.storage_logic as storage_logic
 import src.interface.vault_interface as vault_interface
 

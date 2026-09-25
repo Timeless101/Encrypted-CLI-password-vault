@@ -1,5 +1,5 @@
 import sqlite3
-import src.errors as errors
+import src.common.errors as errors
 
 #Create database
 def create_database(database_name):

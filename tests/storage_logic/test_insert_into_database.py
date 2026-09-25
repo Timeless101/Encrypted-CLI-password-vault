@@ -1,6 +1,6 @@
 import src.storage.storage_logic as storage_logic
 import src.storage.Database_logic as Database_logic
-import src.errors as errors
+import src.common.errors as errors
 import pytest
 
 def test_insert_into_database_happy_test(monkeypatch):

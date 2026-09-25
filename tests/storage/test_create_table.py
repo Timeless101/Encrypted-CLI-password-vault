@@ -1,5 +1,5 @@
 import pytest
-import src.errors as errors
+import src.common.errors as errors
 from src.storage.Database_logic import Table_creator
 
 

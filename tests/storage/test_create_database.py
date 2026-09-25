@@ -1,7 +1,7 @@
 import src.storage.Database_logic as Database_logic
 import sqlite3
 import pytest
-import src.errors as errors
+import src.common.errors as errors
 
 def test_create_database_locked(monkeypatch, tmp_path):
     db_path = tmp_path / "test.db"

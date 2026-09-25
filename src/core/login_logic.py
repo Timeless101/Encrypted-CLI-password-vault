@@ -1,11 +1,11 @@
-import src.errors as errors
+import src.common.errors as errors
 import src.storage.storage_logic as storage_logic
 import src.interface.login_interface as login_interface
 import src.validator as validator
 import src.crypto as crypto
 import src.interface.error_messages as error_messages
 from time import sleep
-from src.services.helper_functions import clear_screen, exit_program
+from src.common.helper_functions import clear_screen, exit_program
 
 #Constances
 DATABASE_NAME: str = "CLI_Data.db"

@@ -1,7 +1,7 @@
-import src.login_logic as login_logic
+import src.core.login_logic as login_logic
 import src.interface.login_interface as login_interface
 import src.Services.helper_functions as helper_functions
-import src.errors as errors
+import src.common.errors as errors
 import pytest
 
 def test_login_flow_happy_test(monkeypatch):

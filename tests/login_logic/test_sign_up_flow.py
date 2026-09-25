@@ -1,9 +1,9 @@
-import src.login_logic as login_logic
+import src.core.login_logic as login_logic
 import src.storage.storage_logic as storage_logic
 import src.interface.error_messages as error_messages
 import src.Services.helper_functions as helper_functions
 import pytest
-import src.errors as errors
+import src.common.errors as errors
 
 
 def test_sign_up_flow_happy_test(monkeypatch):

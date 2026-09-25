@@ -1,5 +1,5 @@
 import pytest
-import src.errors as errors
+import src.common.errors as errors
 import sqlite3
 from src.storage.Database_logic import Search_data
 

@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from getpass import getpass
-from src.services.helper_functions import clear_screen
+from src.common.helper_functions import clear_screen
 
 CONSOLE = Console()
 

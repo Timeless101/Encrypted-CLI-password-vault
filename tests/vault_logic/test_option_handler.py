@@ -1,4 +1,4 @@
-import src.vault_logic as vault_logic
+import src.core.vault_logic as vault_logic
 
 
 def test_option_handler_test_add_items(monkeypatch):

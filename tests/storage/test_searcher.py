@@ -1,7 +1,7 @@
 from src.storage.Database_logic import Search_data
 import sqlite3
 import pytest
-import src.errors as errors
+import src.common.errors as errors
 
 def test_searcher_happy_test(tmp_path):
     db_path = tmp_path / "test.db"

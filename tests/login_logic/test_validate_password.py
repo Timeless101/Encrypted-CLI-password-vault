@@ -1,4 +1,4 @@
-import src.login_logic as login_logic
+import src.core.login_logic as login_logic
 import src.crypto as crypto
 
 def test_validate_password_happy_test(monkeypatch):

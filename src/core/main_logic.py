@@ -1,5 +1,5 @@
-import src.login_logic as login_logic
-import src.vault_logic as vault_logic
+import src.core.login_logic as login_logic
+import src.core.vault_logic as vault_logic
 
 def program_flow():
     while True:

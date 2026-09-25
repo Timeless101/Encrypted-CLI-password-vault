@@ -1,6 +1,6 @@
 import pytest
-import src.errors as errors
-import src.login_logic as login_logic
+import src.common.errors as errors
+import src.core.login_logic as login_logic
 import src.storage.storage_logic as storage_logic
 
 

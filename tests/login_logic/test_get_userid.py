@@ -1,6 +1,6 @@
 import src.storage.storage_logic as storage_logic
-import src.login_logic as login_logic
-import src.errors as errors
+import src.core.login_logic as login_logic
+import src.common.errors as errors
 import pytest
 
 def test_get_userid_happy_test(monkeypatch):

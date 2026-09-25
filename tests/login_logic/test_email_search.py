@@ -1,6 +1,6 @@
-import src.login_logic as login_logic
+import src.core.login_logic as login_logic
 import src.storage.storage_logic as storage_logic
-import src.errors as errors
+import src.common.errors as errors
 
 
 def test_email_search(monkeypatch):

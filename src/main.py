@@ -8,7 +8,7 @@ Created: 09/04/2026 dd/mm/yy
 python -m src.main   
 """
 
-from src.main_logic import program_flow
+from src.core.main_logic import program_flow
 
 def main():
     program_flow()

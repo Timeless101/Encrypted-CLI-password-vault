@@ -2,10 +2,10 @@ import pyperclip
 import src.storage.database_logic as database_logic
 import src.interface.error_messages as error_messages
 import src.interface.view_interface as view_interface
-import src.errors as errors
+import src.common.errors as errors
 from src.services import edit
 from src.crypto import password_decryption
-from src.services.helper_functions import clear_screen, print_copy, confirmation_prompt
+from src.common.helper_functions import clear_screen, print_copy, confirmation_prompt
 from src.services.add_items import add_main
 from src.storage.storage_logic import searcher
 from src.services.pagination import Pagination

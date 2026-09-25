@@ -1,5 +1,5 @@
 import src.storage.database_logic as database_logic
-import src.errors as errors
+import src.common.errors as errors
 
 DATABASE_NAME = "CLI_Data.db"
 LOGIN_TABLE = "login_information"
