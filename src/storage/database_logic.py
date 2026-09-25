@@ -153,7 +153,7 @@ def search_interface_password_id(userid: int, database: str, limit: int) -> list
         SELECT
             ROW_NUMBER() OVER(
             PARTITION BY UserID
-            ORDER by Service COLLATE NOCASE ASC
+            ORDER by EditedDate COLLATE NOCASE DESC
         ) AS screen_number_ID,
 
         Service,

@@ -14,7 +14,7 @@ def search_limited_amount_of_items_in_database(userid: int, limit: int) -> list[
         limit=limit
     )
 
-    return data # returns: screen_number_ID, cred_id, Service, Username, Password, Comment, CreationDate, EditedDate
+    return data # returns: screen_number_ID, Service, Username, EditedDate
     
 def get_all_items_in_database(userid) -> None | int:
     try:
