@@ -85,3 +85,8 @@ def screen_handler(data: list, total_credentials: int, current_page: int, max_pa
             ).lower()
 
     return option
+
+
+def test():
+    to_search = input("Search for service, username or comment\n:")
+    return to_search

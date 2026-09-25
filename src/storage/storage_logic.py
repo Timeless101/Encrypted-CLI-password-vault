@@ -14,7 +14,7 @@ def search_limited_amount_of_items_in_database(userid: int, limit: int) -> list[
         limit=limit
     )
 
-    return data # returns: screen_number_ID, cred_id, Service, Username, Password, Comment, DreationDate, EditedDate
+    return data # returns: screen_number_ID, cred_id, Service, Username, Password, Comment, CreationDate, EditedDate
     
 def get_all_items_in_database(userid) -> None | int:
     try:
@@ -136,13 +136,14 @@ def create_database(database_name: str):
         return False
 
 
-def update_database_item(cred_id: int, userid: int, column: str, new_data: str):
+def update_database_item(cred_id: int, userid: int, column: str, new_data: str, new_date):
     if database_logic.update_item(
         table=VAULT_TABLE,
         database=DATABASE_NAME,
         userid=userid,
         column=column,
         new_data=new_data,
-        cred_id=cred_id
+        cred_id=cred_id,
+        new_date=new_date
     ):
         return True

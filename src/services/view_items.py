@@ -64,7 +64,7 @@ def show_screen_with_data_get_option(data: list, total_cred: int, current_page:i
 
 #Flow functions
 def menu_flow(userid: int, total_cred: int, encryption_key: bytes) -> str:
-    pag = Pagination(total_cred=total_cred)
+    pag = Pagination(total_cred=total_cred, page_size= 5)
     while True:
         clear_screen()
         data = get_screen_data(userid=userid, page_size=pag.page_size, offset=pag.offset)

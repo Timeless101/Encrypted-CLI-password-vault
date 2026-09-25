@@ -66,7 +66,6 @@ def insert_data(table_name: str, column_name: list, data_insert: list, database_
         raise errors.InsertError(f"Couldn't insert data") from sql_error
     
 #Search data in datebase.
-
 def search_specific_data(table: str, column: str, data_to_be_searched: str, database_name: str) -> list | None:
     try:
         query = f"SELECT * FROM {table} WHERE {column} = ?"
@@ -117,7 +116,35 @@ def searcher(table: str, columns: list, column: tuple, data_to_search: str, data
     except sqlite3.Error as e:
         raise errors.DatabaseError(e)
 
+def search_for_search_view(to_search: str, database: str, userid: int):
+    try:
+        query = f"""SELECT
+                        row_number() OVER( 
+                            PARTITION BY UserID
+                            ORDER BY Service COLLATE NOCASE ASC
+                            ) AS screen_number_ID,
+                        *
+                    FROM vault_storage WHERE Service LIKE ? OR Username LIKE ? AND Userid = ?"""
+        to_search = to_search + "%"
 
+        with sqlite3.connect(database) as connection:
+            c = connection.cursor()
+            c.execute(query, (to_search, to_search, userid))
+            searched_data = c.fetchall()
+
+        if len(searched_data) == 0:
+            return None
+
+        return searched_data #screen_number, cred_id, Userid, Service, Username, Password, Comment, CreationDate, EditedDate
+    
+    except sqlite3.ProgrammingError as Programmers_fault:
+        raise errors.WrongSQLStatement("The SQL statements are wrong, please check the query you wrote.") from Programmers_fault
+
+    except sqlite3.OperationalError as Operation_error:
+        raise errors.DatabaseError(f"Database Operation failed: {Operation_error}")
+
+    except sqlite3.Error as Error:
+        raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
 
 def search_interface_password_id(userid: int, database: str, limit: int) -> list[tuple] | None:
 
@@ -219,13 +246,15 @@ def delete_item(database: str, table: str, cred_id: int) -> bool:
                 raise errors.UnexpectedError(f"There was a unexpected error: {Error}")
 
 
-def update_item(table: str, cred_id: int, database: str, userid: int, column: str, new_data: str) -> bool:
+def update_item(table: str, cred_id: int, database: str, userid: int, column: str, new_data: str, new_date) -> bool:
 
-    query = f"UPDATE {table} SET {column} = ? WHERE cred_id = ? AND Userid = ?"
+    query_one = f"UPDATE {table} SET {column} = ? WHERE cred_id = ? AND Userid = ?"
+    query_two = f"UPDATE {table} SET EditedDate = ? WHERE cred_id = ? AND userid = ? "
 
     with sqlite3.Connection(database) as connection:
         c = connection.cursor()
-        c.execute(query, (new_data, cred_id, userid))
+        c.execute(query_one, (new_data, cred_id, userid))
+        c.execute(query_two, (new_date, cred_id, userid))
         return True
 
 if __name__ == "__main__":

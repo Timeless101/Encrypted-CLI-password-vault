@@ -1,6 +1,7 @@
 import src.interface.edit_interface as edit_interface
 import src.storage.storage_logic as storage_logic
 import src.crypto as crypto
+from datetime import datetime
 
 def update_password(column: str, cred_id: int, userid: int, encryption_key: bytes, current_data) -> None:
     while True:
@@ -18,7 +19,9 @@ def update_password(column: str, cred_id: int, userid: int, encryption_key: byte
                             cred_id=cred_id,
                             userid=userid,
                             column=column,
-                            new_data=new_data
+                            new_data=new_data,
+                            new_date=datetime.now().replace(microsecond=0)
+                            
         )
         break
 
@@ -52,7 +55,8 @@ def update_data(column: str, cred_id: int, userid: int, encryption_key: bytes, i
             cred_id=cred_id,
             userid=userid,
             column=column,
-            new_data=new_data
+            new_data=new_data,
+            new_date=datetime.now().replace(microsecond=0)
         )
 
 def main(cred_id: int, userid: int, encryption_key: bytes) -> bool | None:

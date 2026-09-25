@@ -1,11 +1,11 @@
 import math
 
 class Pagination():
-    def __init__(self, total_cred):
+    def __init__(self, total_cred: int, page_size: int):
 
         self.total_cred = total_cred
         self.current_page: int = 1
-        self.page_size: int = 5
+        self.page_size: int = page_size
         self.offset: int = 0
 
         self.total_pages: int = math.ceil(total_cred / self.page_size)
